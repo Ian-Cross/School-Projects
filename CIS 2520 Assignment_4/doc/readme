@@ -1,0 +1,35 @@
+Assignment 4
+CIS 2520
+Ian Cross
+0911085
+icross@mail.uoguelph.ca
+
+*******Compiling the programs*******
+
+To Compile the program run to command
+  make
+from the root directory of the program.
+
+The program will compile and run itself.
+
+
+*******Using The program*******
+
+A prompt will appear getting the user to enter a command number.
+everything else is handled by the program.
+
+The given data file is in the assets folder which must be entered along with the filename
+
+
+*******Testing*******
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
+ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor
+sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
+magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+qui officia deserunt mollit anim id est laborum.
