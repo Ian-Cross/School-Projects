@@ -1,0 +1,26 @@
+/********************
+Ian Cross
+0911085
+icross@mail.uoguelph.ca
+CIS*2750
+Assignment 3
+********************/
+
+*** Limits ***
+
+when creating radio buttons the action and the name have
+to be stated before the value lists. If any additional tags
+are to be added put them at the front of element
+
+when creating a input form, the action needs to be in-front
+of the text, name, value, tags. The order must be as text-name-value.
+If any style or additional tags are wanted put them in-front of everything
+
+
+you may have to click on a stream a twice when the first post of
+the stream goes in, not really sure why sorry
+
+
+**************RUNNING*************
+
+type make in the root directory the go to the webpage

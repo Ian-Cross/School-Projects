@@ -1,0 +1,9 @@
+<div class="login-background">
+    <div class="login">
+        <h1>Login</h1>
+        <form class="" action="index.php" method="post">
+            <input required autofocus autocomplete="off" type="text" name="username" placeholder="username"><br><br>
+            <input type="submit" name="login" value="submit">
+        </form>
+    </div>
+</div>

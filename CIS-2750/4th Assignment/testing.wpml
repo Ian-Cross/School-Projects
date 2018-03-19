@@ -1,0 +1,74 @@
+.b(name="Button",link="page")
+.d()
+.e(exe="filename")
+.h(size="1-6",text="Text")
+.i(action="phone.php",text="enter Number",name="number",value="123-123-1234")
+.l(text="...",link=<url>)
+.p(image="...",size=<height>x<width>)
+.r(action="radio.php",name="colour",value="red",value="green",value="blue")
+.t(file="<filename>",text="...")
+
+
+Username field
+signup button
+login button
+
+signup page (addauthor)
+    newusername
+
+    .t(file="login.txt")
+    .h(text="Welcome",style="color: blue;",size=5)
+    .d()
+    .h(size=1)
+    .h(size=4, text="this is text",style="color: green;")
+    .d()
+    .h(style="colour: purple;",text="Well Hello there You Bitch")
+    .h()
+    .d()
+    .b(name="Testing",style="background: yellow;",link="testing.php")
+    .l(style="color: green;",text="Move To testing Page",link="testing.php")
+    .p(image="test1.jpg",size="150x150")
+    .p(image="test2.jpg")
+    .t(text="<a href="testing.php">Move to the testing page</a>")
+    .t(file="text.txt")
+    .r(action="testing.php",name="changeAuthor",value="Author1",value="Author2",value="Author3",value="Author4")
+    .e(exe="helloWorld")
+    .i(action="index.php",text="Phone Number",name="number",value="123-456-7890",text="First Name",name="fname",value="Ian",text="Last Name",name="lname",value="Cross")
+
+
+
+upper menu
+    stream list
+    change author
+    add/remove author
+    make post
+
+viewing window
+
+control buttons
+    sorting
+    mark all as read
+    check for new
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+l

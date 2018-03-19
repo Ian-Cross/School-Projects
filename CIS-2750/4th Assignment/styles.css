@@ -1,0 +1,236 @@
+html {
+
+}
+
+body {
+    text-align: center;
+    font-size: 16px;
+}
+
+.login {
+    border: 1px solid black;
+    padding: 2em;
+    position: relative;
+    background: rgb(51, 102, 255);
+    display: block;
+    z-index: 1001;
+    margin: auto;
+    width: 25%;
+    top: 200px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 10px 10px 5px grey;
+}
+
+.center {
+    text-align: center;
+}
+
+.UpperButton {
+    font-size: 16px;
+    border: 1px solid black;
+    background: white;
+    box-shadow: 2px 2px 1px lightgrey;
+    border-radius: 10px;
+    padding: 10px 10px;
+    position: relative;
+    display: inline;
+    width: 185px;
+    cursor: pointer;
+}
+
+.UpperButton:hover {
+    box-shadow: 2px 2px 1px grey;
+}
+
+.UpperButton:active {
+    color: grey;
+    box-shadow: 2px 2px 1px black;
+
+}
+
+.viewWindowCover {
+    width: 75%;
+    margin: 0 auto;
+    padding: 0;
+    background: lightgrey;
+    border: 1px dotted black;
+}
+
+.viewWindow {
+    background: lightgrey;
+    resize: none;
+    border: none;
+    padding: 10px 0;
+    margin: 0 auto;
+    font-size: 16px;
+    overflow: auto;
+    word-wrap: break-word;
+}
+
+.viewWindow:focus {
+    border: none;
+}
+
+.buttonForm {
+    display: inline-block;
+    width: 190px;
+}
+
+.login-background {
+    z-index: 1000;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    /*background: rgba(0, 100, 150, 0.5);*/
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.column {
+
+}
+
+.row {
+
+}
+
+.addauthorbackground {
+    display: inline-block;
+    background: lightgrey;
+    width: 30%;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.addauthorcheck {
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.addauthorinput {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.backbutton {
+    position: relative;
+    float: left;
+}
+
+.post {
+    border: 1px solid black;
+    padding: 2em;
+    position: relative;
+    background: rgb(181, 187, 181);
+    display: block;
+    z-index: 1001;
+    margin: auto;
+    width: 50%;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 10px 10px 5px grey;
+}
+
+.postArea {
+    resize: none;
+    overflow: auto;
+    word-wrap: break-word;
+}
+
+.streamsButton {
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid black;
+    background: white;
+    box-shadow: 2px 2px 1px lightgrey;
+    border-radius: 10px;
+    padding: 10px 10px;
+    margin: 0 auto;
+    position: relative;
+    display: inline;
+    width: 135px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.dropdown-content .dropdownlink {
+    color: black;
+    width: 100%;
+    font-size: 14px;
+    margin: 0 auto;
+    text-decoration: none;
+    display: block;
+    border: none;
+}
+
+.dropdownlink {
+    padding: 12px 16px;
+}
+
+.dropdown-content .dropdownlink:hover {
+    background-color: #f1f1f1
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
+.one { width: 8.66666667%; }
+.two { width: 17.33333333%; }
+.three { width: 26%; }
+.four { width: 34.66666667%; }
+.five { width: 43.33333333%; }
+.six { width: 52%; }
+.seven { width: 100%; }
+.eight { width: 100%; }
+.nine { width: 100%; }
+.ten { width: 100%; }
+.eleven { width: 100%; }
+.twelve { width: 100%; }
+
+.one-third { width: 100%; }
+.two-third { width: 100%; }
+
+.one-quarter { width: 100%; }
+.half { width: 100%; }
+.three-quarter { width: 100%; }
+.full { width: 100%; }
+
+.offset-by-one          { margin-left: 8.66666666667%; }
+.offset-by-two          { margin-left: 17.3333333333%; }
+.offset-by-three        { margin-left: 26%;            }
+.offset-by-four         { margin-left: 34.6666666667%; }
+.offset-by-five         { margin-left: 43.3333333333%; }
+.offset-by-six          { margin-left: 52%;            }
+.offset-by-seven        { margin-left: 60.6666666667%; }
+.offset-by-eight        { margin-left: 69.3333333333%; }
+.offset-by-nine         { margin-left: 78.0%;          }
+.offset-by-ten          { margin-left: 86.6666666667%; }
+.offset-by-eleven       { margin-left: 95.3333333333%; }
+
+.offset-by-one-third.column    { margin-left: 34.6666666667%; }
+.offset-by-two-thirds.column   { margin-left: 69.3333333333%; }
+.offset-by-one-half.column     { margin-left: 52%; }

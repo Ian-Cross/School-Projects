@@ -1,0 +1,11 @@
+<div class="post">
+    <form class="postbackground" action="<?PHP echo 'index.php'.get($_GET).'&login=submit'; ?>" method="post">
+        <h1>Make a Post </h1>
+        <input type="hidden" name="username" value="<?PHP echo $_GET['username'];?>">
+        <input type="hidden" name="stream" value="<?PHP echo $_GET['stream'];?>">
+        <h3><?PHP echo 'as '.$_GET['username'].' into the '.$_GET['stream'].' stream'; ?><h3>
+        <textarea class="postArea" name="postArea" rows="24" cols="80"></textarea><br>
+        <input class="UpperButton" type="submit" name="goBack" value="Back">
+        <input class="UpperButton" type="submit" name="makepost" value="Post">
+    </form>
+</div>

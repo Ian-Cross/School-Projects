@@ -1,0 +1,22 @@
+<div class="dropdown">
+    <button class="UpperButton">Streams</button>
+    <div class="dropdown-content">
+        <?php
+            exec('./2ndAssignment/viewAPI.py getStreams '.$_GET['username'],$output,$status);
+            if ($status){
+                echo $status;
+            }
+            if ($output[0] == "Create Stream"){
+                echo "<form action=\""."index.php?username=".$_GET['username']."\" "."method=\"post\">";
+                echo    "\t<input class=\"dropdownlink\" type=\"submit\" name=\"gotoaddauthor\" value=\"Create Stream\">";
+                echo "</form>";
+            } else {
+                foreach ($output as $line) {
+                    echo "<form action=\""."home.php?username=".$_GET['username']."&stream=".$line."&sort=date\" "."method=\"post\">";
+                    echo    "\t<input class=\"dropdownlink\" type=\"submit\" name=\"changeStream\" value=\"".$line."\">";
+                    echo "</form>";
+                }
+            }
+        ?>
+    </div>
+</div>
