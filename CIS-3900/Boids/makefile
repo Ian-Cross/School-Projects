@@ -8,16 +8,16 @@ boidspt: boids.c
 	gcc boids.c -o boidspt -lm -DNOGRAPHICS
 
 data: data.c
-	gcc data.c -o data -lncurses -lm
+	gcc data.c -o data -lncurses -lm -lpthread
 
 datapt: data.c
-	gcc data.c -o datapt -lm -DNOGRAPHICS
+	gcc data.c -o datapt -lm -DNOGRAPHICS -lpthread
 
 task: task.c
-	gcc task.c -o task -lncurses -lm
+	gcc task.c -o task -lncurses -lm -lpthread
 
 taskpt: task.c
-	gcc task.c -o taskpt -lm -DNOGRAPHICS
+	gcc task.c -o taskpt -lm -DNOGRAPHICS -lpthread
 
 clean:
 	rm data datapt boids boidspt task taskpt
