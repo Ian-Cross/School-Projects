@@ -22,8 +22,6 @@
 #define DELAY 50000
 // default population size, number of boids
 #define POPSIZE 50
-// default number of threads
-#define THREADCOUNT 1
 // maximum screen size, both height and width
 #define SCREENSIZE 100
 // default number of iterations to run before exiting, only used
@@ -45,11 +43,13 @@ int max_y = 0, max_x = 0;
 
 // user defined number of boids to create in the population
 int popsize;
-int threadCount;
 // location and velocity of boids
 float **boidArray;
 // change in velocity is stored for each boid (x,y,z)
-float **boidUpdate;
+float **boidRule1Update;
+float **boidRule2Update;
+float **boidRule3Update;
+float **boidRule4Update;
 
 void initBoids() {
   int i;
@@ -98,7 +98,7 @@ int drawBoids() {
 }
 #endif
 
-void rule1(int startRow, int endRow) {
+void *rule1() {
   int i;
   float cx, cy, cz;
 
@@ -119,11 +119,12 @@ void rule1(int startRow, int endRow) {
 
   // update velocity, move towards centre of mass
   // initial use of boidUpdate[][] so overwrite old values
-  for (i = startRow; i <= endRow; i++) {
-    boidUpdate[i][BX] = (cx - boidArray[i][BX]) / popsize;
-    boidUpdate[i][BY] = (cy - boidArray[i][BY]) / popsize;
-    boidUpdate[i][BZ] = (cz - boidArray[i][BZ]) / popsize;
+  for (i = 0; i < popsize; i++) {
+    boidRule1Update[i][BX] = (cx - boidArray[i][BX]) / popsize;
+    boidRule1Update[i][BY] = (cy - boidArray[i][BY]) / popsize;
+    boidRule1Update[i][BZ] = (cz - boidArray[i][BZ]) / popsize;
   }
+  return NULL;
 }
 
 float distance(int i, int j) {
@@ -132,12 +133,12 @@ float distance(int i, int j) {
                 powf(boidArray[i][BZ] - boidArray[j][BZ], 2.0)));
 }
 
-void rule2(int startRow, int endRow) {
+void *rule2() {
   int i, j;
   float cx, cy, cz;
 
   // keep boids from overlapping
-  for (i = startRow; i <= endRow; i++) {
+  for (i = 0; i < popsize; i++) {
     cx = 0.0;
     cy = 0.0;
     cz = 0.0;
@@ -150,13 +151,14 @@ void rule2(int startRow, int endRow) {
         }
       }
     }
-    boidUpdate[i][BX] += cx;
-    boidUpdate[i][BY] += cy;
-    boidUpdate[i][BZ] += cz;
+    boidRule2Update[i][BX] = cx;
+    boidRule2Update[i][BY] = cy;
+    boidRule2Update[i][BZ] = cz;
   }
+  return NULL;
 }
 
-void rule3(int startRow, int endRow) {
+void *rule3() {
   int i;
   float cx, cy, cz;
 
@@ -176,15 +178,16 @@ void rule3(int startRow, int endRow) {
   cz /= popsize;
 
   // update velocity, move towards centre of mass
-  for (i = startRow; i <= endRow; i++) {
-    boidUpdate[i][BX] += (cx - boidArray[i][VX]) / 8.0;
-    boidUpdate[i][BY] += (cy - boidArray[i][VY]) / 8.0;
-    boidUpdate[i][BZ] += (cz - boidArray[i][VZ]) / 8.0;
+  for (i = 0; i < popsize; i++) {
+    boidRule3Update[i][BX] = (cx - boidArray[i][VX]) / 8.0;
+    boidRule3Update[i][BY] = (cy - boidArray[i][VY]) / 8.0;
+    boidRule3Update[i][BZ] = (cz - boidArray[i][VZ]) / 8.0;
   }
+  return NULL;
 }
 
 // move the flock towards a point
-void moveFlock(int startRow, int endRow) {
+void *moveFlock() {
   int i;
   static int count = 0;
   static int sign = 1;
@@ -192,8 +195,7 @@ void moveFlock(int startRow, int endRow) {
 
   // pull flock towards two points as the program runs
   // every 200 iterations change point that flock is pulled towards
-  if (count % 200 == 0 && endRow == popsize - 1) {
-    // printf("flipping directions\n");
+  if (count % 200 == 0) {
     sign = sign * -1;
   }
   if (sign == 1) {
@@ -209,37 +211,49 @@ void moveFlock(int startRow, int endRow) {
   }
   // add offset (px,py,pz) to each boid in order to pull it
   // towards the current target point
-  for (i = startRow; i <= endRow; i++) {
-    boidUpdate[i][BX] += (px - boidArray[i][BX]) / 200.0;
-    boidUpdate[i][BY] += (py - boidArray[i][BY]) / 200.0;
-    boidUpdate[i][BZ] += (pz - boidArray[i][BZ]) / 200.0;
+  for (i = 0; i < popsize; i++) {
+    boidRule4Update[i][BX] = (px - boidArray[i][BX]) / 200.0;
+    boidRule4Update[i][BY] = (py - boidArray[i][BY]) / 200.0;
+    boidRule4Update[i][BZ] = (pz - boidArray[i][BZ]) / 200.0;
   }
-  if (endRow == popsize - 1) {
-    // printf("increaseing move flock count %d\n", count);
-    count++;
-  }
+  count++;
+  return NULL;
 }
 
-void *moveBoids(void *rank) {
+void createThreads() {
+  long thread;
   int i;
-  long localRank = (long)rank;
-  int numRows = popsize / threadCount;
-  int startRow = localRank * numRows;
-  int endRow;
-  if (localRank != threadCount - 1) {
-    endRow = (localRank + 1) * numRows - 1;
-  } else {
-    endRow = popsize - 1;
+  pthread_t *thread_handles;
+  int threadCount = 4;
+
+  thread_handles = malloc(threadCount * sizeof(pthread_t));
+
+  pthread_create(&thread_handles[0], NULL, rule1, (void *)0);
+  pthread_create(&thread_handles[1], NULL, rule2, (void *)1);
+  pthread_create(&thread_handles[2], NULL, rule3, (void *)2);
+  pthread_create(&thread_handles[3], NULL, moveFlock, (void *)3);
+
+  for (thread = 0; thread < threadCount; thread++) {
+    pthread_join(thread_handles[thread], NULL);
+    printf("Thread %ld finished\n", thread);
   }
-  // printf("Thread %ld of %d will operate from %d - %d\n", localRank,
-  // threadCount, startRow, endRow);
 
-  rule1(startRow, endRow);
-  rule2(startRow, endRow);
-  rule3(startRow, endRow);
-  moveFlock(startRow, endRow);
+  // move boids by calculating updated velocity and new position
+  for (i = 0; i < popsize; i++) {
+    // update velocity for each boid
+    boidArray[i][VX] += boidRule1Update[i][BX] + boidRule2Update[i][BX] +
+                        boidRule3Update[i][BX] + boidRule4Update[i][BX];
+    boidArray[i][VY] += boidRule1Update[i][BY] + boidRule2Update[i][BY] +
+                        boidRule3Update[i][BY] + boidRule4Update[i][BY];
+    boidArray[i][VZ] += boidRule1Update[i][BZ] + boidRule2Update[i][BZ] +
+                        boidRule3Update[i][BZ] + boidRule4Update[i][BZ];
+    // update position for each boid
+    boidArray[i][BX] += boidArray[i][VX];
+    boidArray[i][BY] += boidArray[i][VY];
+    boidArray[i][BZ] += boidArray[i][VZ];
+  }
 
-  return NULL;
+  free(thread_handles);
 }
 
 void allocateArrays() {
@@ -249,37 +263,17 @@ void allocateArrays() {
   for (i = 0; i < popsize; i++)
     boidArray[i] = malloc(sizeof(float) * 6);
 
-  boidUpdate = malloc(sizeof(float *) * popsize);
-  for (i = 0; i < popsize; i++)
-    boidUpdate[i] = malloc(sizeof(float) * 3);
-}
+  boidRule1Update = malloc(sizeof(float *) * popsize);
+  boidRule2Update = malloc(sizeof(float *) * popsize);
+  boidRule3Update = malloc(sizeof(float *) * popsize);
+  boidRule4Update = malloc(sizeof(float *) * popsize);
 
-void createThreads() {
-  long thread;
-  int i;
-  pthread_t *thread_handles;
-
-  thread_handles = malloc(threadCount * sizeof(pthread_t));
-
-  for (thread = 0; thread < threadCount; thread++)
-    pthread_create(&thread_handles[thread], NULL, moveBoids, (void *)thread);
-
-  for (thread = 0; thread < threadCount; thread++)
-    pthread_join(thread_handles[thread], NULL);
-
-  // move boids by calculating updated velocity and new position
   for (i = 0; i < popsize; i++) {
-    // update velocity for each boid
-    boidArray[i][VX] += boidUpdate[i][BX];
-    boidArray[i][VY] += boidUpdate[i][BY];
-    boidArray[i][VZ] += boidUpdate[i][BZ];
-    // update position for each boid
-    boidArray[i][BX] += boidArray[i][VX];
-    boidArray[i][BY] += boidArray[i][VY];
-    boidArray[i][BZ] += boidArray[i][VZ];
+    boidRule1Update[i] = malloc(sizeof(float) * 3);
+    boidRule2Update[i] = malloc(sizeof(float) * 3);
+    boidRule3Update[i] = malloc(sizeof(float) * 3);
+    boidRule4Update[i] = malloc(sizeof(float) * 3);
   }
-
-  free(thread_handles);
 }
 
 int main(int argc, char *argv[]) {
@@ -291,7 +285,6 @@ int main(int argc, char *argv[]) {
   // set number of iterations, only used for timing tests in boidspt
   // not used in curses version
   count = ITERATIONS;
-  threadCount = THREADCOUNT;
 
   // read command line arguments for number of iterations and
   // number of boids
@@ -304,16 +297,11 @@ int main(int argc, char *argv[]) {
       } else if (strcmp(argv[argPtr], "-c") == 0) {
         sscanf(argv[argPtr + 1], "%d", &popsize);
         argPtr += 2;
-      } else if (strcmp(argv[argPtr], "-t") == 0) {
-        sscanf(argv[argPtr + 1], "%d", &threadCount);
-        argPtr += 2;
       } else {
-        printf("USAGE: %s <-i iterations> <-c pop_size> <-t thread_count>\n",
-               argv[0]);
+        printf("USAGE: %s <-i iterations> <-c pop_size>\n", argv[0]);
         printf(" iterations -the number of times the population will be "
                "updated\n");
         printf(" pop_size -the number of boids to create\n");
-        printf(" thread_count -the number of thread to utalize\n");
         printf(" the number of iterations only affects the non-curses program "
                "boidspt\n");
         printf(" the curses program exits when q is pressed\n");
@@ -353,7 +341,6 @@ int main(int argc, char *argv[]) {
 #ifdef NOGRAPHICS
   printf("Number of iterations %d\n", count);
   printf("Number of boids %d\n", popsize);
-  printf("Number of threads %d\n", threadCount);
 
   /*** Start timing here ***/
   clock_t time;
