@@ -233,10 +233,8 @@ void createThreads() {
   pthread_create(&thread_handles[2], NULL, rule3, (void *)2);
   pthread_create(&thread_handles[3], NULL, moveFlock, (void *)3);
 
-  for (thread = 0; thread < threadCount; thread++) {
+  for (thread = 0; thread < threadCount; thread++)
     pthread_join(thread_handles[thread], NULL);
-    printf("Thread %ld finished\n", thread);
-  }
 
   // move boids by calculating updated velocity and new position
   for (i = 0; i < popsize; i++) {
@@ -348,7 +346,6 @@ int main(int argc, char *argv[]) {
 
   for (i = 0; i < count; i++) {
     createThreads();
-    getchar();
   }
 
   time = clock() - time;

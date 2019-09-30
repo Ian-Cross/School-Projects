@@ -361,7 +361,6 @@ int main(int argc, char *argv[]) {
 
   for (i = 0; i < count; i++) {
     createThreads();
-    getchar();
   }
 
   time = clock() - time;

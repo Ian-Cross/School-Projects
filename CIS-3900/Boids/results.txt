@@ -1,0 +1,41 @@
+<PRE>
+boids.c Results
+  Threads		1
+Pop.Size
+  50        0.128588
+  100       0.479750
+  500       11.494705
+  1000      45.532018
+<PRE>
+<PRE>
+data.c Results
+  Threads		1          2          3          4          5          6          7
+Pop.Size
+  50        0.156293   0.193810   0.222159   0.260300   0.296600   0.342287   0.371328
+  100       0.511158   0.590103   0.617805   0.639779   0.698477   0.762686   0.817998
+  500       11.633888  11.915507  12.031282  12.220404  12.590445  12.970326  14.320527
+  1000      45.407510  47.263934  48.107436  50.278469  52.153154  54.790730  59.433226
+<PRE>
+<PRE>
+task.c Results
+  Threads		4
+Pop.Size
+  50        0.223278
+  100       0.700227
+  500       11.934472
+  1000      45.819521
+<PRE>
+
+The results are disappointing as they don't show an increase in speed.
+What I assume would happen is that as the thread increase will lower
+the total time. The population increase will increase the time proportionally.
+A population so small that the threads are larger than the population wouldn't
+benefit from the addition of threads. The task parallelism is marginally slower,
+but would likely get drastically slower on a larger and large iterations.
+
+
+SYSTEM
+processor: Intel Core i7
+cores: 6 cores
+clock speed: 2.6 GHz
+memory: 16gb 2400 DDR4
