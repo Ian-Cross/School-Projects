@@ -3,7 +3,7 @@ CLASSPATH=opennlp-tools-1.9.1.jar:.
 GENSAMPLEPATH=./TextSamples/GeneralSample/
 ARTSAMPLEPATH=./TextSamples/ArticleSample/
 
-all: SentenceSplitter.class # POSTaggingMEDemo.class TokenizerMEProbs.class
+all: SentenceSplitter.class PartOfSpeechTagger.class # TokenizerMEProbs.class
 
 %.class: %.java
 	$(JAVAC) -cp $(CLASSPATH) $^

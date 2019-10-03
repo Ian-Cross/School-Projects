@@ -12,10 +12,10 @@ clean:
 	rm -f *.class *~
 
 splitted:
-	java -cp ./$(CLASSPATH) SentenceDetectionME $(ARTSAMPLEPATH)sample.txt > $(ARTSAMPLEPATH)sample.splitted
+	java -cp ./$(CLASSPATH) SentenceDetectionME $(GENSAMPLEPATH)sample.txt > $(GENSAMPLEPATH)sample.splitted
 
 tagged:
-	java -cp ./$(CLASSPATH) POSTaggingMEDemo $(ARTSAMPLEPATH)sample.splitted > $(ARTSAMPLEPATH)sample.tagged
+	java -cp ./$(CLASSPATH) POSTaggingMEDemo $(GENSAMPLEPATH)sample.splitted > $(GENSAMPLEPATH)sample.tagged
 
 stemmed:
-	java -cp ./$(CLASSPATH) TokenizerMEProbs $(ARTSAMPLEPATH)sample.splitted > $(ARTSAMPLEPATH)sample.stemmed
+	java -cp ./$(CLASSPATH) TokenizerMEProbs $(GENSAMPLEPATH)sample.splitted > $(GENSAMPLEPATH)sample.stemmed
