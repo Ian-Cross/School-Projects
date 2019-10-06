@@ -19,9 +19,8 @@ public class SentenceSplitter {
     return text + " ";
   }
 
-  public static String readString(String arg) throws Exception {
-     InputStream infile = new FileInputStream(arg);
-     BufferedReader buf = new BufferedReader(new InputStreamReader(infile));
+  public static String readString() throws Exception {
+     BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));
      StringBuilder sb = new StringBuilder();
      String line = buf.readLine();
      while( line != null ) {
@@ -40,17 +39,14 @@ public class SentenceSplitter {
     //Instantiate SentenceDetectorME
     SentenceDetectorME detector = new SentenceDetectorME(model);
 
-    //Allow multiple files to be processed
-    for (String arg : args ) {
-      String fileBody = readString(arg);
-      String labels = breakLabels(fileBody);
+    String fileBody = readString();
+    String labels = breakLabels(fileBody);
 
-      //Split a file into sentences
-      String sentences[] = detector.sentDetect(readString(arg));
+    //Split input into sentences
+    String sentences[] = detector.sentDetect(fileBody);
 
-      //Print the sentences
-      for(String sent : sentences)
-        System.out.println(sent);
-    }
+    //Print the sentences
+    for(String sent : sentences)
+      System.out.println(sent);
   }
 }

@@ -1,21 +1,27 @@
 JAVAC=javac
+JFLEX=jflex
 CLASSPATH=opennlp-tools-1.9.1.jar:.
-GENSAMPLEPATH=./TextSamples/GeneralSample/
-ARTSAMPLEPATH=./TextSamples/ArticleSample/
+IOFILEPATH=./dataFiles
 
-all: SentenceSplitter.class PartOfSpeechTagger.class # TokenizerMEProbs.class
+all: SentenceSplitter.class Token.class Lexer.class Scanner.class PartOfSpeechTagger.class DataAnalysis.class
 
 %.class: %.java
 	$(JAVAC) -cp $(CLASSPATH) $^
 
 clean:
-	rm -f *.class *~
+	rm -f Lexer.java *.class *~ && cd $(IOFILEPATH) && rm -f *.splitted *.tokenized *.tagged *.analysis
+
+Lexer.java: articles.flex
+	$(JFLEX) articles.flex
 
 splitted:
-	java -cp ./$(CLASSPATH) SentenceSplitter articles.txt > articles.splitted
+	java -cp ./$(CLASSPATH) SentenceSplitter < $(IOFILEPATH)/articles.txt > $(IOFILEPATH)/articles.splitted
+
+tokenize:
+	java Scanner < $(IOFILEPATH)/articles.splitted > $(IOFILEPATH)/articles.tokenized
 
 tagged:
-	java -cp ./$(CLASSPATH) POSTaggingMEDemo articles.splitted > articles.tagged
+	java -cp ./$(CLASSPATH) PartOfSpeechTagger < $(IOFILEPATH)/articles.tokenized > $(IOFILEPATH)/articles.tagged
 
-stemmed:
-	java -cp ./$(CLASSPATH) TokenizerMEProbs articles.splitted > articles.stemmed
+analize:
+	java DataAnalysis < $(IOFILEPATH)/articles.tagged > $(IOFILEPATH)/articles.analysis
