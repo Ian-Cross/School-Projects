@@ -1,16 +1,24 @@
-# Assignment 1: Boids
+# Parallel Programming
+
+A collection of assignment projects used in the CIS\*3900 course at the University of Guelph.
+
+## Aside
+
+This is purely used as a location to store and version control the assignments while in progress.
 
 ## Execution
 
-### No threads
-
-For a graphical solution run
-For a non graphical timing solution run
-
-### Data Parallelism
-
-### Task Parallelism
+All projects should contain a readme with execution instructions.
 
 ## Author
 
 - **Ian Cross**
+
+## License
+
+Under no circumstances should this code be duplicated or used in any educational project.
+
+## Acknowledgments
+
+- Instructor: David Calvert
+- University of Guelph
