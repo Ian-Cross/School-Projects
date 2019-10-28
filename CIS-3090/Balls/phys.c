@@ -17,10 +17,10 @@
 #include <unistd.h>
 
 // used to slow curses animation
-#define DELAY 50000
+#define DELAY 100000
 
 // number of balls
-#define POPSIZE 20
+#define POPSIZE 21
 // ball radius, all circles have the same radius
 #define RADIUS 1.0
 // indicate if balls collide or not
@@ -62,7 +62,7 @@ void initBalls() {
   }
 }
 
-int drawBalls() {
+int drawBalls(int size) {
   int c, i;
   float multx, multy;
 
@@ -74,13 +74,10 @@ int drawBalls() {
   multy = (float)max_y / SCREENSIZE;
 
   clear();
-
-  char char_arr[100];
   // display balls
   for (i = 0; i < POPSIZE; i++) {
-    sprintf(char_arr, "%d", i);
     mvprintw((int)(ballArray[i][BX] * multy), (int)(ballArray[i][BY] * multx),
-             char_arr);
+             "o");
   }
 
   refresh();
@@ -168,21 +165,27 @@ void resolveCollision(int i, int j) {
   ballUpdate[j][BY] = ballArray[j][VY] + ((1 / MASS) * iy);
 }
 
-void moveBalls() {
+void moveBalls(int rank, int size) {
   int i, j;
+
+  int groupSize = POPSIZE / size;
+  int start_row = rank * groupSize;
+  int end_row = (rank + 1) * groupSize - 1;
+  if (rank == size - 1)
+    end_row += POPSIZE % size;
 
   // update velocity of balls based upon collisions
   // compare all balls to all other circles using two loops
-  for (i = 0; i < POPSIZE; i++) {
-    for (j = i + 1; j < POPSIZE; j++) {
-      if (ballCollision(i, j) == COLLIDE) {
-        resolveCollision(i, j);
-      }
-    }
+  if (rank == 0) {
+    for (i = start_row; i <= end_row; i++)
+      for (j = i + 1; j < POPSIZE; j++)
+        if (ballCollision(i, j) == COLLIDE)
+          resolveCollision(i, j);
   }
+  MPI_Bcast(&ballUpdate, 2 * POPSIZE, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
   // move balls by calculating updating velocity and position
-  for (i = 0; i < POPSIZE; i++) {
+  for (i = start_row; i <= end_row; i++) {
     // update velocity for each ball
     if (ballUpdate[i][BX] != 0.0) {
       ballArray[i][VX] = ballUpdate[i][BX];
@@ -223,14 +226,35 @@ void moveBalls() {
       ballArray[i][BY] = 0.5;
     }
   }
+  if (rank != 0)
+    MPI_Send(&ballArray, 4 * POPSIZE, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
+  else
+    for (i = 1; i < size; i++) {
+      float tempSum[POPSIZE][4];
+      int rankStart = i * groupSize;
+      int rankEnd = (i + 1) * groupSize - 1;
+      char test[100];
+      if (i == size - 1)
+        rankEnd += POPSIZE % size;
+      MPI_Recv(tempSum, 4 * POPSIZE, MPI_FLOAT, i, 0, MPI_COMM_WORLD,
+               MPI_STATUS_IGNORE);
+      for (j = rankStart; j <= rankEnd; j++) {
+        ballArray[j][BX] = tempSum[j][BX];
+        ballArray[j][BY] = tempSum[j][BY];
+        ballArray[j][VX] = tempSum[j][VX];
+        ballArray[j][VY] = tempSum[j][VY];
+      }
+    }
 }
 
 int main(int argc, char *argv[]) {
   int i, count;
   int rank, size;
   char char_arr[100];
+  int broken = 0;
 
-  MPI_Init(&argc, &argv);
+  MPI_Init(NULL, NULL);
+
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   if (rank == 0) {
@@ -244,18 +268,25 @@ int main(int argc, char *argv[]) {
     getmaxyx(stdscr, max_y, max_x);
     // place balls in initial position
     initBalls();
+  }
+  MPI_Bcast(&ballArray, 4 * POPSIZE, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
-    // draw and move balls using ncurses
-    while (1) {
-      if (drawBalls() == 1)
-        break;
-      moveBalls();
+  // draw and move balls using ncurses
+  while (1) {
+    if (rank == 0) {
+
+      if (drawBalls(size) == 1) {
+        broken = 1;
+      }
     }
+    MPI_Bcast(&broken, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    if (broken)
+      break;
+    moveBalls(rank, size);
+  }
 
-    // shut down curses
+  if (rank == 0) {
     endwin();
   }
-  printf("%d %d %d\n", rank, max_y, max_x);
-  printf("Hello world from process %d of %d\n", rank, size);
   MPI_Finalize();
 }
