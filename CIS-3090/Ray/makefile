@@ -1,6 +1,3 @@
-all: run
+all: main
 main: main.cc
-	g++ main.cc -o main -lm
-
-run: main
-	./main > test.pmm
+	g++ -fopenmp main.cc -o main -lm

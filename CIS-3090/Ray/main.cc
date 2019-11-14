@@ -18,7 +18,14 @@
 
 #include <float.h>
 #include <iostream>
+#include <cstring>
+#include <fstream>
+#include <omp.h>
+#include <time.h>
 
+#define IR 0
+#define IG 1
+#define IB 2
 
 vec3 color(const ray& r, hittable *world, int depth) {
     hit_record rec;
@@ -81,38 +88,87 @@ hittable *random_scene() {
     return new hittable_list(list,i);
 }
 
+int main(int argc, char *argv[]) {
+    int argPtr;
+    int thread_count = 1;
+    int output_flag = 0;
+    int image_width = 640;
+    int image_height = 480;
+    std::ofstream outputFile;
 
-int main() {
-    // int nx = 1200;
-    // int ny = 800;
-    int nx = 640;
-    int ny = 480;
+    if (argc > 1) {
+        argPtr = 1;
+        while (argPtr < argc) {
+            if (strcmp(argv[argPtr], "-thread") == 0) {
+                sscanf(argv[argPtr + 1], "%d", &thread_count);
+                argPtr += 2;
+            } else if (strcmp(argv[argPtr], "-output") == 0) {
+                output_flag = 1;
+                argPtr += 1;
+            } else if (strcmp(argv[argPtr], "-size") == 0) {
+                sscanf(argv[argPtr + 1], "%d", &image_width);
+                sscanf(argv[argPtr + 2], "%d", &image_height);
+                argPtr += 3;
+            } else {
+                printf("USAGE: %s <-thread thread_count> <-output> <-size xWidth yHeight>\n", argv[0]);
+                printf(" thread_count -the number of threads to use during processing\n");
+                printf(" -output -whether or not to save the output in an external file\n");
+                printf(" xWidth yHeight -the width and height of the image produced\n");
+                exit(1);
+            }
+        }
+    }
+
+    if (output_flag) {
+        outputFile.open ("image.ppm");
+        outputFile << "P3\n" << image_width << " " << image_height << "\n255\n";
+    }
+
     int ns = 10;
-    std::cout << "P3\n" << nx << " " << ny << "\n255\n";
+    time_t start_time, end_time;
     hittable *world = random_scene();
+
+    time(&start_time);
 
     vec3 lookfrom(13,2,3);
     vec3 lookat(0,0,0);
     float dist_to_focus = 10.0;
     float aperture = 0.1;
+    int imageOutput[image_height*image_width][3];
+    int i,j;
 
-    camera cam(lookfrom, lookat, vec3(0,1,0), 20, float(nx)/float(ny), aperture, dist_to_focus);
+    camera cam(lookfrom, lookat, vec3(0,1,0), 20, float(image_width)/float(image_height), aperture, dist_to_focus);
 
-    for (int j = ny-1; j >= 0; j--) {
-        for (int i = 0; i < nx; i++) {
+    omp_set_dynamic(0);
+    omp_set_num_threads(thread_count);
+
+    #pragma omp parallel for shared(imageOutput,j,i) collapse(2)
+    for (j = image_height-1; j >= 0; j--) {
+        for ( i = 0; i < image_width; i++) {
             vec3 col(0, 0, 0);
             for (int s=0; s < ns; s++) {
-                float u = float(i + random_double()) / float(nx);
-                float v = float(j + random_double()) / float(ny);
+                float u = float(i + random_double()) / float(image_width);
+                float v = float(j + random_double()) / float(image_height);
                 ray r = cam.get_ray(u, v);
                 col += color(r, world,0);
             }
             col /= float(ns);
             col = vec3( sqrt(col[0]), sqrt(col[1]), sqrt(col[2]) );
-            int ir = int(255.99*col[0]);
-            int ig = int(255.99*col[1]);
-            int ib = int(255.99*col[2]);
-            std::cout << ir << " " << ig << " " << ib << "\n";
+            imageOutput[j*image_width + i][IR] = int(255.99*col[0]);
+            imageOutput[j*image_width + i][IG] = int(255.99*col[1]);
+            imageOutput[j*image_width + i][IB] = int(255.99*col[2]);
         }
     }
+
+    time(&end_time);
+
+    if (output_flag == 1) {
+        for (int j = image_height*image_width - 1; j >= 0 ; j--)
+            outputFile << imageOutput[j][IR] << " " << imageOutput[j][IG] << " " << imageOutput[j][IB] << "\n";
+        outputFile.close();
+    } else {
+      std::cout << difftime(end_time,start_time) << "\n";
+    }
+
+    return 0;
 }
