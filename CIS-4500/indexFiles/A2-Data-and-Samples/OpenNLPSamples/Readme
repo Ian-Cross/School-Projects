@@ -1,0 +1,15 @@
+There are two sample programs included in this folder:
+
+   StemmerDemo.java: read a text line-by-line and stem the tokens on each line
+
+   TreeMapDemo.java: read a text line-by-line, filter out irrelevant tokens, and
+      update a TreeMap for the relevant tokens to get the total counts for each token type
+
+To build all the programs, simply type "make", and to rebuild, type "make clean" and 
+then "make".
+
+Examples for testing the related programs:
+
+    java -cp ../opennlp-tools-1.9.1.jar:. StemmerDemo sample.tokenized > sample.stemmed
+
+    java TreeMapDemo < test.txt
