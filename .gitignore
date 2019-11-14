@@ -1,0 +1,5 @@
+.DS_Store
+*.tar.gz
+
+#Due to the size
+CIS-4500/indexFiles/dataFiles/*
