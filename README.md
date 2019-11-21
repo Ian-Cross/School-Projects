@@ -7,4 +7,3 @@
 ## Acknowledgements
 
 - Prof. Song
-- University of Guelph
