@@ -144,9 +144,6 @@ int main() {
   };
 
   /* Create a command queue */
-  //   clCreateCommandQueue depricated, use
-  //   clCreateCommandQueueWithProperties(); original code: queue =
-  //   clCreateCommandQueue(context, device, 0, &err);
   queue = clCreateCommandQueueWithProperties(context, device, 0, &err);
   if (err < 0) {
     perror("Couldn't create a command queue");

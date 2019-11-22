@@ -11,8 +11,8 @@ __kernel void add_numbers(__global float4* data,
    sum_vector = input1 + input2;
 
    local_addr = get_local_id(0);
-   local_result[local_addr] = sum_vector.s0 + sum_vector.s1 + 
-                              sum_vector.s2 + sum_vector.s3; 
+   local_result[local_addr] = sum_vector.s0 + sum_vector.s1 +
+                              sum_vector.s2 + sum_vector.s3;
    barrier(CLK_LOCAL_MEM_FENCE);
 
    if(get_local_id(0) == 0) {
