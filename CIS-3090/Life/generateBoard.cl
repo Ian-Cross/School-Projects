@@ -1,23 +1,29 @@
 __kernel void generateBoard(__global int* currBoard,
-                            __global int BOARD_WIDTH,
-                            __global int BOARD_HEIGHT) {
-    int id = get_global_id(0);
-    int i, j, n, neighbours = 0, currRow, currCol;
-    int colRotation[8] = {1, 1, 0, 0, -1, -1, 0, 0};
-    int rowRotation[8] = {0, 0, 1, 1, 0, 0, -1, -1};
+                            int width,
+                            int height,
+                            __global int* nextBoard) {
+    int row = get_global_id(0);
 
-    for (i = 0; i < BOARD_WIDTH; i++) {
-      for (j = 0; j < BOARD_HEIGHT; j++) {
+    for (int i = 0; i < width; i++) {
+      int currCol = i - 1;
+      int currRow = row - 1;
+      int j;
+      int neighbours = 0;
+      int colRotation[8] = {1, 1, 0, 0, -1, -1, 0, 0};
+      int rowRotation[8] = {0, 0, 1, 1, 0, 0, -1, -1};
 
-        currCol = i - 1;
-        currRow = j - 1;
-
-        for (n = 0; n < 8; n++) {
-          if (currCol >= 0 && currCol < BOARD_WIDTH && currRow >= 0 && currRow < BOARD_HEIGHT)
-            neighbours += currBoard[currCol][currRow];
-          currCol += colRotation[n];
-          currRow += rowRotation[n];
-        }
+      for (j = 0; j < 8; j++) {
+        if (currCol >= 0 && currCol < width && currRow >= 0 && currRow < height)
+          neighbours += currBoard[currCol + currRow * width];
+        currCol += colRotation[j];
+        currRow += rowRotation[j];
       }
+
+      if (currBoard[row*width + i] == 1 && (neighbours == 2 || neighbours == 3))
+        nextBoard[row*width + i] = 1;
+      else if (currBoard[row*width + i] == 0 && neighbours == 3)
+        nextBoard[row*width + i] = 1;
+      else
+        nextBoard[row*width + i] = 0;
     }
 }

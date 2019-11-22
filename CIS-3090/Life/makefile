@@ -1,6 +1,6 @@
 PROJ=life
 CC=gcc
-CFLAGS=-std=c99 -Wall -DUNIX -g -DDEBUG
+CFLAGS=-Wall -DUNIX -g -DDEBUG
 NCURSES=-lncurses -lm
 
 # Check for 32-bit vs 64-bit
