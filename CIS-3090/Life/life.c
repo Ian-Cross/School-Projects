@@ -32,8 +32,8 @@
 #define DELAY 250000
 #define RANDOM_THREASHOLD 75
 
-#define BOARD_HEIGHT 48
-#define BOARD_WIDTH 48
+#define BOARD_HEIGHT 24
+#define BOARD_WIDTH 24
 
 int *boardArray1;
 int *boardArray2;
@@ -191,9 +191,6 @@ void orchestrateKernels(cl_device_id device, cl_program program,
 
   cl_command_queue queue;
   cl_kernel kernel;
-  // int k;
-  // for (k = 0; k < kernelCount; k++) {
-  // }
 
   cl_int err; // i, j,
   size_t local_size = floor(BOARD_WIDTH / kernelCount),
@@ -235,7 +232,9 @@ void orchestrateKernels(cl_device_id device, cl_program program,
   err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_board);
   err |= clSetKernelArg(kernel, 1, sizeof(cl_int), &temp_width);
   err |= clSetKernelArg(kernel, 2, sizeof(cl_int), &temp_height);
-  err |= clSetKernelArg(kernel, 3, sizeof(cl_mem), &output_board);
+  err |=
+      clSetKernelArg(kernel, 3, BOARD_WIDTH * BOARD_HEIGHT * sizeof(int), NULL);
+  err |= clSetKernelArg(kernel, 4, sizeof(cl_mem), &output_board);
   if (err < 0) {
     perror("Couldn't create a kernel argument");
     exit(1);
@@ -332,7 +331,7 @@ int main(int argc, char *argv[]) {
       currGen++;
     }
   } else {
-    for (i = 0; i < 1000; i++) {
+    for (i = 0; i < 1; i++) {
       currBoard = currGen % 2 ? boardArray1 : boardArray2;
       nextBoard = currGen % 2 ? boardArray2 : boardArray1;
       orchestrateKernels(device, program, context, currBoard, nextBoard);
