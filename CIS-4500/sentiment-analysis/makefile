@@ -1,7 +1,7 @@
-all: review
+all: compare
 
 analysis:
-	python3 analysis.py -df datafiles
+	python3 analysis.py -ds dataset -v
 
-review:
-	python3 review.py -df datafiles
+compare:
+	python3 compare.py --clf-bayes --clf-centroid --clf-neighbors --feat-anova --feat-chi2 --plot-results
