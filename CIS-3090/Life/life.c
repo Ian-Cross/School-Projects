@@ -2,7 +2,7 @@
  * Author: Ian Cross
  * Date: November 14 2019, 16:40
  * Last modified by: Ian
- * Last modified time:
+ * Last modified time: November 26th 2019
  * Desc: A file to replicate Conways' game of life in a parallel way using
  * ncurses and OpenCL
  */
