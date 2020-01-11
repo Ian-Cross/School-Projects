@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+#include <sys/time.h>
 #ifndef NOGRAPHICS
 #include <ncurses.h>
 #include <unistd.h>
@@ -245,6 +245,14 @@ void allocateArrays() {
     boidUpdate[i] = malloc(sizeof(float) * 3);
 }
 
+long long current_timestamp() {
+  struct timeval currentTime;
+  gettimeofday(&currentTime, NULL);
+  long long milliseconds =
+      currentTime.tv_sec * 1000LL + currentTime.tv_usec / 1000;
+  return milliseconds;
+}
+
 int main(int argc, char *argv[]) {
   int i, count;
   int argPtr;
@@ -312,17 +320,15 @@ int main(int argc, char *argv[]) {
   printf("Number of boids %d\n", popsize);
 
   /*** Start timing here ***/
-  clock_t time;
-  time = clock();
+  long long startTime = current_timestamp();
 
   for (i = 0; i < count; i++) {
     moveBoids();
   }
 
-  time = clock() - time;
-  double elapsed = ((double)time) / CLOCKS_PER_SEC;
+  long long endTime = current_timestamp();
 
-  printf("It took %f seconds to run boids.\n", elapsed);
+  printf("It took %lld milliseconds to run boids.\n", (endTime - startTime));
   /*** End timing here ***/
 #endif
 
