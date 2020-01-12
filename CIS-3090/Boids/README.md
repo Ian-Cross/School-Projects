@@ -1,4 +1,4 @@
-# Assignment 1: Boids
+# Parallel Programming
 
 This assignment is to explore the differences in data parallelism and task parallelism. This will be explored by creating two programs, one of each and viewing the execution time for a given amount of iterations.
 
@@ -68,3 +68,12 @@ From the data parallelism results it is shown that as the thread count increases
 ## Author
 
 - **Ian Cross**
+
+## License
+
+Under no circumstances should this code be duplicated or used in any educational project.
+
+## Acknowledgments
+
+- Instructor: David Calvert
+- University of Guelph
