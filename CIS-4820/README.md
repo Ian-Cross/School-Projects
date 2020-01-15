@@ -1,8 +1,10 @@
-# Assignment 1 - Building a Three Dimensional World
+# Game Programming Assignments
+
+## Assignment 1 - Building a Three Dimensional World
 
 Due. January 24, 2020
 
-## World Building
+### World Building
 
 ---
 
@@ -58,7 +60,7 @@ game is started they should appear in different locations. Use the rand()
 function to find locations for them. They should not run into the edge
 of the world.
 
-## Collision Detection
+### Collision Detection
 
 ---
 
@@ -97,7 +99,7 @@ from getting too high in the air. Pick a maximum elevation and
 do not allow the viewpoint to move above this range. The viewpoint
 should be at least 15 units above the ground.
 
-## Clouds and Timing
+### Clouds and Timing
 
 ---
 
@@ -130,7 +132,7 @@ fixed time schedule. You should check the current time with each
 call to update() and only change the animation if enough time has
 passed since the previous change. Do not use sleep() for this operation.
 
-## Player Bases
+### Player Bases
 
 ---
 
@@ -144,7 +146,7 @@ You can make the bases look more interesting than simple boxes if you
 wish. You can make them multiple colours and you can add windows or
 towers.
 
-## Choosing Parameters
+### Choosing Parameters
 
 It is important to pick values for parameters such as colours, speed of
 objects, the effect of gravity so they are easy for the marker to see.
@@ -154,7 +156,7 @@ see then it will be marked as missing or incomplete.
 Make sure colours are bright and distinct. Choose velocities that are
 fast enough to be seen.
 
-## Coding Practices
+### Coding Practices
 
 Write the code using standard stylistic practices. Use functions,
 reasonable variable names, and consistent indentation.
@@ -163,7 +165,7 @@ will lose marks.
 
 As usual, keep backups of your work using source control software.
 
-## Starting Code
+### Starting Code
 
 The starting code is available on the Courselink site.
 You can untar the file using tar xvf filename.
@@ -173,9 +175,9 @@ Note that the graphics code may be modified for assignment 2. If you
 make changes to the graphics code (in graphics.c or visible.c) then you
 may have to recode the changes in assignment 2.
 
-## Submitting the Assignment
+### Submitting the Assignment
 
-Put all of the files in a directory names 4820 so they unpack into
+Put all of the files in a directory named 4820 so they unpack into
 this directory.
 
 Submit the assignment using Courselink. Submit only the source code
