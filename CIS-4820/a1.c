@@ -11,10 +11,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "include/generation.h"
 #include "include/graphics.h"
-#include "include/world.h"
-
-extern GLubyte world[WORLDX][WORLDY][WORLDZ];
+#include "include/timing.h"
 
 /* mouse function called by GLUT when a button is pressed or released */
 void mouse(int, int, int, int);
@@ -24,8 +23,6 @@ extern void setLightPosition(GLfloat, GLfloat, GLfloat);
 extern GLfloat *getLightPosition();
 
 /* viewpoint control */
-extern void setViewPosition(float, float, float);
-extern void getViewPosition(float *, float *, float *);
 extern void getOldViewPosition(float *, float *, float *);
 extern void setOldViewPosition(float, float, float);
 extern void setViewOrientation(float, float, float);
@@ -96,7 +93,49 @@ extern void getUserColour(int, GLfloat *, GLfloat *, GLfloat *, GLfloat *,
 /* -can also be used to implement gravity by updating y position of vp*/
 /* note that the world coordinates returned from getViewPosition()
    will be the negative value of the array indices */
-void collisionResponse() { /* your code for collisions goes here */
+void collisionResponse() {
+  float x, xx, y, yy, z, zz;
+  int collisionPoints = 8;
+
+  getViewPosition(&x, &y, &z);
+  getOldViewPosition(&xx, &yy, &zz);
+
+  int fix = -(int)floor(x);
+  int fiy = -(int)floor(y);
+  int fiz = -(int)floor(z);
+
+  int cix = -(int)ceil(x);
+  int ciy = -(int)ceil(y);
+  int ciz = -(int)ceil(z);
+
+  // Simulate a hitbox around the viewpoint to check for collisions on all sides
+  for (int i = 0; i < collisionPoints; i++) {
+    // calculate the needed bits from the amount of desired collision reference
+    // points
+    size_t bits = sizeof(char) * (int)log2(collisionPoints);
+
+    char *str = malloc(bits);
+    if (!str) {
+      printf("Could not allocate space for binary counter\n");
+      exit(1);
+    }
+
+    // Use bit shifting to build a binary string
+    int u = i;
+    for (; bits--; u >>= 1)
+      str[bits] = u & 1 ? '1' : '0';
+
+    // pick out the corner of the hit box to check
+    if (world[str[2] == 1 ? fix : cix][str[1] == 1 ? fiy : ciy]
+             [str[0] == 1 ? fiz : ciz] != 0)
+      setViewPosition(xx, yy, zz);
+    free(str);
+  }
+
+  if (!withinBounds(-floor(x), -(floor(y) + 5), -floor(z)))
+    setViewPosition(xx, yy, zz);
+
+  printf("(%lf, %lf, %lf) => (%lf, %lf, %lf) \n", xx, yy, zz, x, y, z);
 }
 
 /******* draw2D() *******/
@@ -141,17 +180,17 @@ void update() {
   /* demo of animating mobs */
   if (testWorld) {
 
-    /* update old position so it contains the correct value */
-    /* -otherwise view position is only correct after a key is */
-    /*  pressed and keyboard() executes. */
+/* update old position so it contains the correct value */
+/* -otherwise view position is only correct after a key is */
+/*  pressed and keyboard() executes. */
 #if 0
-// Fire a ray in the direction of forward motion
-float xx, yy, zz;
-getViewPosition(&x, &y, &z);
-getOldViewPosition(&xx, &yy, &zz);
-printf("%f %f %f %f %f %f\n", xx, yy, zz, x, y, z);
-printf("%f %f %f\n",  -xx+((x-xx)*25.0), -yy+((y-yy)*25.0), -zz+((z-zz)*25.0));
-createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*25.0), 5);
+      // Fire a ray in the direction of forward motion
+      float xx, yy, zz;
+      getViewPosition(&x, &y, &z);
+      getOldViewPosition(&xx, &yy, &zz);
+      printf("%f %f %f %f %f %f\n", xx, yy, zz, x, y, z);
+      printf("%f %f %f\n",  -xx+((x-xx)*25.0), -yy+((y-yy)*25.0), -zz+((z-zz)*25.0));
+      createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*25.0), 5);
 #endif
 
     getViewPosition(&x, &y, &z);
@@ -230,8 +269,7 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
     /* end testworld animation */
 
   } else {
-
-    /* your code goes here */
+    moveClouds();
   }
 }
 
@@ -264,8 +302,7 @@ int main(int argc, char **argv) {
   if (testWorld == 1) {
     genTestWorld();
   } else {
-    /* your code to build the world goes here */
-    // genWorld();
+    genWorld();
   }
 
   /* starts the graphics processing loop */

@@ -18,6 +18,8 @@
 /* maximum number of user defined colours */
 #define NUMBERCOLOURS 100
 
+GLubyte world[WORLDX][WORLDY][WORLDZ];
+
 /* initilize graphics information and mob data structure */
 void graphicsInit(int *argc, char **argv);
 
@@ -36,4 +38,9 @@ void createMob(int number, float x, float y, float z, float mobroty);
 /* heading of rotx, roty, rotz */
 void createPlayer(int number, float x, float y, float z, float playerroty);
 
+/* Viewpoint Control */
+void setViewPosition(float, float, float);
+void getViewPosition(float *, float *, float *);
+
+int withinBounds(int xLoc, int yLoc, int zLoc);
 #endif

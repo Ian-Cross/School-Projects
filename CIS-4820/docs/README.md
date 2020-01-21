@@ -4,11 +4,13 @@
 
 Due. January 24, 2020
 
+---
+
 ### World Building
 
 ---
 
-Create a three dimensional world using the world[][][] array.
+Create a three dimensional world using the `world[][][]` array.
 
 Create a flat surface which will be the ground on which the game will be
 played. It should be 100 units in the x and z dimension. It should be at
@@ -46,7 +48,7 @@ too steep.
      XXXXXXXXXX
      XXXXXXXXXX
 
-     XXXXXXXX   XXXXXXXX
+     XXXXXXXX     XXXXXXXX
             X     X
             XXXXXXX
 
@@ -59,6 +61,8 @@ The position of the hills and valleys should be random. Each time the
 game is started they should appear in different locations. Use the rand()
 function to find locations for them. They should not run into the edge
 of the world.
+
+---
 
 ### Collision Detection
 
@@ -99,6 +103,8 @@ from getting too high in the air. Pick a maximum elevation and
 do not allow the viewpoint to move above this range. The viewpoint
 should be at least 15 units above the ground.
 
+---
+
 ### Clouds and Timing
 
 ---
@@ -131,6 +137,8 @@ animated objects. Use real time to update the cloud animations on a
 fixed time schedule. You should check the current time with each
 call to update() and only change the animation if enough time has
 passed since the previous change. Do not use sleep() for this operation.
+
+---
 
 ### Player Bases
 

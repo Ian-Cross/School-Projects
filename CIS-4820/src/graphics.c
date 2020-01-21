@@ -52,6 +52,8 @@ GLfloat viewpointLight[] = {-50.0, -50.0, -50.0, 1.0};
 float skySize;
 
 /* screen dimensions */
+// int screenWidth = 1748;
+// int screenHeight = 1311;
 int screenWidth = 1024;
 int screenHeight = 768;
 
@@ -62,6 +64,7 @@ int testWorld = 0;       // sample world for timing tests
 int fps = 0;             // turn on frame per second output
 int netClient = 0;       // network client flag, is client when = 1
 int netServer = 0;       // network server flag, is server when = 1
+double fastFly = 0;      // speedier flying flag, is true when = 0.5
 
 /* list of cubes to display */
 int displayList[MAX_DISPLAY_LIST][3];
@@ -107,6 +110,17 @@ void draw2Dtriangle(int, int, int, int, int, int);
 void set2Dcolour(float[]);
 
 /***************/
+/* TODO: Comment */
+int withinBounds(int xLoc, int yLoc, int zLoc) {
+  printf("%d %d %d", xLoc, yLoc, zLoc);
+  if (xLoc >= WORLDX || xLoc < 0)
+    return 0;
+  if (yLoc >= WORLDY || yLoc < 0)
+    return 0;
+  if (zLoc >= WORLDZ || zLoc < 0)
+    return 0;
+  return 1;
+}
 
 /* player control functions */
 /* set all player location, rotation, and visibility values to zero */
@@ -703,11 +717,11 @@ void keyboard(unsigned char key, int x, int y) {
     oldvpz = vpz;
     rotx = (mvx / 180.0 * 3.141592);
     roty = (mvy / 180.0 * 3.141592);
-    vpx -= sin(roty) * 0.3;
+    vpx -= sin(roty) * (0.3 + fastFly);
     // turn off y motion so you can't fly
     if (flycontrol == 1)
-      vpy += sin(rotx) * 0.3;
-    vpz += cos(roty) * 0.3;
+      vpy += sin(rotx) * (0.3 + fastFly);
+    vpz += cos(roty) * (0.3 + fastFly);
     collisionResponse();
     glutPostRedisplay();
     break;
@@ -717,11 +731,11 @@ void keyboard(unsigned char key, int x, int y) {
     oldvpz = vpz;
     rotx = (mvx / 180.0 * 3.141592);
     roty = (mvy / 180.0 * 3.141592);
-    vpx += sin(roty) * 0.3;
+    vpx += sin(roty) * (0.3 + fastFly);
     // turn off y motion so you can't fly
     if (flycontrol == 1)
-      vpy -= sin(rotx) * 0.3;
-    vpz -= cos(roty) * 0.3;
+      vpy -= sin(rotx) * (0.3 + fastFly);
+    vpz -= cos(roty) * (0.3 + fastFly);
     collisionResponse();
     glutPostRedisplay();
     break;
@@ -730,8 +744,8 @@ void keyboard(unsigned char key, int x, int y) {
     oldvpy = vpy;
     oldvpz = vpz;
     roty = (mvy / 180.0 * 3.141592);
-    vpx += cos(roty) * 0.3;
-    vpz += sin(roty) * 0.3;
+    vpx += cos(roty) * (0.3 + fastFly);
+    vpz += sin(roty) * (0.3 + fastFly);
     collisionResponse();
     glutPostRedisplay();
     break;
@@ -740,8 +754,8 @@ void keyboard(unsigned char key, int x, int y) {
     oldvpy = vpy;
     oldvpz = vpz;
     roty = (mvy / 180.0 * 3.141592);
-    vpx -= cos(roty) * 0.3;
-    vpz -= sin(roty) * 0.3;
+    vpx -= cos(roty) * (0.3 + fastFly);
+    vpz -= sin(roty) * (0.3 + fastFly);
     collisionResponse();
     glutPostRedisplay();
     break;
@@ -750,6 +764,12 @@ void keyboard(unsigned char key, int x, int y) {
       flycontrol = 1;
     else
       flycontrol = 0;
+    break;
+  case 'l': // toggle fastFly flag
+    if (fastFly == 0)
+      fastFly = 1.0;
+    else
+      fastFly = 0;
     break;
   case ' ': // toggle space flag
     space = 1;
@@ -844,6 +864,8 @@ void graphicsInit(int *argc, char **argv) {
       netClient = 1;
     if (strcmp(argv[i], "-server") == 0)
       netServer = 1;
+    if (strcmp(argv[i], "-fastfly") == 0)
+      fastFly = 1.0;
     if (strcmp(argv[i], "-help") == 0) {
       printf("Usage: a4 [-full] [-drawall] [-testworld] [-fps] [-client] "
              "[-server]\n");
