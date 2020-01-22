@@ -11,9 +11,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/generation.h"
-#include "include/graphics.h"
-#include "include/timing.h"
+#include "generation.h"
+#include "graphics.h"
+#include "timing.h"
 
 /* mouse function called by GLUT when a button is pressed or released */
 void mouse(int, int, int, int);
@@ -135,7 +135,7 @@ void collisionResponse() {
   if (!withinBounds(-floor(x), -(floor(y) + 5), -floor(z)))
     setViewPosition(xx, yy, zz);
 
-  printf("(%lf, %lf, %lf) => (%lf, %lf, %lf) \n", xx, yy, zz, x, y, z);
+  // printf("(%lf, %lf, %lf) => (%lf, %lf, %lf) \n", xx, yy, zz, x, y, z);
 }
 
 /******* draw2D() *******/

@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/graphics.h"
+#include "graphics.h"
 
 GLubyte world[WORLDX][WORLDY][WORLDZ];
 
@@ -52,10 +52,10 @@ GLfloat viewpointLight[] = {-50.0, -50.0, -50.0, 1.0};
 float skySize;
 
 /* screen dimensions */
-// int screenWidth = 1748;
-// int screenHeight = 1311;
-int screenWidth = 1024;
-int screenHeight = 768;
+int screenWidth = 1748;
+int screenHeight = 1311;
+// int screenWidth = 1024;
+// int screenHeight = 768;
 
 /* command line flags */
 int flycontrol = 1;      // allow viewpoint to move in y axis when 1
@@ -112,7 +112,7 @@ void set2Dcolour(float[]);
 /***************/
 /* TODO: Comment */
 int withinBounds(int xLoc, int yLoc, int zLoc) {
-  printf("%d %d %d", xLoc, yLoc, zLoc);
+  // printf("%d %d %d", xLoc, yLoc, zLoc);
   if (xLoc >= WORLDX || xLoc < 0)
     return 0;
   if (yLoc >= WORLDY || yLoc < 0)

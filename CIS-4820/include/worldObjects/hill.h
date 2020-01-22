@@ -8,15 +8,26 @@
 #endif
 
 #define HILL_SIZE 7
-#define MAX_HILL_COUNT 10
-#define MIN_HILL_COUNT 5
+#define MAX_HILL_COUNT 15
+#define MIN_HILL_COUNT 7
+
+#ifndef RECT_OBJ
+typedef struct Rects {
+  int x;
+  int z;
+  int hx;
+  int hz;
+} Rect;
+#define RECT_OBJ
+#endif
 
 typedef struct Hills {
   int radius;
   int xLoc;
   int zLoc;
   int height;
-  int render;
+  Rect *(*getSurrounding)(struct Hills *);
+  void (*changeLocation)(struct Hills *);
 } Hill;
 
 Hill *createHill();

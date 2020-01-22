@@ -8,15 +8,26 @@
 #endif
 
 #define VALLEY_SIZE 7
-#define MAX_VALLEY_COUNT 10
-#define MIN_VALLEY_COUNT 5
+#define MAX_VALLEY_COUNT 15
+#define MIN_VALLEY_COUNT 7
+
+#ifndef RECT_OBJ
+typedef struct Rects {
+  int x;
+  int z;
+  int hx;
+  int hz;
+} Rect;
+#define RECT_OBJ
+#endif
 
 typedef struct Valleys {
   int radius;
   int xLoc;
   int zLoc;
   int depth;
-  int render;
+  Rect *(*getSurrounding)(struct Valleys *);
+  void (*changeLocation)(struct Valleys *);
 } Valley;
 
 Valley *createValley();

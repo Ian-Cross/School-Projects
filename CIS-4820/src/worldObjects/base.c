@@ -4,11 +4,20 @@
 #include <string.h>
 #include <time.h>
 
-#include "../../include/generation.h"
-#include "../../include/graphics.h"
-#include "../../include/worldObjects/base.h"
+#include "base.h"
+#include "generation.h"
+#include "graphics.h"
 
 int x, y, z, idx;
+
+Rect *getSurroudingRect(Base *base) {
+  Rect *newRect = malloc(sizeof(Rect));
+  newRect->x = base->xLoc;
+  newRect->z = base->zLoc;
+  newRect->hx = base->xLoc + base->width;
+  newRect->hz = base->zLoc + base->length;
+  return newRect;
+}
 
 void createBase(Base *base, int baseNum) {
   int xLoc;
@@ -24,6 +33,7 @@ void createBase(Base *base, int baseNum) {
   base->height = 5;
   base->xLoc = xLoc;
   base->zLoc = zLoc;
+  base->getSurrounding = getSurroudingRect;
 }
 
 void drawBase(Base *base) {

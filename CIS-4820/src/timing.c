@@ -4,9 +4,9 @@
 #include <string.h>
 #include <time.h>
 
-#include "../../include/generation.h"
-#include "../../include/graphics.h"
-#include "../../include/worldObjects/cloud.h"
+#include "cloud.h"
+#include "generation.h"
+#include "graphics.h"
 
 int lastSecond = 0;
 

@@ -4,9 +4,9 @@
 #include <string.h>
 #include <time.h>
 
-#include "../../include/generation.h"
-#include "../../include/graphics.h"
-#include "../../include/worldObjects/cloud.h"
+#include "cloud.h"
+#include "generation.h"
+#include "graphics.h"
 
 int x, y, z, idx;
 
@@ -38,6 +38,7 @@ void drawCloud(Cloud *cloud) {
   // }
   world[cloud->xLoc][cloud->yLoc][cloud->zLoc] = rand() % 3 + 20;
 }
+
 void clearCloud(Cloud *cloud) {
   // for (x = cloud->xLoc - 1; x < cloud->xLoc + 2; x++) {
   //   for (z = cloud->zLoc - 1; z < cloud->zLoc + 2; z++) {

@@ -7,14 +7,14 @@
 #include <OpenGL/glu.h>
 #endif
 
+#include "base.h"
+#include "cloud.h"
+#include "hill.h"
 #include "timing.h"
-#include "worldObjects/base.h"
-#include "worldObjects/cloud.h"
-#include "worldObjects/hill.h"
-#include "worldObjects/valley.h"
+#include "valley.h"
 
 typedef enum StructureId {
-  invalId = 0,
+  invaldId = 0,
   valleyId,
   hillId,
   baseId,
@@ -23,6 +23,8 @@ typedef enum StructureId {
 typedef struct Objects {
   structureId id;
   void *structure;
+  int render;
+  int moveCount;
 } Object;
 
 typedef struct WorldDatas {
@@ -43,6 +45,6 @@ void genTestWorld();
 
 void genWorld();
 
-void fixOverlap(WorldData *worldData);
+void fixOverlap();
 
 #endif

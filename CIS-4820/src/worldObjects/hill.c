@@ -4,11 +4,25 @@
 #include <string.h>
 #include <time.h>
 
-#include "../../include/generation.h"
-#include "../../include/graphics.h"
-#include "../../include/worldObjects/hill.h"
+#include "generation.h"
+#include "graphics.h"
+#include "hill.h"
 
 int x, y, z, idx;
+
+Rect *getHillRect(Hill *hill) {
+  Rect *newRect = malloc(sizeof(Rect));
+  newRect->x = hill->xLoc;
+  newRect->z = hill->zLoc;
+  newRect->hx = hill->xLoc + 2 * hill->radius;
+  newRect->hz = hill->zLoc + 2 * hill->radius;
+  return newRect;
+}
+
+void moveHill(Hill *hill) {
+  hill->xLoc = rand() % (WORLDX - hill->radius * 2 - 2);
+  hill->zLoc = rand() % (WORLDZ - hill->radius * 2 - 2);
+}
 
 Hill *createHill() {
   // Create space for the new hill
@@ -22,15 +36,20 @@ Hill *createHill() {
   newHill->xLoc = rand() % (WORLDX - newHill->radius * 2 - 2);
   newHill->zLoc = rand() % (WORLDZ - newHill->radius * 2 - 2);
   newHill->height = rand() % 2 + 2;
-  newHill->render = 1;
+  newHill->getSurrounding = getHillRect;
+  newHill->changeLocation = moveHill;
   return newHill;
 }
 
 void drawHill(Hill *hill) {
   printf("Rendering hill of size %d at %d,%d\n", hill->radius, hill->xLoc,
          hill->zLoc);
-  if (!hill->render)
-    return;
+  // Rect *rect = getHillRect(hill);
+  // world[rect->x][5][rect->z] = 1;
+  // world[rect->hx][5][rect->z] = 2;
+  // world[rect->x][5][rect->hz] = 3;
+  // world[rect->hx][5][rect->hz] = 4;
+
   for (y = 0; y < hill->height; y++) {
     int radius = hill->radius - y;
     for (z = -radius; z < radius; z++) {

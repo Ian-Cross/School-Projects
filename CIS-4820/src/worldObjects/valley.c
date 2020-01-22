@@ -4,11 +4,25 @@
 #include <string.h>
 #include <time.h>
 
-#include "../../include/generation.h"
-#include "../../include/graphics.h"
-#include "../../include/worldObjects/valley.h"
+#include "generation.h"
+#include "graphics.h"
+#include "valley.h"
 
 int x, y, z, idx;
+
+Rect *getValleyRect(Valley *valley) {
+  Rect *newRect = malloc(sizeof(Rect));
+  newRect->x = valley->xLoc;
+  newRect->z = valley->zLoc;
+  newRect->hx = valley->xLoc + 2 * valley->radius;
+  newRect->hz = valley->zLoc + 2 * valley->radius;
+  return newRect;
+}
+
+void moveValley(Valley *valley) {
+  valley->xLoc = rand() % (WORLDX - valley->radius * 2 - 2);
+  valley->zLoc = rand() % (WORLDZ - valley->radius * 2 - 2);
+}
 
 Valley *createValley() {
   // Create space for the new valley
@@ -21,15 +35,14 @@ Valley *createValley() {
   newValley->xLoc = rand() % (WORLDX - newValley->radius * 2 - 2);
   newValley->zLoc = rand() % (WORLDZ - newValley->radius * 2 - 2);
   newValley->depth = rand() % 2 + 2;
-  newValley->render = 1;
+  newValley->getSurrounding = getValleyRect;
+  newValley->changeLocation = moveValley;
   return newValley;
 }
 
 void drawValley(Valley *valley) {
   printf("Rendering valley of size %d at %d,%d\n", valley->radius, valley->xLoc,
          valley->zLoc);
-  if (!valley->render)
-    return;
   for (y = 0; y < valley->depth; y++) {
     int radius = valley->radius - y;
     for (z = -radius; z < radius; z++) {
