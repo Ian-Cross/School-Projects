@@ -30,8 +30,15 @@ typedef struct Hills {
   void (*changeLocation)(struct Hills *);
 } Hill;
 
+/******* createHill() *******/
+/* - Allocate memory space for the Hill */
+/* - Generate random location and sizes */
 Hill *createHill();
 
+/******* drawHill() *******/
+/* - Input Hill object  */
+/* - Builds the circles line by line */
+/* - Dig into the world in shinking circles to build a Hill */
 void drawHill(Hill *hill);
 
 #endif

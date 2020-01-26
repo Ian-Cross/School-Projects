@@ -10,6 +10,9 @@
 
 int x, y, z, idx;
 
+/******* createCloud() *******/
+/* - Allocate memory space for the cloud */
+/* - Generate random location and render to screen */
 Cloud *createCloud(int xLoc, int zLoc) {
   Cloud *newCloud = (Cloud *)malloc(sizeof(Cloud));
   if (newCloud == NULL) {
@@ -23,29 +26,20 @@ Cloud *createCloud(int xLoc, int zLoc) {
   return (newCloud);
 }
 
-void moveCloud(Cloud *cloud) { cloud->xLoc = (cloud->xLoc + 1) % 100; }
+/******* moveCloud() *******/
+/* - Inputs cloud object and moves by 1 in the x direction*/
+/* - Wrap around if hits the edge of the world */
+void moveCloud(Cloud *cloud) { cloud->xLoc = (cloud->xLoc + 1) % WORLDX; }
 
+/******* drawCloud() *******/
+/* - Inputs cloud object and renders to the world */
+/* - Picks a random colour from a group of greys */
 void drawCloud(Cloud *cloud) {
-  // for (x = cloud->xLoc - 1; x < cloud->xLoc + 2; x++) {
-  //   for (z = cloud->zLoc - 1; z < cloud->zLoc + 2; z++) {
-  //     if (withinBounds(x, WORLDY - 3, z)) {
-  //       if (x == cloud->xLoc && z == cloud->zLoc)
-  //         world[x][cloud->yLoc][z] = 5;
-  //       else
-  //         world[x][cloud->yLoc][z] = rand() % 3 + 20;
-  //     }
-  //   }
-  // }
   world[cloud->xLoc][cloud->yLoc][cloud->zLoc] = rand() % 3 + 20;
 }
 
+/******* clearCloud() *******/
+/* - Inputs cloud object and clears that spot in the world */
 void clearCloud(Cloud *cloud) {
-  // for (x = cloud->xLoc - 1; x < cloud->xLoc + 2; x++) {
-  //   for (z = cloud->zLoc - 1; z < cloud->zLoc + 2; z++) {
-  //     if (withinBounds(x, WORLDY - 3, z)) {
-  //       world[x][cloud->yLoc][z] = 0;
-  //     }
-  //   }
-  // }
   world[cloud->xLoc][cloud->yLoc][cloud->zLoc] = 0;
 }

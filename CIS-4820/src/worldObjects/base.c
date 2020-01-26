@@ -10,6 +10,9 @@
 
 int x, y, z, idx;
 
+/******* getSurroudingRect() *******/
+/* - Input Base object, allocate memory for a rectangle object */
+/* - Retrieve the collision object around Base object */
 Rect *getSurroudingRect(Base *base) {
   Rect *newRect = malloc(sizeof(Rect));
   newRect->x = base->xLoc;
@@ -19,15 +22,15 @@ Rect *getSurroudingRect(Base *base) {
   return newRect;
 }
 
+/******* createBase() *******/
+/* - Input base object, and base id */
+/* - randomize values and fill the object */
 void createBase(Base *base, int baseNum) {
-  int xLoc;
-  if (baseNum == 0)
-    xLoc = rand() % WORLDX * 0.2 + WORLDX * 0.7;
-  if (baseNum == 1)
-    xLoc = rand() % WORLDX * 0.2 + WORLDX * 0.1;
+  // find a random location to place the base
+  int xLoc = rand() % WORLDX * 0.2 + WORLDX * (baseNum == 0 ? 0.7 : 0.1);
   int zLoc = rand() % (WORLDZ - BASE_SIZE * 3) + BASE_SIZE * 1.5;
 
-  printf("%d\n", BASE_SIZE);
+  // randomize base values
   base->width = BASE_SIZE;
   base->length = BASE_SIZE - 2;
   base->height = 5;
@@ -36,15 +39,12 @@ void createBase(Base *base, int baseNum) {
   base->getSurrounding = getSurroudingRect;
 }
 
+/******* drawBase() *******/
+/* - Input base object  */
+/* - Iterate over 3 dimensions to build the base block by block */
 void drawBase(Base *base) {
-  printf("Rendering base of size %dx%d at %d,%d\n", base->width, base->length,
-         base->xLoc, base->zLoc);
-
-  for (y = 0; y < base->height; y++) {
-    for (z = 0; z < base->length; z++) {
-      for (x = 0; x < base->width; x++) {
+  for (y = 0; y < base->height; y++)
+    for (z = 0; z < base->length; z++)
+      for (x = 0; x < base->width; x++)
         world[base->xLoc + x][5 + y][base->zLoc + z] = 19;
-      }
-    }
-  }
 }

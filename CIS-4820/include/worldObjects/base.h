@@ -29,8 +29,14 @@ typedef struct Bases {
   Rect *(*getSurrounding)(struct Bases *);
 } Base;
 
+/******* createBase() *******/
+/* - Input base object, and base id */
+/* - randomize values and fill the object */
 void createBase(Base *base, int baseNum);
 
+/******* drawBase() *******/
+/* - Input base object  */
+/* - Iterate over 3 dimensions to build the base block by block */
 void drawBase(Base *base);
 
 #endif

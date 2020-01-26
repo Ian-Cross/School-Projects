@@ -29,7 +29,7 @@ all: $(EXE)
 $(EXE): $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o $@
 
-test: a1.c src/graphics.c src/visible.c src/generation.c src/timing.c src/worldObjects/valley.c src/worldObjects/hill.c src/worldObjects/base.c src/worldObjects/cloud.c include/graphics.h include/generation.h include/timing.h include/worldObjects/valley.h include/worldObjects/hill.h include/worldObjects/base.h include/worldObjects/cloud.h
+test: a1.c src/graphics.c src/visible.c src/generation.c src/timing.c src/worldObjects/valley.c src/worldObjects/hill.c src/worldObjects/base.c src/worldObjects/cloud.c include/graphics.h include/visible.h include/generation.h include/timing.h include/worldObjects/valley.h include/worldObjects/hill.h include/worldObjects/base.h include/worldObjects/cloud.h
 	gcc $(INC) $(CFLAGS) $(LFLAGS) a1.c src/graphics.c src/visible.c src/generation.c src/timing.c src/worldObjects/valley.c src/worldObjects/hill.c src/worldObjects/base.c src/worldObjects/cloud.c -o $(EXE)
 
 clean:

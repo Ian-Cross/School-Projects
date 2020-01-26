@@ -14,78 +14,16 @@
 #include "generation.h"
 #include "graphics.h"
 #include "timing.h"
+#include "visible.h"
 
-/* mouse function called by GLUT when a button is pressed or released */
-void mouse(int, int, int, int);
-
-/* lighting control */
-extern void setLightPosition(GLfloat, GLfloat, GLfloat);
-extern GLfloat *getLightPosition();
-
-/* viewpoint control */
-extern void getOldViewPosition(float *, float *, float *);
-extern void setOldViewPosition(float, float, float);
-extern void setViewOrientation(float, float, float);
-extern void getViewOrientation(float *, float *, float *);
-
-/* add cube to display list so it will be drawn */
-extern void addDisplayList(int, int, int);
-
-/* mob controls */
-extern void setMobPosition(int, float, float, float, float);
-extern void hideMob(int);
-extern void showMob(int);
-
-/* player controls */
-extern void setPlayerPosition(int, float, float, float, float);
-extern void hidePlayer(int);
-extern void showPlayer(int);
-
-/* tube controls */
-extern void createTube(int, float, float, float, float, float, float, int);
-extern void hideTube(int);
-extern void showTube(int);
-
-/* 2D drawing functions */
-extern void draw2Dline(int, int, int, int, int);
-extern void draw2Dbox(int, int, int, int);
-extern void draw2Dtriangle(int, int, int, int, int, int);
-extern void set2Dcolour(float[]);
-
-/* flag which is set to 1 when flying behaviour is desired */
-extern int flycontrol;
-/* flag used to indicate that the test world should be used */
-extern int testWorld;
-/* flag to print out frames per second */
-extern int fps;
-/* flag to indicate the space bar has been pressed */
-extern int space;
-/* flag indicates the program is a client when set = 1 */
-extern int netClient;
-/* flag indicates the program is a server when set = 1 */
-extern int netServer;
-/* size of the window in pixels */
-extern int screenWidth, screenHeight;
-/* flag indicates if map is to be printed */
-extern int displayMap;
-/* flag indicates use of a fixed viewpoint */
-extern int fixedVP;
-
-/* frustum corner coordinates, used for visibility determination  */
-extern float corners[4][3];
-
-/* determine which cubes are visible e.g. in view frustum */
-extern void ExtractFrustum();
-extern void tree(float, float, float, float, float, float, int);
-
-/* allows users to define colours */
-extern int setUserColour(int, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat,
-                         GLfloat, GLfloat, GLfloat);
-void unsetUserColour(int);
-extern void getUserColour(int, GLfloat *, GLfloat *, GLfloat *, GLfloat *,
-                          GLfloat *, GLfloat *, GLfloat *, GLfloat *);
-
-/********* end of extern variable declarations **************/
+/******* doesCollide() *******/
+/* - checks the identity of the provided block */
+/* - returns true or false if that block is solid */
+int doesCollide(int x, int y, int z) {
+  if (world[x][y][z] != 0)
+    return 1;
+  return 0;
+}
 
 /*** collisionResponse() ***/
 /* -performs collision detection and response */
@@ -95,46 +33,26 @@ extern void getUserColour(int, GLfloat *, GLfloat *, GLfloat *, GLfloat *,
    will be the negative value of the array indices */
 void collisionResponse() {
   float x, xx, y, yy, z, zz;
-  int collisionPoints = 8;
+  // int collisionPoints = 16;
+  int interpolationRounds = 1000;
 
   getViewPosition(&x, &y, &z);
   getOldViewPosition(&xx, &yy, &zz);
 
-  int fix = -(int)floor(x);
-  int fiy = -(int)floor(y);
-  int fiz = -(int)floor(z);
-
-  int cix = -(int)ceil(x);
-  int ciy = -(int)ceil(y);
-  int ciz = -(int)ceil(z);
-
-  // Simulate a hitbox around the viewpoint to check for collisions on all sides
-  for (int i = 0; i < collisionPoints; i++) {
-    // calculate the needed bits from the amount of desired collision reference
-    // points
-    size_t bits = sizeof(char) * (int)log2(collisionPoints);
-
-    char *str = malloc(bits);
-    if (!str) {
-      printf("Could not allocate space for binary counter\n");
-      exit(1);
-    }
-
-    // Use bit shifting to build a binary string
-    int u = i;
-    for (; bits--; u >>= 1)
-      str[bits] = u & 1 ? '1' : '0';
-
-    // pick out the corner of the hit box to check
-    if (world[str[2] == 1 ? fix : cix][str[1] == 1 ? fiy : ciy]
-             [str[0] == 1 ? fiz : ciz] != 0)
-      setViewPosition(xx, yy, zz);
-    free(str);
-  }
-
+  // Keeps the viewpoint in the map, and below the clouds
   if (!withinBounds(-floor(x), -(floor(y) + 5), -floor(z)))
     setViewPosition(xx, yy, zz);
 
+  // Iterate through the 26 points surrounding the viewpoint to draw a simulated
+  // hitbox
+  for (float j = -y - 0.1; j < -y + 0.2; j += 0.1) {
+    for (float i = -x - 0.1; i < -x + 0.2; i += 0.1) {
+      for (float k = -z - 0.1; k < -z + 0.2; k += 0.1) {
+        if (doesCollide((int)i, (int)j, (int)k))
+          setViewPosition(xx, yy, zz);
+      }
+    }
+  }
   // printf("(%lf, %lf, %lf) => (%lf, %lf, %lf) \n", xx, yy, zz, x, y, z);
 }
 

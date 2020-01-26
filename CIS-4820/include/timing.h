@@ -7,6 +7,9 @@
 #include <OpenGL/glu.h>
 #endif
 
+/******* moveClouds() *******/
+/* - Iterate over all the clouds */
+/* - Move each cloud by 1 space every 1 second */
 void moveClouds();
 
 #endif

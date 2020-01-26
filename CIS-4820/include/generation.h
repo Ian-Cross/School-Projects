@@ -13,6 +13,14 @@
 #include "timing.h"
 #include "valley.h"
 
+#define RELOCATE_CHANCE 100
+
+typedef struct Coords {
+  int x;
+  int y;
+  int z;
+} Coord;
+
 typedef enum StructureId {
   invaldId = 0,
   valleyId,
@@ -43,8 +51,9 @@ WorldData *newWorld;
         with dimensions of 100,50,100. */
 void genTestWorld();
 
+/******* genWorld() *******/
+/* - Fill the world object */
+/* - Create user defined colours */
 void genWorld();
-
-void fixOverlap();
 
 #endif

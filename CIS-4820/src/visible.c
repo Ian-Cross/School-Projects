@@ -9,44 +9,8 @@
 #include <string.h>
 
 #include "../include/graphics.h"
-extern GLubyte world[WORLDX][WORLDY][WORLDZ];
 
 #define OCTREE_LEVEL 1
-
-extern void gradphicsInit(int *, char **);
-extern void setLightPosition(GLfloat, GLfloat, GLfloat);
-extern GLfloat *getLightPosition();
-
-extern void setViewPosition(float, float, float);
-extern void getViewPosition(float *, float *, float *);
-extern void getOldViewPosition(float *, float *, float *);
-extern void getViewOrientation(float *, float *, float *);
-
-extern int addDisplayList(int, int, int);
-
-extern void createMob(int, float, float, float, float);
-extern void setMobPosition(int, float, float, float, float);
-extern void hideMob(int);
-extern void showMob(int);
-
-extern void createPlayer(int, float, float, float, float);
-extern void setPlayerPosition(int, float, float, float, float);
-extern void hidePlayer(int);
-extern void showPlayer(int);
-
-/* flag which is set to 1 when flying behaviour is desired */
-extern int flycontrol;
-/* flag used to indicate that the test world should be used */
-extern int testWorld;
-/* list and count of polygons to be displayed, set during culling */
-extern int displayList[MAX_DISPLAY_LIST][3];
-extern int displayCount;
-/* flag to print out frames per second */
-extern int fps;
-/* flag indicates the program is a client when set = 1 */
-extern int netClient;
-/* flag indicates the program is a server when set = 1 */
-extern int netServer;
 
 /* frustum corner coordinates */
 float corners[4][3];

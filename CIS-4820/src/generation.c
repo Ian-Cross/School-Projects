@@ -13,22 +13,20 @@ int x, y, z, idx, jdx;
 int hillCount, valleyCount;
 int cloudHeight = WORLDY - 3;
 
-typedef struct Coords {
-  int x;
-  int y;
-  int z;
-} Coord;
-
 Coord flatPlusSign[4] = {{-1, 0, 0}, {1, 0, 0}, {0, 0, -1}, {0, 0, 1}};
 
+/******* initWorld() *******/
+/* - initialize world array to empty */
 void initWorld() {
-  /* initialize world to empty */
+
   for (x = 0; x < WORLDX; x++)
     for (y = 0; y < WORLDY; y++)
       for (z = 0; z < WORLDZ; z++)
         world[x][y][z] = 0;
 }
 
+/******* setColours() *******/
+/* - register predefind user colours with the game engine */
 void setColours() {
   // Grass Greens
   setUserColour(9, 0.074, 0.529, 0.203, 1.0, 0.037, 0.264, 0.101, 1.0);
@@ -50,8 +48,10 @@ void setColours() {
   setUserColour(22, 0.925, 0.925, 0.925, 0.5, 0.925, 0.925, 0.925, 0.5);
 }
 
-/* Create a flat world 5 blocks deep, top level with "grass" and bottom with
- * "dirt" */
+/******* makeFloor() *******/
+/* - fill the bottom 4 rows with *dirtColor* */
+/* - fill the 5th rows with *grassColor* */
+/* - *dirtColor* and *grassColor* are random between 5 colour options */
 void makeFloor() {
   for (x = 0; x < WORLDX; x++) {
     for (z = 0; z < WORLDZ; z++) {
@@ -65,58 +65,44 @@ void makeFloor() {
   }
 }
 
+/******* identifyRect() *******/
+/* - input a Unknown object */
+/* - derive the identity of the object with the id */
+/* - retreive the collision rectangle around that object */
+Rect *identifyRect(Object *obj) {
+  Rect *rect;
+  switch (obj->id) {
+  case hillId: {
+    Hill *hill = obj->structure;
+    rect = hill->getSurrounding(hill);
+    break;
+  }
+  case valleyId: {
+    Valley *valley = obj->structure;
+    rect = valley->getSurrounding(valley);
+    break;
+  }
+  case baseId: {
+    Base *base = obj->structure;
+    rect = base->getSurrounding(base);
+    break;
+  }
+  default:
+    printf("Bad id during rectangle retrieval\n");
+    exit(1);
+  }
+  return rect;
+}
+
+/******* doesOverlap() *******/
+/* - input two objects */
+/* - determine if the collision rectanlges of either opbject overlap */
 int doesOverlap(Object *objectA, Object *objectB) {
-  Rect *rectA, *rectB;
+  Rect *rectA = identifyRect(objectA);
+  Rect *rectB = identifyRect(objectB);
   int overlap = 1;
 
-  switch (objectA->id) {
-  case hillId: {
-    Hill *hill = objectA->structure;
-    rectA = hill->getSurrounding(hill);
-    // printf("Hill: %d %d %d %d\n", rectA->x, rectA->z, rectA->hx, rectA->hz);
-    break;
-  }
-  case valleyId: {
-    Valley *valley = objectA->structure;
-    rectA = valley->getSurrounding(valley);
-    // printf("Vall: %d %d %d %d\n", rectA->x, rectA->z, rectA->hx, rectA->hz);
-    break;
-  }
-  case baseId: {
-    Base *base = objectA->structure;
-    rectA = base->getSurrounding(base);
-    // printf("Base: %d %d %d %d\n", rectA->x, rectA->z, rectA->hx, rectA->hz);
-    break;
-  }
-  default:
-    printf("BAD ID!!!\n");
-    overlap = 0;
-  }
-
-  switch (objectB->id) {
-  case hillId: {
-    Hill *hill = objectB->structure;
-    rectB = hill->getSurrounding(hill);
-    // printf("Hill: %d %d %d %d\n", rectB->x, rectB->z, rectB->hx, rectB->hz);
-    break;
-  }
-  case valleyId: {
-    Valley *valley = objectB->structure;
-    rectB = valley->getSurrounding(valley);
-    // printf("Vall: %d %d %d %d\n", rectB->x, rectB->z, rectB->hx, rectB->hz);
-    break;
-  }
-  case baseId: {
-    Base *base = objectB->structure;
-    rectB = base->getSurrounding(base);
-    // printf("Base: %d %d %d %d\n", rectB->x, rectB->z, rectB->hx, rectB->hz);
-    break;
-  }
-  default:
-    printf("BAD ID!!!\n");
-    overlap = 0;
-  }
-
+  // Simpler to check if the object are not overlapping
   if (rectA->x > rectB->hx || rectB->x > rectA->hx)
     overlap = 0;
   if (rectA->z > rectB->hz || rectB->z > rectA->hz)
@@ -127,33 +113,35 @@ int doesOverlap(Object *objectA, Object *objectB) {
   return overlap;
 }
 
+/******* checkOverlap() *******/
+/* - input an object, and its index */
+/* - compare the object to all others in the world array */
+/* - attempt to relocate the object if it is found to be overlapping. */
+/* Only attempt RELOCATE_CHANCE times, then remove the object */
 void checkOverlap(Object *objectA, int idx) {
   for (jdx = 0; jdx < valleyCount + hillCount + BASE_COUNT; jdx++) {
+    Object *objectB = newWorld->objects[jdx];
+    // Skip over the object itself
+    // any objects that have be removed,
+    // or non objects
     if (jdx == idx)
       continue;
-    Object *objectB = newWorld->objects[jdx];
     if (objectB->render == 0)
       continue;
     if (objectB->id == invaldId)
       break;
 
     if (doesOverlap(objectA, objectB)) {
-      // printf("Found overlapping objects %d %d\n", objectA->id, objectB->id);
-      if (objectA->moveCount < 5) {
+      if (objectA->moveCount < RELOCATE_CHANCE) {
         switch (objectA->id) {
         case hillId: {
           Hill *hill = objectA->structure;
-          // printf("Relocating hill at %d %d to ", hill->xLoc, hill->zLoc);
           hill->changeLocation(hill);
-          // printf("%d %d\n", hill->xLoc, hill->zLoc);
           break;
         }
         case valleyId: {
           Valley *valley = objectA->structure;
-          // printf("Relocating valley at %d %d to ", valley->xLoc,
-          // valley->zLoc);
           valley->changeLocation(valley);
-          // printf("%d %d\n", valley->xLoc, valley->zLoc);
           break;
         }
         default:
@@ -169,9 +157,12 @@ void checkOverlap(Object *objectA, int idx) {
   }
 }
 
+/******* fixOverlap() *******/
+/* - check all objects for overlaps */
+/* - try to replace objects that do */
 void fixOverlap() {
-  // starting at 2 to skip over the bases which shouldn't move
-  for (idx = 2; idx < valleyCount + hillCount + BASE_COUNT; idx++) {
+  // Skip over the bases which shouldn't move
+  for (idx = BASE_COUNT; idx < valleyCount + hillCount + BASE_COUNT; idx++) {
     if (newWorld->objects[idx]->render == 0)
       continue;
     if (newWorld->objects[idx]->id == invaldId)
@@ -180,71 +171,43 @@ void fixOverlap() {
   }
 }
 
+/******* growCloud() *******/
+/* - input a cloud location, remaining clouds, and the growth_rate */
+/* - use the growth_rate to add onto that cloud in all 4 directions  */
+/* - recursively move outward to grow the newly added clouds */
 void growCloud(int xLoc, int zLoc, int *totalCloudsPtr, int growth_rate) {
-
   int newX, newZ;
-  // printf("Growing Cloud %d\n", *totalCloudsPtr);
-  // for (idx = 0; idx < 4; idx++) {
-  //   if (*totalCloudsPtr < 0)
-  //     return;
-  //   newX = xLoc + flatPlusSign[idx].x;
-  //   newZ = zLoc + flatPlusSign[idx].z;
-  //   if (withinBounds(newX, cloudHeight, newZ) &&
-  //       world[newX][cloudHeight][newZ] == 0) {
-  //     if ((rand() % GROWTH_CHANCE) < growth_rate) {
-  //       newWorld->clouds[*totalCloudsPtr] = createCloud(newX, newZ);
-  //       *totalCloudsPtr = *totalCloudsPtr - 1;
-  //       growCloud(newX, newZ, totalCloudsPtr, growth_rate - 10);
-  //     }
-  //   }
-  // }
-
-  if (withinBounds(xLoc - 1, cloudHeight, zLoc) &&
-      world[xLoc - 1][cloudHeight][zLoc] == 0) {
-    if ((rand() % GROWTH_CHANCE) < growth_rate) {
-      newWorld->clouds[*totalCloudsPtr] = createCloud(xLoc - 1, zLoc);
-      *totalCloudsPtr = *totalCloudsPtr - 1;
-      growCloud(xLoc + 1, zLoc, totalCloudsPtr, growth_rate - 10);
-    }
-  }
-
-  if (withinBounds(xLoc + 1, cloudHeight, zLoc) &&
-      world[xLoc + 1][cloudHeight][zLoc] == 0) {
-    if ((rand() % GROWTH_CHANCE) < growth_rate) {
-      newWorld->clouds[*totalCloudsPtr] = createCloud(xLoc + 1, zLoc);
-      *totalCloudsPtr = *totalCloudsPtr - 1;
-      growCloud(xLoc + 1, zLoc, totalCloudsPtr, growth_rate - 10);
-    }
-  }
-
-  if (withinBounds(xLoc, cloudHeight, zLoc - 1) &&
-      world[xLoc][cloudHeight][zLoc - 1] == 0) {
-    if ((rand() % GROWTH_CHANCE) < growth_rate) {
-      newWorld->clouds[*totalCloudsPtr] = createCloud(xLoc, zLoc - 1);
-      *totalCloudsPtr = *totalCloudsPtr - 1;
-      growCloud(xLoc, zLoc - 1, totalCloudsPtr, growth_rate - 10);
-    }
-  }
-
-  if (withinBounds(xLoc, cloudHeight, zLoc + 1) &&
-      world[xLoc][cloudHeight][zLoc + 1] == 0) {
-    if ((rand() % GROWTH_CHANCE) < growth_rate) {
-      newWorld->clouds[*totalCloudsPtr] = createCloud(xLoc, zLoc + 1);
-      *totalCloudsPtr = *totalCloudsPtr - 1;
-      growCloud(xLoc, zLoc + 1, totalCloudsPtr, growth_rate - 10);
+  for (idx = 0; idx < 4; idx++) {
+    if (*totalCloudsPtr < 0)
+      return;
+    newX = xLoc + flatPlusSign[idx].x;
+    newZ = zLoc + flatPlusSign[idx].z;
+    if (withinBounds(newX, cloudHeight, newZ) &&
+        world[newX][cloudHeight][newZ] == 0) {
+      if ((rand() % GROWTH_CHANCE) < growth_rate) {
+        newWorld->clouds[*totalCloudsPtr] = createCloud(newX, newZ);
+        *totalCloudsPtr = *totalCloudsPtr - 1;
+        // lower the growth rate to stop growth eventually
+        growCloud(newX, newZ, totalCloudsPtr, growth_rate - 10);
+      }
     }
   }
 }
 
+/******* makeClouds() *******/
+/* - create 9 clouds in a 3x3 pattern in a random location */
+/* - start the cloud growth in a random direction */
 void makeClouds() {
   int totalClouds = MAX_CLOUD_COUNT - 1;
   int *totalCloudsPtr = &totalClouds;
   while (*totalCloudsPtr >= 0) {
     int xLoc = rand() % (WORLDX - 2) + 1;
     int zLoc = rand() % (WORLDZ - 2) + 1;
+    // make sure there is no cloud there already
     if (world[xLoc][WORLDY - 3][zLoc] == 0) {
       for (x = xLoc - 1; x < xLoc + 2; x++) {
         for (z = zLoc - 1; z < zLoc + 2; z++) {
+          // make sure the cloud is still in the map
           if (withinBounds(x, cloudHeight, z)) {
             newWorld->clouds[*totalCloudsPtr] = createCloud(x, z);
             *totalCloudsPtr = *totalCloudsPtr - 1;
@@ -253,6 +216,7 @@ void makeClouds() {
           }
         }
       }
+      // Pick a random direction to start growing in
       switch (rand() % 4) {
       case 0:
         growCloud(xLoc - 1, zLoc, totalCloudsPtr, 70);
@@ -271,11 +235,16 @@ void makeClouds() {
   }
 }
 
+/******* makeBases() *******/
+/* - Generate two base objects */
+/* - fill with random values */
 void makeBases() {
 
   for (idx = 0; idx < 2; idx++) {
+    // Create space for and fill a base object
     Base *newBase = (Base *)malloc(sizeof(Base));
     createBase(newBase, idx);
+
     newWorld->objects[idx]->id = baseId;
     newWorld->objects[idx]->render = 1;
     newWorld->objects[idx]->moveCount = 0;
@@ -283,7 +252,11 @@ void makeBases() {
   }
 }
 
+/******* makeValleys() *******/
+/* - Generate valleyCount number of valley objects */
+/* - fill with random values */
 void makeValleys() {
+  // offset the start to account for the objects already created
   for (idx = BASE_COUNT; idx < valleyCount + BASE_COUNT; idx++) {
 
     // load into the world object array
@@ -291,14 +264,14 @@ void makeValleys() {
     newWorld->objects[idx]->render = 1;
     newWorld->objects[idx]->moveCount = 0;
     newWorld->objects[idx]->structure = createValley();
-
-    Valley *test = (Valley *)newWorld->objects[idx]->structure;
-    printf("%d: Creating valey of size %d at %d,%d\n", idx, test->radius,
-           test->xLoc, test->zLoc);
   }
 }
 
+/******* makeHills() *******/
+/* - Generate hillCount number of hill objects */
+/* - fill with random values */
 void makeHills() {
+  // offset the start to account for the objects already created
   for (idx = valleyCount + BASE_COUNT;
        idx < valleyCount + hillCount + BASE_COUNT; idx++) {
 
@@ -307,10 +280,6 @@ void makeHills() {
     newWorld->objects[idx]->render = 1;
     newWorld->objects[idx]->moveCount = 0;
     newWorld->objects[idx]->structure = createHill();
-
-    Hill *test = (Hill *)newWorld->objects[idx]->structure;
-    printf("%d: Creating hill of size %d at %d,%d\n", idx, test->radius,
-           test->xLoc, test->zLoc);
   }
 }
 
@@ -362,6 +331,28 @@ void genTestWorld() {
   createPlayer(0, 52.0, 27.0, 52.0, 0.0);
 }
 
+/******* drawStructures() *******/
+/* - Iterate and render all of the world objects */
+void drawStructures() {
+  for (idx = 0; idx < valleyCount + hillCount + BASE_COUNT; idx++) {
+    if (!newWorld->objects[idx]->render)
+      continue;
+
+    if (newWorld->objects[idx]->id == hillId) {
+      drawHill((Hill *)newWorld->objects[idx]->structure);
+    } else if (newWorld->objects[idx]->id == valleyId) {
+      drawValley((Valley *)newWorld->objects[idx]->structure);
+    } else if (newWorld->objects[idx]->id == baseId) {
+      drawBase((Base *)newWorld->objects[idx]->structure);
+    } else {
+      printf(" Unknown ID, something went wrong\n");
+    }
+  }
+}
+
+/******* genWorld() *******/
+/* - Fill the world object */
+/* - Create user defined colours */
 void genWorld() {
   srand((unsigned)time(NULL));
 
@@ -369,6 +360,7 @@ void genWorld() {
   setColours();
   makeFloor();
 
+  // Generate random structure counts
   valleyCount =
       rand() % (MAX_VALLEY_COUNT - MIN_VALLEY_COUNT) + MIN_VALLEY_COUNT;
   hillCount = rand() % (MAX_HILL_COUNT - MIN_HILL_COUNT) + MIN_HILL_COUNT;
@@ -378,7 +370,6 @@ void genWorld() {
   if (newWorld == NULL)
     printf("Unable to allocate space for the worldData");
 
-  printf("%d\n", valleyCount + hillCount + BASE_COUNT);
   for (idx = 0; idx < valleyCount + hillCount + BASE_COUNT; idx++) {
     newWorld->objects[idx] = (Object *)malloc(sizeof(Object));
     if (newWorld->objects[idx] == NULL) {
@@ -388,37 +379,15 @@ void genWorld() {
     newWorld->objects[idx]->id = invaldId;
   }
 
+  // place player
+  setViewPosition(-1, -10, -1);
+
+  // Generate random values for structures
   makeBases();
   makeValleys();
   makeHills();
   makeClouds();
-
-  setViewPosition(-1, -10, -1);
-
   fixOverlap();
 
-  // Draw Structres
-  for (idx = 0; idx < valleyCount + hillCount + BASE_COUNT; idx++) {
-    if (!newWorld->objects[idx]->render)
-      continue;
-    printf("%d: Drawing", idx);
-    if (newWorld->objects[idx]->id == hillId) {
-      Hill *test = (Hill *)newWorld->objects[idx]->structure;
-      printf(" hill of size %d at %d,%d -> ", test->radius, test->xLoc,
-             test->zLoc);
-      drawHill(test);
-    } else if (newWorld->objects[idx]->id == valleyId) {
-      Valley *test = (Valley *)newWorld->objects[idx]->structure;
-      printf(" valley of size %d at %d,%d -> ", test->radius, test->xLoc,
-             test->zLoc);
-      drawValley(test);
-    } else if (newWorld->objects[idx]->id == baseId) {
-      Base *test = (Base *)newWorld->objects[idx]->structure;
-      printf(" base of size %d,%d at %d,%d -> ", test->width, test->length,
-             test->xLoc, test->zLoc);
-      drawBase(test);
-    } else {
-      printf(" Unknown ID, something went wrong\n");
-    }
-  }
+  drawStructures();
 }

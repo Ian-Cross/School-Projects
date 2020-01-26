@@ -10,12 +10,6 @@
 
 #include "graphics.h"
 
-GLubyte world[WORLDX][WORLDY][WORLDZ];
-
-#define MOB_COUNT 10
-#define PLAYER_COUNT 10
-#define TUBE_COUNT 10
-
 extern void update();
 extern void collisionResponse();
 extern void buildDisplayList();
@@ -58,13 +52,7 @@ int screenHeight = 1311;
 // int screenHeight = 768;
 
 /* command line flags */
-int flycontrol = 1;      // allow viewpoint to move in y axis when 1
 int displayAllCubes = 0; // draw all of the cubes in the world when 1
-int testWorld = 0;       // sample world for timing tests
-int fps = 0;             // turn on frame per second output
-int netClient = 0;       // network client flag, is client when = 1
-int netServer = 0;       // network server flag, is server when = 1
-double fastFly = 0;      // speedier flying flag, is true when = 0.5
 
 /* list of cubes to display */
 int displayList[MAX_DISPLAY_LIST][3];
@@ -102,12 +90,6 @@ GLfloat uDifColour[NUMBERCOLOURS][4];
 /* flag indicating user defined colour has been allocated */
 /* initialized to 0, set to 1 when colour stored in uColour[][] */
 int uColourUsed[NUMBERCOLOURS];
-
-/* functions draw 2D images */
-void draw2Dline(int, int, int, int, int);
-void draw2Dbox(int, int, int, int);
-void draw2Dtriangle(int, int, int, int, int, int);
-void set2Dcolour(float[]);
 
 /***************/
 /* TODO: Comment */
@@ -719,7 +701,7 @@ void keyboard(unsigned char key, int x, int y) {
     roty = (mvy / 180.0 * 3.141592);
     vpx -= sin(roty) * (0.3 + fastFly);
     // turn off y motion so you can't fly
-    if (flycontrol == 1)
+    if (flycontrol == 0)
       vpy += sin(rotx) * (0.3 + fastFly);
     vpz += cos(roty) * (0.3 + fastFly);
     collisionResponse();
@@ -733,7 +715,7 @@ void keyboard(unsigned char key, int x, int y) {
     roty = (mvy / 180.0 * 3.141592);
     vpx += sin(roty) * (0.3 + fastFly);
     // turn off y motion so you can't fly
-    if (flycontrol == 1)
+    if (flycontrol == 0)
       vpy -= sin(rotx) * (0.3 + fastFly);
     vpz -= cos(roty) * (0.3 + fastFly);
     collisionResponse();

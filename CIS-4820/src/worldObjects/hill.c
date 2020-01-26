@@ -10,6 +10,9 @@
 
 int x, y, z, idx;
 
+/******* getHillRect() *******/
+/* - Input Hill object, allocate memory for a rectangle object */
+/* - Retrieve the collision object around Hill object */
 Rect *getHillRect(Hill *hill) {
   Rect *newRect = malloc(sizeof(Rect));
   newRect->x = hill->xLoc;
@@ -19,11 +22,17 @@ Rect *getHillRect(Hill *hill) {
   return newRect;
 }
 
+/******* moveHill() *******/
+/* - Input Hill object */
+/* - Rerandomize the location of the object */
 void moveHill(Hill *hill) {
   hill->xLoc = rand() % (WORLDX - hill->radius * 2 - 2);
   hill->zLoc = rand() % (WORLDZ - hill->radius * 2 - 2);
 }
 
+/******* createHill() *******/
+/* - Allocate memory space for the Hill */
+/* - Generate random location and sizes */
 Hill *createHill() {
   // Create space for the new hill
   Hill *newHill = (Hill *)malloc(sizeof(Hill));
@@ -41,20 +50,18 @@ Hill *createHill() {
   return newHill;
 }
 
+/******* drawHill() *******/
+/* - Input Hill object  */
+/* - Builds the circles line by line */
+/* - Dig into the world in shinking circles to build a Hill */
 void drawHill(Hill *hill) {
-  printf("Rendering hill of size %d at %d,%d\n", hill->radius, hill->xLoc,
-         hill->zLoc);
-  // Rect *rect = getHillRect(hill);
-  // world[rect->x][5][rect->z] = 1;
-  // world[rect->hx][5][rect->z] = 2;
-  // world[rect->x][5][rect->hz] = 3;
-  // world[rect->hx][5][rect->hz] = 4;
-
   for (y = 0; y < hill->height; y++) {
-    int radius = hill->radius - y;
+    int radius = hill->radius - y; // shrink the circle
     for (z = -radius; z < radius; z++) {
+      // calculate the length of current line by the distance from the centre
       int half_row_width = sqrt(radius * radius - z * z);
       for (x = -half_row_width; x < half_row_width; x++) {
+        // keep from a 1 length line at the very edge
         if ((z != 0 || x != half_row_width - 1) &&
             (z != 0 || x != -half_row_width)) {
           int grassColor = rand() % 12 + 2;

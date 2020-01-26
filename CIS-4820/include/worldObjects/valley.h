@@ -30,8 +30,15 @@ typedef struct Valleys {
   void (*changeLocation)(struct Valleys *);
 } Valley;
 
+/******* createValley() *******/
+/* - Allocate memory space for the valley */
+/* - Generate random location and sizes */
 Valley *createValley();
 
+/******* drawValley() *******/
+/* - Input Valley object  */
+/* - Builds the circles line by line */
+/* - Dig into the world in shinking circles to build a Valley */
 void drawValley(Valley *valley);
 
 #endif

@@ -154,6 +154,12 @@ You can make the bases look more interesting than simple boxes if you
 wish. You can make them multiple colours and you can add windows or
 towers.
 
+---
+
+## Details
+
+---
+
 ### Choosing Parameters
 
 It is important to pick values for parameters such as colours, speed of
