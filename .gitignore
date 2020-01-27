@@ -1,5 +1,6 @@
 .DS_Store
 *.tar.gz
+readme.txt
 
 #Due to the size
 CIS-4500/indexFiles/dataFiles/*
