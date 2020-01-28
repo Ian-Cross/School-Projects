@@ -1,5 +1,6 @@
 JAVAC=javac
 JFLEX=jflex
+DATA=datafiles/
 
 all: Token.class Lexer.class Scanner.class
 
@@ -10,7 +11,7 @@ Lexer.java: news.flex
 	$(JFLEX) news.flex
 
 run: all
-	java Scanner < newsdata.txt > output.txt
+	java Scanner < $(DATA)newsdata.txt > $(DATA)output.txt
 
 clean:
 	rm -f Lexer.java *.class *~

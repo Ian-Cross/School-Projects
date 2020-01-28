@@ -12,7 +12,7 @@ import java.util.ArrayList;
 %column
 
 %eofval{
-  printStack();
+  printStackErrors();
   return null;
 %eofval};
 
@@ -60,13 +60,16 @@ import java.util.ArrayList;
       popTag();
       return new Token(Token.CLOSETAG, tagName , yyline, yycolumn);
     } else {
-      printStack();
-      return new Token(Token.OPENTAG, "ERROR TAG-" + tagName , yyline, yycolumn);
+      System.out.println("ERROR TAG-" + tagName);
+      return new Token(Token.NOTHING,"NOTHING",-1,-1);
     }
   }
 
-  private static void printStack() {
-    System.out.println(tagStack);
+  private static void printStackErrors() {
+    if (tagStack.size() > 0) {
+      System.out.println("ERROR, unclosed tags");
+      System.out.println(tagStack);
+    }
   }
 %};
 
