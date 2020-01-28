@@ -1,7 +1,11 @@
 .DS_Store
 *.tar.gz
+*.tgz
 readme.txt
 
 #Due to the size
 CIS-4500/indexFiles/dataFiles/*
 CIS-4500/sentiment-analysis/dataFiles/Example
+
+# base code
+CIS-4650/scanner/sample/*
