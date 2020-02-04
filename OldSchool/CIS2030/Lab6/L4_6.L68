@@ -1,0 +1,53 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 10/27/2016 11:16:27 AM
+
+00000000                             1  *L6_3.x68     
+00000000                             2  
+00008000                             3      ORG $8000
+00008000  207C 00009000              4  START   MOVEA.L #MATRIX,A0
+00008006  7000                       5          MOVE.L  #0,D0
+00008008  7200                       6          MOVE.L  #0,D1
+0000800A  0C40 0002                  7  FOR1    CMPI    #$2,D0
+0000800E  6E00 0020                  8          BGT     EXIT
+00008012  1200                       9          MOVE.B  D0,D1
+00008014  5201                      10          ADD.B   #$1,D1
+00008016  0C41 0003                 11  FOR2    CMPI    #$3,D1
+0000801A  6E00 0010                 12          BGT     INCI
+Line 13 ERROR: Invalid addressing mode
+0000801E                            13          MOVE.B  D0,#I
+0000801E  13C1 00009011             14          MOVE.B  D1,J
+Line 15 ERROR: Displacement out of range
+00008024  1630 1810                 15          MOVE.B  I(A0,D1.L),D3
+00008028  5201                      16          ADD.B   #$1,D1
+0000802A  60EA                      17          BRA     FOR2
+0000802C  5200                      18  INCI    ADD.B   #$1,D0
+0000802E  60DA                      19          BRA     FOR1
+00008030  4E4E                      20  EXIT    TRAP    #14
+00008032                            21  
+00008032                            22  **** 4 x 4 matrix ****
+00008032                            23  
+00009000                            24      ORG $9000       
+00009000= 01 02 03 04               25  MATRIX  DC.B    1 ,2 ,3 ,4
+00009004= 05 06 07 08               26          DC.B    5 ,6 ,7 ,8
+00009008= 09 0A 0B 0C               27          DC.B    9 ,10,11,12
+0000900C= 0D 0E 0F 10               28          DC.B    13,14,15,16
+00009010                            29  I       DS.B    1
+00009011                            30  J       DS.B    1
+00009012                            31      END START
+
+2 errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+EXIT                8030
+FOR1                800A
+FOR2                8016
+I                   9010
+INCI                802C
+J                   9011
+MATRIX              9000
+START               8000

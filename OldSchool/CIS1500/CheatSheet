@@ -1,0 +1,106 @@
+Calling Variable Types
+
+%d -> Integer
+%lf -> Double
+%.2lf -> prints a double with 2 decimal spaces
+%c -> Character
+
+scanf("VaraibleType",&VariableName); -> inputs a varible from the user
+getChar() -> only inputs character varaibles
+
+printf("Text variableType text",variablename); -> prints to the screen
+
+When printing a variable, putting a number after the precent "%3variableType" will output that variable in blocks of 3
+so if you were outputting the number 5 and you wrote it as
+printf("%3d",FiveVaraible);
+it prints it out as "  5"
+of for other numbers
+printf("%*d",numberOfSpaces, tenVariable);
+it prints with the defined number of spaces
+
+system("clear") -> clears the terminal screen
+
+if (fabs(doubleVariableName - Target) < 0.0001) -> comparing doubles, you have to compare them as close enough
+
+******IF ELSE STYLE******
+
+int x,y;
+
+if (x < y)
+{
+    blah
+}
+else
+{
+    if (x == y)
+    {
+        blah
+    }
+}
+
+***********END***********
+
+*********LOOP STYLE******
+
+int i;
+
+for(i = 0; i < 10; i++)
+{
+
+}
+
+
+while (condition)
+{
+
+}
+
+***********END************
+
+*********README***********
+
+Assignment 1
+CIS 1500
+Ian Cross
+0911085
+icross@mail.uoguelph.ca
+
+******Compiling the program**********
+to compile this program exicute the following command:
+gcc -Wall -pedantic -std=c99 A1MUG.c -o SomeFile
+
+*******Running The program********
+to run the program type the following command from the root directory of the 	assignment
+./Somefile
+
+explain how to use the program basics
+
+*********Known Limitations**********
+size of input in limmited by the value of integers
+no error checking easy to break
+
+*************END**************
+
+***********LINUX COMMANDS*********
+styleCheck -> will check the style of your program and will print out style errors
+
+nano -> Text editor
+nano -E -> starts nano, but converts the tabs into spaces
+
+ls -> list all the files and directories in thecurrent folder
+ls -al -> list all the files and directories includeing hidden ones with file exstentions in the current folder
+
+cd filename -> moves inside the defined directory
+cd .. ->  moves up a single directory
+cd -> moves up to the top directory
+
+mkdir filename -> makes a directory with the defined name
+
+touch filename -> creates a file with the defined name
+
+git clone https://icross@git.socs.uoguelph.ca/icross/REPONAME -> downloads a file from the person git, or creates the folder in your personaol git
+git close https://icross@git.socs.uoguelph.ca/cis1500/icross/REPONAME -> downloads a file from the class git, can only be (examples, labs, A2, A1)
+git add <Filename> -> when in the local repository folder this add the defined file to the commit
+git commit -a -m "Add a commit message to remind yourself what happened during this commit, put date with it" -> this packages all the files added to the commit and makes them ready to push
+git push -> updates the git repository on the main server, make sure to be inside the repository folder
+git pull -> updates the local repository, make sure to be inside the repository folder

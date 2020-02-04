@@ -1,0 +1,50 @@
+
+Source file: LAB8_4.X68
+Assembled on: 16-11-10 at: 10:10:31
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        
+    2  00008000                        ORG       $8000
+    3  00008000 3F390000A000 START:    MOVE.W    X,-(SP)
+    4  00008006 3F390000A002           MOVE.W    Y,-(SP)
+    5  0000800C 48790000A004           PEA       Z
+    6  00008012 4EB900008024           JSR       QUAD
+    7  00008018 4FEF0008               LEA       8(SP),SP
+    8  0000801C 3A390000A004           MOVE      Z,D5
+    9  00008022 4E4E                   TRAP      #14
+   10                        
+   11                        **************Quadratic****************
+   12  00008024 48E7E0C0     QUAD:     MOVEM.L   D0-D2/A0-A1,-(SP)
+   13  00008028 4E50FFFA               LINK      A0,#-6
+   14  0000802C 32280022               MOVE.W    34(A0),D1
+   15  00008030 C2C1                   MULU      D1,D1
+   16  00008032 3141FFFE               MOVE.W    D1,-2(A0)
+   17  00008036 32280020               MOVE.W    32(A0),D1
+   18  0000803A C2C1                   MULU      D1,D1
+   19  0000803C 3141FFFC               MOVE.W    D1,-4(A0)
+   20  00008040 30280022               MOVE.W    34(A0),D0
+   21  00008044 32280020               MOVE.W    32(A0),D1
+   22  00008048 C2C0                   MULU      D0,D1
+   23  0000804A C2FC0002               MULU      #2,D1
+   24  0000804E 3141FFFA               MOVE.W    D1,-6(A0)
+   25  00008052 3028FFFE               MOVE      -2(A0),D0
+   26  00008056 3228FFFC               MOVE      -4(A0),D1
+   27  0000805A 3428FFFA               MOVE      -6(A0),D2
+   28  0000805E D041                   ADD.W     D1,D0
+   29  00008060 D440                   ADD.W     D0,D2
+   30  00008062 2668001C               MOVEA.L   28(A0),A3
+   31  00008066 2682                   MOVE.L    D2,(A3)
+   32  00008068 4E58                   UNLK      A0
+   33  0000806A 4CDF0307               MOVEM.L   (SP)+,D0-D2/A0-A1
+   34  0000806E 4E75                   RTS       
+   35                                
+   36                        
+   37  0000A000                        ORG       $A000
+   38  0000A000 0004         X:        DC.W      4
+   39  0000A002 0005         Y:        DC.W      5
+   40  0000A004 00000004     Z:        DS.L      1
+   41                                
+   42           00008000               END       START
+
+Lines: 42, Errors: 0, Warnings: 0.

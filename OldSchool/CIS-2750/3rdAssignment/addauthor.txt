@@ -1,0 +1,13 @@
+<div class="center">
+    <form class="addauthorbackground" action="<?PHP echo 'index.php'.get($_GET).'&login=submit'; ?>" method="post">
+        <h1>Add or Remove Author </h1>
+        <input autocomplete="off" class="addauthorinput" type="text" name="username" value="<?PHP echo $_GET['username']?>" placeholder="Author">
+        <br>
+        <input autocomplete="off" class="addauthorinput" type="text" name="streams" placeholder="Enter Stream(s)" tooltip="Creates a stream if it doesn't exist">
+        <br>
+        <input class="addauthorcheck" type="checkbox" name="removeAuthor">Remove
+        <br>
+        <input class="UpperButton" type="submit" name="goBack" value="Back">
+        <input class="UpperButton" type="submit" name="addauthor" value="Add">
+    </form>
+</div>

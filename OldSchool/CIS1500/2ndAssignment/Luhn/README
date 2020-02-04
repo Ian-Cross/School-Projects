@@ -1,0 +1,31 @@
+Assignment 2
+CIS1500
+Ian Cross
+0911085
+icross@mail.uoguelph.ca
+
+****\*\*****Compiling the Program****\*\*****
+To compile the program exicute the following command
+
+    make card
+
+or
+
+    gcc -Wall -pedantic -std=c99 a2LUHN.c -o card
+
+******\*\*******Running The program******\*******
+To run the program type the following command on the root directory
+of the assignment file
+
+    ./card
+
+In this program you will be prompted to enter a credit card
+number into the terminal. Please enter the number in a 16 digit
+number block (xxxxxxxxxxxxxxxx where x's are to be replaced with numbers)
+the program will then test if the entered number is a valid credit card number
+
+******\*\*\*******Known limitations********\*\*********
+No letters can be entered in space of said x's
+
+If more than 99 characters are entered then the
+characters after 99 will be chopped off.

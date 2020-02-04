@@ -1,0 +1,31 @@
+
+Source file: L3_4.X68
+Assembled on: 16-10-06 at: 10:44:57
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        *IAN CROSS LAB 3 BONUS
+    2                        
+    3           00008000     CODE:     EQU       $8000
+    4           00009000     DATA:     EQU       $9000
+    5                        
+    6  00008000                        ORG       CODE
+    7  00008000 303900009000 START:    MOVE.W    W,D0
+    8  00008006 123900009002           MOVE.B    Y,D1
+    9  0000800C 4881                   EXT.W     D1
+   10  0000800E C1C1                   MULS      D1,D0
+   11  00008010 343900009004           MOVE.W    X,D2
+   12  00008016 84FC0003               DIVU      #$3,D2
+   13  0000801A D440                   ADD.W     D0,D2
+   14  0000801C 48C2                   EXT.L     D2
+   15  0000801E 23C200009006           MOVE.L    D2,Z
+   16  00008024 4E4E                   TRAP      #14
+   17                            
+   18  00009000                        ORG       DATA
+   19  00009000 0004         W:        DC.W      $4
+   20  00009002 FD           Y:        DC.B      -3
+   21  00009004 0009         X:        DC.W      $9
+   22  00009006 00000004     Z:        DS.L      1
+   23           00008000               END       START
+
+Lines: 23, Errors: 0, Warnings: 0.

@@ -1,0 +1,22 @@
+
+Source file: L4_5.X68
+Assembled on: 16-10-13 at: 08:44:10
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        *L4_5.x68      
+    2                         
+    3  00008000                        ORG       $8000
+    4  00008000 207C00009000 START:    MOVEA.L   #LIST,A0
+    5  00008006 2018                   MOVE.L    (A0)+,D0
+    6  00008008 3018                   MOVE.W    (A0)+,D0
+    7  0000800A 1018                   MOVE.B    (A0)+,D0
+    8  0000800C 4E4E                   TRAP      #14
+    9                        
+   10  00009000                        ORG       $9000
+   11  00009000 12345678     LIST:     DC.L      $12345678
+   12  00009004 9ABC                   DC.W      $9ABC
+   13  00009006 DE                     DC.B      $DE
+   14           00008000               END       START
+
+Lines: 14, Errors: 0, Warnings: 0.

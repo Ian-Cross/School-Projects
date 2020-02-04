@@ -1,0 +1,37 @@
+
+Source file: L5_5.X68
+Assembled on: 16-10-20 at: 10:35:05
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        
+    2  00008000                        ORG       $8000
+    3  00008000 303900009000 START:    MOVE.W    NUM1,D0
+    4  00008006 323900009002           MOVE.W    NUM2,D1
+    5  0000800C 343900009004           MOVE.W    NUM3,D2
+    6  00008012 B041                   CMP       D1,D0
+    7  00008014 6D000024               BLT       ELSEIF
+    8  00008018 B042                   CMP       D2,D0
+    9  0000801A 6D000010               BLT       ELSE
+   10  0000801E 33F900009000           MOVE.W    NUM1,BIGGEST
+                00009006    
+   11  00008028 6000001E               BRA       EXIT
+   12  0000802C 33F900009004 ELSE:     MOVE.W    NUM3,BIGGEST
+                00009006    
+   13  00008036 60000010               BRA       EXIT
+   14  0000803A B242         ELSEIF:   CMP       D2,D1
+   15  0000803C 6DEE                   BLT       ELSE
+   16  0000803E 33F900009002           MOVE.W    NUM2,BIGGEST
+                00009006    
+   17  00008048 363900009006 EXIT:     MOVE.W    BIGGEST,D3
+   18  0000804E 4E4E                   TRAP      #14
+   19                                
+   20                        
+   21  00009000                        ORG       $9000
+   22  00009000 FFF6         NUM1:     DC.W      -10
+   23  00009002 FFFB         NUM2:     DC.W      -5
+   24  00009004 FFF1         NUM3:     DC.W      -15
+   25  00009006 00000002     BIGGEST:  DS.W      1
+   26           00008000               END       START
+
+Lines: 26, Errors: 0, Warnings: 0.

@@ -1,0 +1,48 @@
+
+Source file: WIRE681.X68
+Assembled on: 16-11-24 at: 10:32:56
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        ******************************************************
+    2                        * WIRE681.x68                                        *
+    3                        *                                                    *
+    4                        * This is a "wire" program.  It reads the 68681      *
+    5                        * input port and updates the output port, simulating *
+    6                        * wire connections, as follows:                      *
+    7                        *                                                    *
+    8                        *        IP0 ----> OP0                               *
+    9                        *        IP1 ----> OP1                               *
+   10                        *        IP2 ----> OP2                               *
+   11                        *        IP3 ----> OP3                               *
+   12                        *        IP4 ----> OP4                               *
+   13                        *        IP5 ----> OP5                               *
+   14                        ******************************************************
+   15           0000C001     DUART:    EQU       $00C001               ;;base address of 68681
+   16           0000001A     IPR:      EQU       13*2                  ;;input port register
+   17           0000001C     OPR_SET:  EQU       14*2                  ;;set bit command reg.
+   18           0000001E     OPR_CLR:  EQU       15*2                  ;;clear bit cmd. reg.
+   19                        
+   20  00008000                        ORG       $8000
+   21  00008000 207C0000C001 WIRE681:  MOVEA.L   #DUART,A0             ;;A0 points to 68681
+   22  00008006 1028001A     LOOP:     MOVE.B    IPR(A0),D0            ;;read input port
+   23  0000800A 020000FF               ANDI.B    #$FF,D0               ;;(mask if desired)
+   24  0000800E 6102                   BSR.S     OUT681                ;;update output port
+   25  00008010 60F4                   BRA       LOOP                  ;;repeat
+   26                        
+   27                        ******************************************************
+   28                        * OUT681 - OUTput data to 68681 output port          *
+   29                        *                                                    *
+   30                        *        ENTER:   D0[0:7] contains data to output    *
+   31                        *                 A0 points to 68681 DUART           *
+   32                        *        EXIT:    all registers intact               *
+   33                        *        USES:    no subroutines                     *
+   34                        ******************************************************
+   35  00008012 1140001E     OUT681:   MOVE.B    D0,OPR_CLR(A0)        ;;clr. bits, set pins
+   36  00008016 4600                   NOT.B     D0
+   37  00008018 1140001C               MOVE.B    D0,OPR_SET(A0)        ;;set bits, clr. pins
+   38  0000801C 4600                   NOT.B     D0                    ;;restore D0
+   39  0000801E 4E75                   RTS       
+   40           00008000               END       WIRE681
+
+Lines: 40, Errors: 0, Warnings: 0.

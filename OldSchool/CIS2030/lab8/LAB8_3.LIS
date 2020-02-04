@@ -1,0 +1,45 @@
+
+Source file: LAB8_3.X68
+Assembled on: 16-11-10 at: 09:42:12
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        
+    2  00008000                        ORG       $8000
+    3  00008000 48790000A000 START:    PEA       W
+    4  00008006 48790000A004           PEA       X
+    5  0000800C 48790000A006           PEA       Y
+    6  00008012 48790000A008           PEA       Z
+    7  00008018 4EB90000802A           JSR       QUAD
+    8  0000801E 4FEF0010               LEA       16(SP),SP
+    9  00008022 2A390000A000           MOVE.L    W,D5
+   10  00008028 4E4E                   TRAP      #14
+   11                        
+   12                        **************Quadratic****************
+   13  0000802A 206F0004     QUAD:     MOVEA.L   4(SP),A0              ;;Z
+   14  0000802E 226F0008               MOVEA.L   8(SP),A1              ;;Y
+   15  00008032 246F000C               MOVEA.L   12(SP),A2             ;;X
+   16  00008036 266F0010               MOVEA.L   16(SP),A3             ;;W
+   17  0000803A 3010                   MOVE.W    (A0),D0
+   18  0000803C 3211                   MOVE.W    (A1),D1
+   19  0000803E 3412                   MOVE.W    (A2),D2
+   20  00008040 C1C0                   MULS      D0,D0                 ;;Z*Z
+   21  00008042 C3C2                   MULS      D2,D1                 ;;X*Y
+   22  00008044 C3FCFFFC               MULS      #-4,D1                ;;-4*Y  
+   23  00008048 C5C2                   MULS      D2,D2                 ;;X*X
+   24  0000804A C5FC0005               MULS      #5,D2                 ;;5*X
+   25  0000804E D441                   ADD.W     D1,D2
+   26  00008050 D440                   ADD.W     D0,D2
+   27  00008052 2682                   MOVE.L    D2,(A3)
+   28  00008054 4E75                   RTS       
+   29                                
+   30                        
+   31  0000A000                        ORG       $A000
+   32  0000A000 00000004     W:        DS.L      1
+   33  0000A004 0002         X:        DC.W      2
+   34  0000A006 0003         Y:        DC.W      3
+   35  0000A008 0004         Z:        DC.W      4
+   36                                
+   37           00008000               END       START
+
+Lines: 37, Errors: 0, Warnings: 0.

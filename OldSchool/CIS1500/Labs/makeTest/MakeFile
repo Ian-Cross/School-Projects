@@ -1,0 +1,3 @@
+test:
+	gcc -Wall -std=c99 -pedantic text.c -o RunTest
+	

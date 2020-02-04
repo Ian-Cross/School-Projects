@@ -1,0 +1,33 @@
+
+Source file: LAB10_3.X68
+Assembled on: 16-11-24 at: 10:27:30
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1           0000C001     DUART:    EQU       $C001
+    2           00000002     SRA:      EQU       2
+    3           00000006     RBA:      EQU       6
+    4           0000001A     IPR:      EQU       $1A
+    5           0000001C     OPR_SET:  EQU       $1C
+    6           0000001E     OPR_CLR:  EQU       $1E
+    7                        
+    8  00008000                        ORG       $8000
+    9  00008000 207C0000C001 START:    MOVEA.L   #DUART,A0
+   10  00008006 10280002     LOOP:     MOVE.B    SRA(A0),D0
+   11  0000800A 02070001               ANDI.B    #1,D7
+   12  0000800E 67F6                   BEQ       LOOP
+   13  00008010 10280006               MOVE.B    RBA(A0),D0
+   14  00008014 020000FF               ANDI.B    #$FF,D0
+   15  00008018 6104                   BSR.S     OUT
+   16  0000801A 60EA                   BRA       LOOP
+   17  0000801C 4E4E                   TRAP      #14
+   18                                
+   19  0000801E 1140001E     OUT:      MOVE.B    D0,OPR_CLR(A0)
+   20  00008022 4600                   NOT.B     D0
+   21  00008024 1140001C               MOVE.B    D0,OPR_SET(A0)
+   22  00008028 4600                   NOT.B     D0
+   23  0000802A 4E75                   RTS       
+   24                            
+   25           00008000               END       START
+
+Lines: 25, Errors: 0, Warnings: 0.

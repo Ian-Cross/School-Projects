@@ -1,0 +1,46 @@
+
+Source file: LAB10_1.X68
+Assembled on: 16-11-24 at: 09:54:52
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1           0000C001     DUART:    EQU       $C001
+    2           00000002     SRA:      EQU       2
+    3           00000006     TBA:      EQU       6
+    4           0000000D     CL:       EQU       $0D
+    5           0000000A     LF:       EQU       $0A
+    6                        
+    7  00008000                        ORG       $8000
+    8  00008000 227C0000800C START:    MOVEA.L   #WORD,A1
+    9  00008006 6100002A               BSR       PRINT
+   10  0000800A 4E4E                   TRAP      #14
+   11                                
+   12  0000800C 0D0A48454C4C WORD:     DC.B      CL,LF,'HELLO'
+                4F          
+   13  00008013 00                     DC.B      0
+   14                        
+   15  00008014 2F08         PRCH:     MOVE.L    A0,-(A7)
+   16  00008016 3F07                   MOVE.W    D7,-(A7)
+   17  00008018 207C0000C001           MOVEA.L   #DUART,A0
+   18                               
+   19  0000801E 1E280002     PRCH2:    MOVE.B    2(A0),D7
+   20  00008022 02070004               ANDI.B    #4,D7
+   21  00008026 67F6                   BEQ       PRCH2
+   22  00008028 11400006               MOVE.B    D0,6(A0)
+   23  0000802C 3E1F                   MOVE.W    (A7)+,D7
+   24  0000802E 205F                   MOVE.L    (A7)+,A0
+   25  00008030 4E75                   RTS       
+   26                        
+   27                        
+   28  00008032 2F00         PRINT:    MOVE.L    D0,-(A7)
+   29  00008034 1019         PR:       MOVE.B    (A1)+,D0
+   30  00008036 6700000A               BEQ       EXIT
+   31  0000803A 4EB900008014           JSR       PRCH
+   32  00008040 60F2                   BRA       PR
+   33                                
+   34  00008042 201F         EXIT:     MOVE.L    (A7)+,D0
+   35  00008044 4E75                   RTS       
+   36                            
+   37           00008000               END       START
+
+Lines: 37, Errors: 0, Warnings: 0.

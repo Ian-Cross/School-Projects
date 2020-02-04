@@ -1,0 +1,46 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 10/20/2016 10:19:25 AM
+
+00000000                             1  
+00008000                             2      ORG $8000
+00008000  3039 00009000              3  START   MOVE.W  NUM1,D0
+00008006  3239 00009002              4          MOVE.W  NUM2,D1
+0000800C  3439 00009004              5          MOVE.W  NUM3,D2
+00008012  B041                       6          CMP     D1,D0
+00008014  6D00 0024                  7          BLT     ELSEIF
+00008018  B042                       8          CMP     D2,D0
+0000801A  6D00 0010                  9          BLT     ELSE
+0000801E  33F9 00009000 00009006    10          MOVE.W  NUM1,BIGGEST
+00008028  6000 001E                 11          BRA     EXIT
+0000802C  33F9 00009004 00009006    12  ELSE    MOVE.W  NUM3,BIGGEST
+00008036  6000 0010                 13          BRA     EXIT
+0000803A  B242                      14  ELSEIF  CMP     D2,D1
+0000803C  6DEE                      15          BLT     ELSE
+0000803E  33F9 00009002 00009006    16          MOVE.W  NUM2,BIGGEST
+00008048  3639 00009006             17  EXIT    MOVE.W BIGGEST,D3
+0000804E  4E4E                      18          TRAP    #14
+00008050                            19          
+00008050                            20  
+00009000                            21      ORG $9000
+00009000= 0003                      22  NUM1    DC.W    3
+00009002= 0004                      23  NUM2    DC.W    4
+00009004= 0005                      24  NUM3    DC.W    5
+00009006                            25  BIGGEST DS.W    1
+00009008                            26      END START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+BIGGEST             9006
+ELSE                802C
+ELSEIF              803A
+EXIT                8048
+NUM1                9000
+NUM2                9002
+NUM3                9004
+START               8000

@@ -1,0 +1,61 @@
+
+Source file: TWOHZ.X68
+Assembled on: 16-11-24 at: 11:17:27
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        ******************************************************
+    2                        * TWOHZ.x68                                          *
+    3                        *                                                    *
+    4                        * This program uses the 68681 timer to create a 2 Hz *
+    5                        * square wave on OP3.  If the 68681 X1 input is      *
+    6                        * driven at 3.6864 MHz, then the frequency on OP3    *
+    7                        * equals                                             *
+    8                        *                                                    *
+    9                        *       3686400 / 2 / 16 / COUNT                     *
+   10                        *                                                    *
+   11                        * where COUNT is the 16-bit integer in the timer     *
+   12                        * registers CTUR and CTLR.  CTUR holds the upper     *
+   13                        * byte, CTLR holds the lower byte.                   *
+   14                        ******************************************************
+   15           0000C001     DUART:    EQU       $00C001               ;;68681 base address
+   16           0000000A     ISR:      EQU       $A
+   17           0000001E     STOP:     EQU       $1E
+   18           00000008     ACR:      EQU       4*2                   ;;auxiliary control reg.
+   19           0000000C     CTUR:     EQU       6*2                   ;;counter/timer upper reg.
+   20           0000000E     CTLR:     EQU       7*2                   ;;counter/timer lower reg.
+   21           0000001A     OPCR:     EQU       13*2                  ;;output port config. reg.
+   22           00003840     COUNT:    EQU       14400
+   23           0000001C     OPR_SET:  EQU       $1C
+   24           0000001E     OPR_CLR:  EQU       $1E
+   25                        
+   26  00008000                        ORG       $8000
+   27  00008000 207C0000C001 TWOHZ:    MOVEA.L   #DUART,A0
+   28  00008006 303C3840               MOVE.W    #COUNT,D0
+   29  0000800A 0188000C               MOVEP.W   D0,CTUR(A0)
+   30  0000800E 117C00700008           MOVE.B    #$70,ACR(A0)          ;;crystal clock / 16
+   31                                 
+   32  00008014 1028000A     LOOP:     MOVE.B    ISR(A0),D0
+   33  00008018 02000008               ANDI.B    #8,D0
+   34  0000801C 67F6                   BEQ       LOOP
+   35  0000801E 4A28001E               TST.B     STOP(A0)
+   36  00008022 0C020001               CMPI.B    #1,D2
+   37  00008026 67000006               BEQ       OFF
+   38  0000802A 60000014               BRA       ON
+   39                                 
+   40  0000802E 103C00FF     OFF:      MOVE.B    #$FF,D0
+   41  00008032 13C00000C01F           MOVE.B    D0,$C01F
+   42  00008038 4600                   NOT.B     D0
+   43  0000803A 143C0000               MOVE.B    #0,D2
+   44  0000803E 60D4                   BRA       LOOP
+   45                        
+   46  00008040 103C0000     ON:       MOVE.B    #$00,D0
+   47  00008044 1140001E               MOVE.B    D0,OPR_CLR(A0)
+   48  00008048 4600                   NOT.B     D0
+   49  0000804A 1140001C               MOVE.B    D0,OPR_SET(A0)
+   50  0000804E 143C0001               MOVE.B    #1,D2
+   51  00008052 60C0                   BRA       LOOP
+   52                        
+   53           00008000               END       TWOHZ
+
+Lines: 53, Errors: 0, Warnings: 0.

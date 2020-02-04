@@ -1,0 +1,30 @@
+
+Source file: LAB2_2.X68
+Assembled on: 16-11-03 at: 09:04:36
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        
+    2  00009000                        ORG       $9000
+    3  00009000 00000000     RESULT:   DC.L      0
+    4                        
+    5  00009500                        ORG       $9500
+    6  00009500 203C12345678 START:    MOVE.L    #$12345678,D0
+    7  00009506 223C9ABCDEF0           MOVE.L    #$9ABCDEF0,D1
+    8  0000950C 243C0FEDCBA9           MOVE.L    #$0FEDCBA9,D2
+    9  00009512 027CDFFF               ANDI.W    #%1101111111111111,SR
+   10  00009516 4FF900008100           LEA       $8100,A7
+   11  0000951C 4EB900009524           JSR       GENMUL
+   12  00009522 4E4E                   TRAP      #14
+   13                                    
+   14  00009524 2F00         GENMUL:   MOVE.L    D0,-(A7)
+   15  00009526 2001                   MOVE.L    D1,D0
+   16  00009528 C1C2                   MULS      D2,D0
+   17  0000952A 23C000009000           MOVE.L    D0,RESULT
+   18  00009530 201F                   MOVE.L    (A7)+,D0
+   19  00009532 4E75                   RTS       
+   20                                    
+   21                        
+   22           00009500               END       START
+
+Lines: 22, Errors: 0, Warnings: 0.
