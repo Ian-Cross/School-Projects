@@ -198,16 +198,17 @@ Use the mob functions to create and control the projectile. There are examples o
 
 ---
 
-Use the draw2D() function draw two dimensional maps on the screen. The map should show the boundary of the world, the player's current location, the landed meteor locations, and the location of the bases, The maps should display the x and z coordinates of the world. They do not need to show elevation in the y axis.
+Use the `draw2D()` function draw two dimensional maps on the screen. The map should show the boundary of the world, the player's current location, the landed meteor locations, and the location of the bases, The maps should display the x and z coordinates of the world. They do not need to show elevation in the y axis.
 
 The int displayMap variable will be used to indicate what type of map will be displayed. When:
-displayMap == 0, no map is displayed
-displayMap == 1, a small world map in the upper right corner is drawn
-displayMap == 2, a large world map is displayed in the middle of the screen is drawn
+
+    displayMap == 0, no map is displayed
+    displayMap == 1, a small world map in the upper right corner is drawn
+    displayMap == 2, a large world map is displayed in the middle of the screen is drawn
 
 The value of displayMap is cycled through using the m key.
 
-You can use the draw2D\*() functions to drawn lines, boxes, and triangles. The `set2Dcolour()` function lets you set the colour of the shapes. These are described in the readme.txt file.
+You can use the `draw2D\*()` functions to drawn lines, boxes, and triangles. The `set2Dcolour()` function lets you set the colour of the shapes. These are described in the readme.txt file.
 
 Draw lines to indicate the boundary of the map and draw a square to indicate the players location on the map.
 

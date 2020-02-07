@@ -46,8 +46,8 @@ GLfloat viewpointLight[] = {-50.0, -50.0, -50.0, 1.0};
 float skySize;
 
 /* screen dimensions */
-int screenWidth = 1748;
-int screenHeight = 1311;
+int screenWidth = 1320;
+int screenHeight = 1068;
 // int screenWidth = 1024;
 // int screenHeight = 768;
 

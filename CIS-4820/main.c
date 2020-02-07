@@ -56,6 +56,39 @@ void collisionResponse() {
   // printf("(%lf, %lf, %lf) => (%lf, %lf, %lf) \n", xx, yy, zz, x, y, z);
 }
 
+GLfloat ambRed, ambGreen, ambBlue, ambAlpha, difRed, difGreen, difBlue,
+    difAlpha;
+
+void drawMap(int startX, int startY, int width, int height, int cubeWidth,
+             int cubeHeight) {
+  // Draw a box to contain the map,
+  GLfloat black[] = {0.0, 0.0, 0.0, 1};
+  set2Dcolour(black);
+  draw2Dline(startX, startY, startX + width, startY, 5);
+  draw2Dline(startX, startY, startX, startY + height, 5);
+  draw2Dline(startX + width, startY, startX + width, startY + height, 5);
+  draw2Dline(startX, startY + height, startX + width, startY + height, 5);
+
+  for (int i = 0; i < WORLDX; i++) {
+    for (int j = 0; j < WORLDZ; j++) {
+      for (int y = 0; y < WORLDY; y++) {
+        if (world[i][y][j] == 0) {
+          getUserColour(world[i][y - 1][j], &ambRed, &ambGreen, &ambBlue,
+                        &ambAlpha, &difRed, &difGreen, &difBlue, &difAlpha);
+          GLfloat colour[] = {ambRed, ambGreen, ambBlue, 1};
+          set2Dcolour(colour);
+
+          int cubeStartX = startX + i * cubeWidth;
+          int cubeStartY = startY + j * cubeWidth;
+          draw2Dbox(cubeStartX, cubeStartY, cubeStartX + cubeWidth,
+                    cubeStartY + cubeWidth);
+          break;
+        }
+      }
+    }
+  }
+}
+
 /******* draw2D() *******/
 /* draws 2D shapes on screen */
 /* use the following functions: 			*/
@@ -79,8 +112,23 @@ void draw2D() {
       draw2Dbox(500, 380, 524, 388);
     }
   } else {
-
-    /* your code goes here */
+    if (displayMap == 1) {
+      // define map size
+      // take off 20 pixles to add a small buffer to the edge of the screen
+      int mapWidth = (screenWidth / 4) / WORLDX * WORLDX;
+      int mapStartX = screenWidth - mapWidth - 20;
+      int mapStartY = screenHeight - mapWidth - 20;
+      int cubeWidth = mapWidth / WORLDX;
+      drawMap(mapStartX, mapStartY, mapWidth, mapWidth, cubeWidth, cubeWidth);
+    } else if (displayMap == 2) {
+      // define map size
+      // take off 50 pixles to add a small buffer to the edge of the screen
+      int mapHeight = (screenHeight - 50) / WORLDZ * WORLDZ;
+      int mapStartX = (screenWidth - mapHeight) / 2;
+      int mapStartY = (screenHeight - mapHeight) / 2;
+      int cubeWidth = mapHeight / WORLDX;
+      drawMap(mapStartX, mapStartY, mapHeight, mapHeight, cubeWidth, cubeWidth);
+    }
   }
 }
 
