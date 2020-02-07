@@ -10,6 +10,7 @@
 #include "base.h"
 #include "cloud.h"
 #include "hill.h"
+#include "meteor.h"
 #include "timing.h"
 #include "valley.h"
 
@@ -39,6 +40,7 @@ typedef struct WorldDatas {
   int worldId;
   Object *objects[MAX_VALLEY_COUNT + MAX_HILL_COUNT + BASE_COUNT];
   Cloud *clouds[MAX_CLOUD_COUNT];
+  Meteor *meteors;
 } WorldData;
 
 WorldData *newWorld;
@@ -50,6 +52,9 @@ WorldData *newWorld;
 /* The testworld is only guaranteed to work with a world of
         with dimensions of 100,50,100. */
 void genTestWorld();
+
+void addMeteor(Meteor *newMeteor);
+Meteor *removeMeteor(Meteor *meteor);
 
 /******* genWorld() *******/
 /* - Fill the world object */

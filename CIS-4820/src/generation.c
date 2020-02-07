@@ -7,6 +7,7 @@
 #include "generation.h"
 #include "graphics.h"
 #include "hill.h"
+#include "meteor.h"
 #include "valley.h"
 
 int x, y, z, idx, jdx;
@@ -25,27 +26,45 @@ void initWorld() {
         world[x][y][z] = 0;
 }
 
+/******* convertColour() *******/
+/* TODO: Write the helper function */
+void setColourAmbDif(int colourCode, int r, int g, int b) {
+  double aRed = roundf(((double)r / (double)256) * 1000) / 1000;
+  double aGreen = roundf(((double)g / (double)256) * 1000) / 1000;
+  double aBlue = roundf(((double)b / (double)256) * 1000) / 1000;
+  double dRed = roundf(((double)r / (double)512) * 1000) / 1000;
+  double dGreen = roundf(((double)g / (double)512) * 1000) / 1000;
+  double dBlue = roundf(((double)b / (double)512) * 1000) / 1000;
+  setUserColour(colourCode, aRed, aGreen, aBlue, 1.0, dRed, dGreen, dBlue, 1.0);
+}
+
 /******* setColours() *******/
 /* - register predefind user colours with the game engine */
 void setColours() {
   // Grass Greens
-  setUserColour(9, 0.074, 0.529, 0.203, 1.0, 0.037, 0.264, 0.101, 1.0);
-  setUserColour(10, 0.074, 0.429, 0.203, 1.0, 0.037, 0.264, 0.101, 1.0);
-  setUserColour(11, 0.074, 0.629, 0.203, 1.0, 0.037, 0.264, 0.101, 1.0);
-  setUserColour(12, 0.074, 0.729, 0.203, 1.0, 0.037, 0.264, 0.101, 1.0);
-  setUserColour(13, 0.074, 0.329, 0.203, 1.0, 0.037, 0.264, 0.101, 1.0);
+  setColourAmbDif(9, 19, 136, 52);
+  setColourAmbDif(10, 19, 110, 52);
+  setColourAmbDif(11, 19, 162, 52);
+  setColourAmbDif(12, 19, 187, 52);
+  setColourAmbDif(13, 19, 85, 52);
   // Dirt Brown
-  setUserColour(14, 0.262, 0.234, 0.039, 1.0, 0.131, 0.117, 0.02, 1.0);
-  setUserColour(15, 0.477, 0.355, 0.094, 1.0, 0.238, 0.178, 0.047, 1.0);
-  setUserColour(16, 0.398, 0.262, 0.059, 1.0, 0.199, 0.131, 0.029, 1.0);
-  setUserColour(17, 0.309, 0.258, 0.047, 1.0, 0.154, 0.129, 0.023, 1.0);
-  setUserColour(18, 0.488, 0.387, 0.059, 1.0, 0.244, 0.193, 0.029, 1.0);
+  setColourAmbDif(14, 68, 60, 10);
+  setColourAmbDif(15, 123, 91, 24);
+  setColourAmbDif(16, 102, 67, 15);
+  setColourAmbDif(17, 80, 66, 12);
+  setColourAmbDif(18, 125, 99, 15);
   // Base Grey
-  setUserColour(19, 0.344, 0.367, 0.367, 1.0, 0.172, 0.184, 0.184, 1.0);
+  setColourAmbDif(19, 89, 94, 94);
   // cloud grey
-  setUserColour(20, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.5);
-  setUserColour(21, 0.975, 0.975, 0.975, 0.5, 0.975, 0.975, 0.975, 0.5);
-  setUserColour(22, 0.925, 0.925, 0.925, 0.5, 0.925, 0.925, 0.925, 0.5);
+  setColourAmbDif(20, 244, 244, 244);
+  setColourAmbDif(21, 250, 250, 250);
+  setColourAmbDif(22, 237, 237, 237);
+  // fire reds
+  setColourAmbDif(23, 206, 22, 32);
+  setColourAmbDif(24, 226, 88, 34);
+  setColourAmbDif(25, 255, 222, 173);
+  // meteorite black
+  setColourAmbDif(26, 48, 25, 52);
 }
 
 /******* makeFloor() *******/
@@ -235,6 +254,57 @@ void makeClouds() {
   }
 }
 
+/******* makeMeteors() *******/
+void makeMeteors() {
+  newWorld->meteors = NULL;
+  for (idx = 0; idx < 30; idx++) {
+    addMeteor(createMeteor(idx + 1));
+  }
+}
+void addMeteor(Meteor *newMeteor) {
+  Meteor *meteor = newWorld->meteors;
+  // If the meteor list is empty
+  if (meteor == NULL) {
+    newWorld->meteors = newMeteor;
+    return;
+  }
+  while (meteor->next != NULL) {
+    meteor = meteor->next;
+  }
+  meteor->next = newMeteor;
+  newMeteor->prev = meteor;
+}
+Meteor *removeMeteor(Meteor *meteor) {
+  if (meteor == NULL)
+    return NULL;
+  Meteor *next = meteor->next;
+  Meteor *prev = meteor->prev;
+
+  // if this is the only item in the list
+  if (next == NULL && prev == NULL) {
+    free(meteor);
+    newWorld->meteors = NULL;
+    return NULL;
+  }
+  // if this is the last item in the list
+  if (next == NULL) {
+    prev->next = NULL;
+    free(meteor);
+    return NULL;
+  }
+  // if this is the first item in the list
+  if (prev == NULL) {
+    next->prev = NULL;
+    newWorld->meteors = next;
+    free(meteor);
+    return next;
+  }
+  prev->next = next;
+  next->prev = prev;
+  free(meteor);
+  return next;
+}
+
 /******* makeBases() *******/
 /* - Generate two base objects */
 /* - fill with random values */
@@ -387,6 +457,7 @@ void genWorld() {
   makeValleys();
   makeHills();
   makeClouds();
+  makeMeteors();
   fixOverlap();
 
   drawStructures();

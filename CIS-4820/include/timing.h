@@ -12,4 +12,9 @@
 /* - Move each cloud by 1 space every 1 second */
 void moveClouds();
 
+/******* moveMeteors() *******/
+/* - Iterate over all the meteors */
+/* - Move each meteor by its velocity vectory 0.5 seconds */
+void moveMeteors();
+
 #endif

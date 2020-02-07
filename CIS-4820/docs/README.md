@@ -154,6 +154,65 @@ You can make the bases look more interesting than simple boxes if you
 wish. You can make them multiple colours and you can add windows or
 towers.
 
+## Assignment 2 - Projectiles, Meteors, and Maps
+
+Due. February 7, 2020
+
+---
+
+### Meteors
+
+---
+
+The resources that will be collected in the game are meteors. They should appear in the sky and land on the ground. Animate them using black or dark coloured cubes in the world array. They should have coloured cubes that look like fire trails following them as they drop to the ground. The fire trails should disappear once they land on the ground.
+
+The meteors should move diagonally while they drop from the sky. Once they contact the ground or any occupied cube in the world array they should stop descending. Meteors should not land on clouds. They should be treated like any other object in the world array once they have reached the ground.
+
+The meteors should drop randomly in the world. They should not repeatedly fall in the same location.
+
+Since the meteors will drop diagonally they should move in both the x and z direction while falling. This means they may need to start in a location outside the maximum world dimensions (100x50x100). While they are falling you should store their location in a data structure. This will allow you to position them outside the world array. Once they stop falling you can clear the data structure to store their location while falling.
+
+Use the timing schedular you developed in assignment 1 to control the speed of the meteors as they drop to the ground. Make them drop in a reasonable speed so the player can see them fall.
+
+Initially there should be 30 meteors that fall at the start of the game. Every 30 seconds another 10 meteors should fall.
+
+---
+
+### Launching a Projectile
+
+---
+
+Launch a projectile from the viewpoint. It should travel in the direction which the viewpoint was facing when it is launched. The player should be able to control the angle the projectile when it is fired. After that it should move in a straight line. When the projectile strikes a cube in the world array both the projectile and the cube should be removed from the game.
+
+The projectile should travel in a straight line from the viewpoint. You will likely want to use the getViewPosition() and getViewOrientation() functions to find the starting location of the viewpoint and the angle that the viewpoint is facing. It is a good idea to examine the values these functions return, particularly the orientation, to understand the values they return.
+
+The mouse() function allows you to respond to button press and release events on the mouse. Remove the existing printf's from the mouse() function in your final submission. They are there to help understand the function and are not meant to be part of the final system. Launch the projectile when the left mouse button is pressed.
+
+If a projectile impacts the side of the world space then it should be removed (when 0>x>99 or 0>z>99 or y>49).
+
+Use the mob functions to create and control the projectile. There are examples of these functions in a1.c. Opponents will be added in later assignments which can collide with the projectiles and be removed from the game. For now all the projectile can do is remove cubes from the world array.
+
+---
+
+### Displaying a Two Dimensional World Map
+
+---
+
+Use the draw2D() function draw two dimensional maps on the screen. The map should show the boundary of the world, the player's current location, the landed meteor locations, and the location of the bases, The maps should display the x and z coordinates of the world. They do not need to show elevation in the y axis.
+
+The int displayMap variable will be used to indicate what type of map will be displayed. When:
+displayMap == 0, no map is displayed
+displayMap == 1, a small world map in the upper right corner is drawn
+displayMap == 2, a large world map is displayed in the middle of the screen is drawn
+
+The value of displayMap is cycled through using the m key.
+
+You can use the draw2D\*() functions to drawn lines, boxes, and triangles. The `set2Dcolour()` function lets you set the colour of the shapes. These are described in the readme.txt file.
+
+Draw lines to indicate the boundary of the map and draw a square to indicate the players location on the map.
+
+You should use the screenWidth and screenHeight variables to scale the size of the maps when the window size is changed.
+
 ---
 
 ## Details

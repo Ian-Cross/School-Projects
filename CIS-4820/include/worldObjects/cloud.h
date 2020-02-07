@@ -10,12 +10,13 @@
 #define MAX_CLOUD_COUNT 2000
 #define GROWTH_CHANCE 100
 
-#define CLOUD_MOVE_SPEED 1
+#define CLOUD_MOVE_SPEED 10
 
 typedef struct Clouds {
   int xLoc;
   int zLoc;
   int yLoc;
+  int colour;
 } Cloud;
 
 /******* createCloud() *******/

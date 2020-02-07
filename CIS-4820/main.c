@@ -188,6 +188,7 @@ void update() {
 
   } else {
     moveClouds();
+    moveMeteors();
   }
 }
 

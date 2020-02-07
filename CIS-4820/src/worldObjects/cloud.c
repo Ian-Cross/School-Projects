@@ -22,6 +22,7 @@ Cloud *createCloud(int xLoc, int zLoc) {
   newCloud->xLoc = xLoc;
   newCloud->yLoc = WORLDY - 3;
   newCloud->zLoc = zLoc;
+  newCloud->colour = rand() % 3 + 20;
   drawCloud(newCloud);
   return (newCloud);
 }
@@ -35,7 +36,7 @@ void moveCloud(Cloud *cloud) { cloud->xLoc = (cloud->xLoc + 1) % WORLDX; }
 /* - Inputs cloud object and renders to the world */
 /* - Picks a random colour from a group of greys */
 void drawCloud(Cloud *cloud) {
-  world[cloud->xLoc][cloud->yLoc][cloud->zLoc] = rand() % 3 + 20;
+  world[cloud->xLoc][cloud->yLoc][cloud->zLoc] = cloud->colour;
 }
 
 /******* clearCloud() *******/
