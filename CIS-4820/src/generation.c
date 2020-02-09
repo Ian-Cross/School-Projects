@@ -261,6 +261,7 @@ void makeMeteors() {
     addMeteor(createMeteor(idx + 1));
   }
 }
+
 void addMeteor(Meteor *newMeteor) {
   Meteor *meteor = newWorld->meteors;
   // If the meteor list is empty
@@ -274,6 +275,7 @@ void addMeteor(Meteor *newMeteor) {
   meteor->next = newMeteor;
   newMeteor->prev = meteor;
 }
+
 Meteor *removeMeteor(Meteor *meteor) {
   if (meteor == NULL)
     return NULL;

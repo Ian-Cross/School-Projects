@@ -58,11 +58,6 @@ int displayAllCubes = 0; // draw all of the cubes in the world when 1
 int displayList[MAX_DISPLAY_LIST][3];
 int displayCount = 0; // count of cubes in displayList[][]
 
-/* list of mobs - number of mobs, xyz values and rotation about y */
-float mobPosition[MOB_COUNT][4];
-/* visibility of mobs, 0 not drawn, 1 drawn */
-short mobVisible[MOB_COUNT];
-
 /* list of players - number of mobs, xyz values and rotation about y */
 float playerPosition[PLAYER_COUNT][4];
 /* visibility of players, 0 not drawn, 1 drawn */

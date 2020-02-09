@@ -2,25 +2,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+#include <sys/time.h>
 
 #include "cloud.h"
 #include "generation.h"
 #include "graphics.h"
 #include "meteor.h"
 
-int meteorMoveCount = 0;
+double lastCloudTime = 0;
+double lastMeteorTime = 0;
+int meteorSpawnCount = 0;
 int lastMeteorSecond = 0;
-int cloudMoveCount = 0;
+
+double getTimeMS() {
+  struct timeval t;
+  gettimeofday(&t, NULL);
+  return (t.tv_sec + (t.tv_usec / 1000000.0)) * 1000.0;
+}
 
 /******* moveClouds() *******/
 /* - Iterate over all the clouds */
-/* - Move each cloud by 1 space every 1000 second */
+/* - Move each cloud by 1 space every 1000 milli-seconds */
 void moveClouds() {
-  cloudMoveCount++;
-  // make sure enough time has passed
-  if ((cloudMoveCount % CLOUD_MOVE_SPEED) == 0) {
-    cloudMoveCount /= CLOUD_MOVE_SPEED;
+  double currTime = getTimeMS();
+
+  if (currTime - lastCloudTime >= CLOUD_MOVE_SPEED) {
+    lastCloudTime = currTime;
     for (int i = 0; i < MAX_CLOUD_COUNT; i++) {
       clearCloud(newWorld->clouds[i]);
       moveCloud(newWorld->clouds[i]);
@@ -31,14 +38,13 @@ void moveClouds() {
 
 /******* moveMeteors() *******/
 /* - Iterate over all the meteors */
-/* - Move each meteor by its velocity vectory 0.5 seconds */
+/* - Move each meteor by its velocity vectory 500 milli-seconds */
 void moveMeteors() {
-  meteorMoveCount++;
-  time_t seconds = time(NULL);
+  double currTime = getTimeMS();
   // make sure enough time has passed
-  if ((meteorMoveCount % METEOR_MOVE_SPEED) == 0) {
-    meteorMoveCount /= METEOR_MOVE_SPEED;
-    // printf("MOVING METEORS:\n");
+  if (currTime - lastMeteorTime > METEOR_MOVE_SPEED) {
+    lastMeteorTime = currTime;
+
     Meteor *meteor = newWorld->meteors;
     while (meteor != NULL) {
       clearMeteor(meteor);
@@ -54,8 +60,13 @@ void moveMeteors() {
     }
   }
 
-  if (seconds != lastMeteorSecond && (seconds % 10) == 0) {
-    lastMeteorSecond = seconds;
+  if ((int)(currTime / 1000) != lastMeteorSecond) {
+    lastMeteorSecond = (int)(currTime / 1000);
+    meteorSpawnCount++;
+  }
+
+  if (meteorSpawnCount == 10) {
+    meteorSpawnCount = 0;
     for (int i = 0; i < 10; i++) {
       addMeteor(createMeteor());
     }

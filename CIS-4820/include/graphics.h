@@ -42,6 +42,11 @@ double fastFly;                // speedier flying flag, is true when = 1.0
 int displayList[MAX_DISPLAY_LIST][3];
 int displayCount; // count of cubes in displayList[][]
 
+/* list of mobs - number of mobs, xyz values and rotation about y */
+float mobPosition[MOB_COUNT][4];
+/* visibility of mobs, 0 not drawn, 1 drawn */
+short mobVisible[MOB_COUNT];
+
 /***** Graphics Initiallization *****/
 void graphicsInit(int *argc, char **argv);
 

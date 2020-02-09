@@ -17,7 +17,8 @@ SOURCES = main.c \
 					src/worldObjects/hill.c \
 					src/worldObjects/base.c \
 					src/worldObjects/cloud.c \
-					src/worldObjects/meteor.c
+					src/worldObjects/meteor.c \
+					src/projectile.c \
 
 
 OBJS = $(SOURCES:%.c=%.o)

@@ -7,7 +7,7 @@
 #include <OpenGL/glu.h>
 #endif
 
-#define METEOR_MOVE_SPEED 5
+#define METEOR_MOVE_SPEED 50
 
 typedef struct Meteors {
   int xLoc;

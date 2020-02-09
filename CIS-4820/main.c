@@ -13,6 +13,7 @@
 
 #include "generation.h"
 #include "graphics.h"
+#include "projectile.h"
 #include "timing.h"
 #include "visible.h"
 
@@ -45,9 +46,9 @@ void collisionResponse() {
 
   // Iterate through the 26 points surrounding the viewpoint to draw a simulated
   // hitbox
-  for (float j = -y - 0.1; j < -y + 0.2; j += 0.1) {
-    for (float i = -x - 0.1; i < -x + 0.2; i += 0.1) {
-      for (float k = -z - 0.1; k < -z + 0.2; k += 0.1) {
+  for (float j = -y - 0.15; j < -y + 0.3; j += 0.15) {
+    for (float i = -x - 0.15; i < -x + 0.3; i += 0.15) {
+      for (float k = -z - 0.15; k < -z + 0.3; k += 0.15) {
         if (doesCollide((int)i, (int)j, (int)k))
           setViewPosition(xx, yy, zz);
       }
@@ -61,6 +62,16 @@ GLfloat ambRed, ambGreen, ambBlue, ambAlpha, difRed, difGreen, difBlue,
 
 void drawMap(int startX, int startY, int width, int height, int cubeWidth,
              int cubeHeight) {
+  GLfloat white[] = {1.0, 1.0, 1.0, 1};
+  // Draw view point on map
+  float x, y, z;
+  getViewPosition(&x, &y, &z);
+  set2Dcolour(white);
+  int cubeStartX = startX + -x * cubeWidth;
+  int cubeStartY = startY + -z * cubeWidth;
+  draw2Dbox(cubeStartX, cubeStartY, cubeStartX + cubeWidth,
+            cubeStartY + cubeWidth);
+
   // Draw a box to contain the map,
   GLfloat black[] = {0.0, 0.0, 0.0, 1};
   set2Dcolour(black);
@@ -72,17 +83,16 @@ void drawMap(int startX, int startY, int width, int height, int cubeWidth,
   for (int i = 0; i < WORLDX; i++) {
     for (int j = 0; j < WORLDZ; j++) {
       for (int y = 0; y < WORLDY; y++) {
-        if (world[i][y][j] == 0) {
-          getUserColour(world[i][y - 1][j], &ambRed, &ambGreen, &ambBlue,
-                        &ambAlpha, &difRed, &difGreen, &difBlue, &difAlpha);
+        if (world[i][y][j] != 0 && world[i][y + 1][j] == 0) {
+          getUserColour(world[i][y][j], &ambRed, &ambGreen, &ambBlue, &ambAlpha,
+                        &difRed, &difGreen, &difBlue, &difAlpha);
           GLfloat colour[] = {ambRed, ambGreen, ambBlue, 1};
           set2Dcolour(colour);
 
-          int cubeStartX = startX + i * cubeWidth;
-          int cubeStartY = startY + j * cubeWidth;
+          cubeStartX = startX + i * cubeWidth;
+          cubeStartY = startY + j * cubeWidth;
           draw2Dbox(cubeStartX, cubeStartY, cubeStartX + cubeWidth,
                     cubeStartY + cubeWidth);
-          break;
         }
       }
     }
@@ -90,13 +100,13 @@ void drawMap(int startX, int startY, int width, int height, int cubeWidth,
 }
 
 /******* draw2D() *******/
-/* draws 2D shapes on screen */
-/* use the following functions: 			*/
-/*	draw2Dline(int, int, int, int, int);		*/
-/*	draw2Dbox(int, int, int, int);			*/
-/*	draw2Dtriangle(int, int, int, int, int, int);	*/
-/*	set2Dcolour(float []); 				*/
-/* colour must be set before other functions are called	*/
+/* - draws 2D shapes on screen */
+/* - use the following functions: 			*/
+/* - draw2Dline(int, int, int, int, int);		*/
+/* - draw2Dbox(int, int, int, int);			*/
+/* - draw2Dtriangle(int, int, int, int, int, int);	*/
+/* - set2Dcolour(float []); 				*/
+/* - colour must be set before other functions are called	*/
 void draw2D() {
 
   if (testWorld) {
@@ -167,6 +177,7 @@ void update() {
     static float mob0x = 50.0, mob0y = 25.0, mob0z = 52.0;
     static float mob0ry = 0.0;
     static int increasingmob0 = 1;
+
     /* coordinates for mob 1 */
     static float mob1x = 50.0, mob1y = 25.0, mob1z = 52.0;
     static float mob1ry = 0.0;
@@ -237,6 +248,35 @@ void update() {
   } else {
     moveClouds();
     moveMeteors();
+    if (mobVisible[0] == 1) {
+      float mobX = mobPosition[0][0], mobY = mobPosition[0][1],
+            mobZ = mobPosition[0][2];
+
+      float rotx = (mouseRotX / 180.0 * 3.141592);
+      float roty = (mouseRotY / 180.0 * 3.141592);
+      mobX += sin(roty) * 0.8;
+      mobY -= sin(rotx) * 0.8;
+      mobZ -= cos(roty) * 0.8;
+
+      // setMobPosition(0, mobX, mobY, mobZ, 0.0);
+      setMobPosition(0, mobX, mobY, mobZ, 0.0);
+      if (withinBounds(mobX, mobY, mobZ))
+        showMob(0);
+      else
+        hideMob(0);
+
+      for (float j = mobY - 0.4; j < mobY + 0.8; j += 0.4) {
+        for (float i = mobX - 0.4; i < mobX + 0.8; i += 0.4) {
+          for (float k = mobZ - 0.4; k < mobZ + 0.8; k += 0.4) {
+            if (doesCollide((int)i, (int)j, (int)k)) {
+              hideMob(0);
+              world[(int)i][(int)j][(int)k] = 0;
+              return;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -247,19 +287,19 @@ void update() {
 /*  released */
 void mouse(int button, int state, int x, int y) {
 
-  if (button == GLUT_LEFT_BUTTON)
-    printf("left button - ");
-  else if (button == GLUT_MIDDLE_BUTTON)
+  if (button == GLUT_LEFT_BUTTON) {
+    fireProjectile();
+  } else if (button == GLUT_MIDDLE_BUTTON)
     printf("middle button - ");
   else
     printf("right button - ");
 
-  if (state == GLUT_UP)
-    printf("up - ");
-  else
-    printf("down - ");
-
-  printf("%d %d\n", x, y);
+  if (state == GLUT_UP) {
+    // printf("up - ");
+  } else {
+    // printf("down - ");
+  }
+  // printf("%d %d\n", x, y);
 }
 
 int main(int argc, char **argv) {
