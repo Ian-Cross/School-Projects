@@ -214,6 +214,110 @@ Draw lines to indicate the boundary of the map and draw a square to indicate the
 
 You should use the screenWidth and screenHeight variables to scale the size of the maps when the window size is changed.
 
+## Assignment 3 - Enemy AI and Animation
+
+Due. March 6, 2020
+
+---
+
+### AI Vehicles and Animation
+
+---
+
+Create vehicles and animate them in the game. Draw them by placing values in the world array. You can animate their motion and make them move by updating the values in the world array.
+
+The vehicles will search the world for fallen meteors, pick them up, and bring them back to the base. The vehicle should follow a randomly created path until it comes within ten spaces of a meteor on the ground. Once it is near a meteor the vehicle should drive in a straight line towards it.
+When the vehicle is near the meteor it should stop and the meteor should be removed from the ground and placed on top of the vehicle.
+
+Once a meteor has been loaded onto the vehicle it should be removed from the game world. You can animate the meteor moving onto the vehicle if you wish.
+
+The vehicle will need to be drawn with multiple blocks simultaneously. It should not appear as a single cube and it should occupy several squares at one time. The vehicle is in essence a truck that will go and pick up a meteor so make the vehicle appear truck-like. It would be difficult to make a convincing vehicle in a 2x2x2 or less space.
+
+---
+
+### AI Agents - Searching and Picking up Meteors
+
+---
+
+The vehicles will follow a random path while searching for meteors. Pick a random destination that the vehicle will move towards. As it moves towards this destination it should check if it is within ten units of a fallen meteor. When the vehicle is within 10 units to the meteor it should change its destination to be the meteor's location.
+
+If a vehicle picks up a meteor which other vehicles are moving towards then the other vehicles should pick a new random destination and
+start searching for another meteor.
+
+The vehicles will only move towards meteors that are on the ground.
+Those that are still in the sky can be ignored.
+
+The vehicles all start near their base. Each base should have five vehicles
+that start searching for meteors when the game starts. All vehicles are
+independent of each other and should search and retrieve meteors
+without interacting with each other.
+
+The starting state for each vehicle is to pick a random destination
+and to start moving towards that location in the world. The initial
+state is searching.
+
+Have the agents move at a reasonable speed. Pick a speed that makes
+the game playable.
+
+Write the AI using a state machine where the agent is either searching
+for meteors, moving to pick to pick up a meteor, loading a meteor, or
+returning to the base.
+
+The state machine for this AI is:
+
+| Current State  | detect meteor  | don't' detect meteor |    have meteor | close to meteor |
+| -------------- | :------------: | -------------------: | -------------: | --------------: |
+| searching      |  move towards  |            searching | return to base |         loading |
+| moving towards |  move towards  |            searching | return to base |         loading |
+| loading meteor |    loading     |              loading | return to base |         loading |
+| return to base | return to base |       return to base | return to base |  return to base |
+
+The inputs to the state machine are:
+
+- detect meteor
+  - the vehicle is within ten spaces of the meteor
+- don't detect meteor
+  - there is no meteor within ten spaces of the vehicle
+- have meteor
+  - the vehicle has loaded a meteor which can be returned to the base
+- close to meteor
+  - the vehicle is near enough to load the meteor
+
+The states in the state machine are:
+
+- searching
+  - following a random path until a meteor is found
+- moving towards a meteor
+  - once a meteor is found (within 10 units from the vehicle, change destination to the meteor
+- loading meteor
+  - once the vehicle is near to the meteor it should load the meteor onto the vehicle
+- return to base
+  - once the vehicle has a meteor loaded it should follow a straight line back to its base
+
+The vehicles should be a colour similar to that of their base.
+
+Pick a reasonable time for the vehicle to load the meteor. Once a vehicle has started loading a meteor then it will finish loading and return to the base without being interrupted.
+
+Allow the vehicles to climb walls of more than one cube in height.
+
+---
+
+### Shooting the Vehicles
+
+---
+
+Place five towers randomly around the world space for each base. The towers should have a similar colour to the base and the vehicles. If a vehicle from the other base comes too close to a tower then the tower should shoot a ball at the vehicle. Use the same method of shooting you used for the player to shoot in assignment 2 but with the ball starting at the tower.
+
+If the vehicle is shot by a tower then it should return to the base, lose a meteor if it is carrying one, and begin searching again. The tower should have to hit the vehicle at least twice for the vehicle to be sent back to the base.
+
+When the vehicle is destroyed and sent back to the base, make a crater in the ground from the last location of the vehicle.
+
+---
+
+### Counting Meteors
+
+When a vehicle brings a meteor back the its base, remove the meteor from the vehicle and place it beside the base. The goal is to create a 3x3 cube of meteors. Once the vehicle has dropped off the meteor it should begin searching for another meteor to retrieve.
+
 ---
 
 ## Details
@@ -222,20 +326,13 @@ You should use the screenWidth and screenHeight variables to scale the size of t
 
 ### Choosing Parameters
 
-It is important to pick values for parameters such as colours, speed of
-objects, the effect of gravity so they are easy for the marker to see.
-If the effect of a parameter it isn't obvious or is difficult to
-see then it will be marked as missing or incomplete.
+It is important to pick values for parameters such as colours, speed of objects, the effect of gravity so they are easy for the marker to see. If the effect of a parameter it isn't obvious or is difficult to see then it will be marked as missing or incomplete.
 
-Make sure colours are bright and distinct. Choose velocities that are
-fast enough to be seen.
+Make sure colours are bright and distinct. Choose velocities that are fast enough to be seen.
 
 ### Coding Practices
 
-Write the code using standard stylistic practices. Use functions,
-reasonable variable names, and consistent indentation.
-If the code is difficult for the TA to understand then you
-will lose marks.
+Write the code using standard stylistic practices. Use functions, reasonable variable names, and consistent indentation. If the code is difficult for the TA to understand then you will lose marks.
 
 As usual, keep backups of your work using source control software.
 
@@ -245,36 +342,26 @@ The starting code is available on the Courselink site.
 You can untar the file using tar xvf filename.
 All of the changes to the code should be made in the a1.c file.
 
-Note that the graphics code may be modified for assignment 2. If you
-make changes to the graphics code (in graphics.c or visible.c) then you
-may have to recode the changes in assignment 2.
+Note that the graphics code may be modified for later assignment. If you make changes to the graphics code (in graphics.c or visible.c) then you may have to recode the changes in later assignments.
 
 ### Submitting the Assignment
 
-Put all of the files in a directory named 4820 so they unpack into
-this directory.
+Put all of the files in a directory named 4820 so they unpack into this directory.
 
-Submit the assignment using Courselink. Submit only the source code
-and the makefile. Bundle the code in a tar file.
+Submit the assignment using Courselink. Submit only the source code and the makefile. Bundle the code in a tar file.
 
 The assignments will be marked on the Macs in Thorn 2420.
-If you develop your code on a different platform then it is a good
-idea to put the include files in an #ifdef for that system
+If you develop your code on a different platform then it is a good idea to put the include files in an #ifdef for that system
 so they will still compile on the Macs. Test your program on the
 Macs before you submit it.
 
-Include the graphics code with your submission. Include a makefile
-that will compile the executable. Name the executable a1.
+Include the graphics code with your submission. Include a makefile that will compile the executable. Name the executable a1.
 
-The TA will unpack your code and type "make". They will then try to
-run an executable named "./a1". If the make command or executing a1
-does not work then you will lose a substantial number of marks.
+The TA will unpack your code and type "make". They will then try to run an executable named "./a1". If the make command or executing a1 does not work then you will lose a substantial number of marks.
 
 Don't name your program with a .exe extension. If the assignment
 says name the executable a1 then don't change the name to a1.exe.
 
-It is always a good idea to unpack and test the file you are submitting
-to be sure that what you submit actually compiles.
+It is always a good idea to unpack and test the file you are submitting to be sure that what you submit actually compiles.
 
-Include a readme.txt with your name, student number, and a description
-of anything that does not work correctly in your assignment.
+Include a readme.txt with your name, student number, and a description of anything that does not work correctly in your assignment.
