@@ -9,7 +9,7 @@
 #include "meteor.h"
 
 int x, y, z, idx;
-int groundBlocks[] = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
+int groundBlocks[] = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 27, 28};
 
 /******* hitGround *******/
 /* */
@@ -30,6 +30,7 @@ int hitGround(int x, int y, int z) {
 void moveMeteor(Meteor *meteor) {
   if (meteor->falling == 1) {
     int newXLoc = meteor->xLoc - meteor->xVel;
+
     int newYLoc = meteor->yLoc + meteor->yVel;
     int newZLoc = meteor->zLoc - meteor->zVel;
 
@@ -53,7 +54,7 @@ Meteor *createMeteor() {
   // Create space for the new meteor
   Meteor *newMeteor = (Meteor *)malloc(sizeof(Meteor));
   if (newMeteor == NULL) {
-    printf("Unable to allocate memory for a hill");
+    printf("Unable to allocate memory for a meteor");
     exit(1);
   }
   // Generate a landing location
@@ -62,6 +63,7 @@ Meteor *createMeteor() {
   newMeteor->yLoc = 0;
   newMeteor->falling = 1;
   newMeteor->render = 1;
+
   newMeteor->next = NULL;
   newMeteor->prev = NULL;
 
@@ -103,8 +105,9 @@ Meteor *createMeteor() {
 /* - Only draw the meteor or tail if it is within the world bounds */
 void drawMeteor(Meteor *meteor) {
   // ensure the meteor is in the world bounds before drawing
-  if (withinBounds(meteor->xLoc, meteor->yLoc, meteor->zLoc))
+  if (withinBounds(meteor->xLoc, meteor->yLoc, meteor->zLoc)) {
     world[meteor->xLoc][meteor->yLoc][meteor->zLoc] = 26;
+  }
 
   // Draw flame trails, ensure each new trail block is in the world bounds
   for (int i = 1; i <= 3; i++) {

@@ -41,22 +41,28 @@ void moveClouds() {
 /* - Move each meteor by its velocity vectory 500 milli-seconds */
 void moveMeteors() {
   double currTime = getTimeMS();
+
+  Meteor *meteor = newWorld->meteors;
   // make sure enough time has passed
   if (currTime - lastMeteorTime > METEOR_MOVE_SPEED) {
     lastMeteorTime = currTime;
-
-    Meteor *meteor = newWorld->meteors;
     while (meteor != NULL) {
-      clearMeteor(meteor);
-      moveMeteor(meteor);
-      drawMeteor(meteor);
+      if (meteor->render != 0) {
+        clearMeteor(meteor);
+        moveMeteor(meteor);
+        drawMeteor(meteor);
+      }
 
       if (meteor->falling == 0) {
         clearTail(meteor);
-        meteor = removeMeteor(meteor);
-      } else {
-        meteor = meteor->next;
+        meteor->render = 0;
+        // meteor = removeMeteor(meteor);
+        // if (meteor != NULL && meteor->prev != NULL) {
+        //   //   printf("Moving list\n");
+        //   meteor = meteor->next;
+        // }
       }
+      meteor = meteor->next;
     }
   }
 

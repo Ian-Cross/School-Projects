@@ -65,6 +65,10 @@ void setColours() {
   setColourAmbDif(25, 255, 222, 173);
   // meteorite black
   setColourAmbDif(26, 48, 25, 52);
+  // Base Red
+  setColourAmbDif(27, 200, 50, 50);
+  // Base Blue
+  setColourAmbDif(28, 50, 50, 200);
 }
 
 /******* makeFloor() *******/
@@ -256,9 +260,10 @@ void makeClouds() {
 
 /******* makeMeteors() *******/
 void makeMeteors() {
+  // initialize the meteor list with 30 to start
   newWorld->meteors = NULL;
   for (idx = 0; idx < 30; idx++) {
-    addMeteor(createMeteor(idx + 1));
+    addMeteor(createMeteor());
   }
 }
 
@@ -267,44 +272,52 @@ void addMeteor(Meteor *newMeteor) {
   // If the meteor list is empty
   if (meteor == NULL) {
     newWorld->meteors = newMeteor;
-    return;
+  } else {
+    // otherwise move to the end of the list and add the meteor
+    while (meteor->next != NULL) {
+      meteor = meteor->next;
+    }
+    meteor->next = newMeteor;
+    newMeteor->prev = meteor;
   }
-  while (meteor->next != NULL) {
-    meteor = meteor->next;
-  }
-  meteor->next = newMeteor;
-  newMeteor->prev = meteor;
 }
 
 Meteor *removeMeteor(Meteor *meteor) {
   if (meteor == NULL)
     return NULL;
+  printf("%p %p %p\n", meteor->prev, meteor, meteor->next);
   Meteor *next = meteor->next;
   Meteor *prev = meteor->prev;
 
-  // if this is the only item in the list
+  // if this is the only item in the list besides the head
   if (next == NULL && prev == NULL) {
+    printf("Only Item In list %p\n", meteor);
     free(meteor);
     newWorld->meteors = NULL;
     return NULL;
   }
+
   // if this is the last item in the list
   if (next == NULL) {
-    prev->next = NULL;
+    printf("Last Item In list %p\n", meteor);
     free(meteor);
+    prev->next = NULL;
     return NULL;
   }
+
   // if this is the first item in the list
   if (prev == NULL) {
-    next->prev = NULL;
-    newWorld->meteors = next;
+    printf("First Item In list %p %d\n", meteor, meteor->falling);
     free(meteor);
-    return next;
+    next->prev = NULL;
+    return newWorld->meteors;
   }
+
+  printf("Normal Item In list %p\n", meteor);
+  free(meteor);
   prev->next = next;
   next->prev = prev;
-  free(meteor);
-  return next;
+  return prev;
 }
 
 /******* makeBases() *******/

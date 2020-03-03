@@ -14,6 +14,7 @@
 #include "generation.h"
 #include "graphics.h"
 #include "projectile.h"
+#include "team.h"
 #include "timing.h"
 #include "visible.h"
 
@@ -82,7 +83,7 @@ void drawMap(int startX, int startY, int width, int height, int cubeWidth,
 
   for (int i = 0; i < WORLDX; i++) {
     for (int j = 0; j < WORLDZ; j++) {
-      for (int y = 0; y < WORLDY; y++) {
+      for (int y = WORLDY - 4; y > 0; y--) {
         if (world[i][y][j] != 0 && world[i][y + 1][j] == 0) {
           getUserColour(world[i][y][j], &ambRed, &ambGreen, &ambBlue, &ambAlpha,
                         &difRed, &difGreen, &difBlue, &difAlpha);
@@ -90,7 +91,7 @@ void drawMap(int startX, int startY, int width, int height, int cubeWidth,
           set2Dcolour(colour);
 
           cubeStartX = startX + i * cubeWidth;
-          cubeStartY = startY + j * cubeWidth;
+          cubeStartY = startY + width - j * cubeWidth;
           draw2Dbox(cubeStartX, cubeStartY, cubeStartX + cubeWidth,
                     cubeStartY + cubeWidth);
         }
@@ -310,6 +311,7 @@ int main(int argc, char **argv) {
     genTestWorld();
   } else {
     genWorld();
+    createTeams();
   }
 
   /* starts the graphics processing loop */

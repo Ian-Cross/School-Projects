@@ -22,6 +22,13 @@ typedef struct Meteors {
   struct Meteors *prev;
 } Meteor;
 
+/******* createFalseMeteor() *******/
+/* - Allocate memory space for the Meteor */
+/* - fill everything in with garbage values */
+/* - set render to false, so it will never show */
+/* - only use this for list managment */
+Meteor *createFalseMeteor();
+
 /******* createMeteor() *******/
 /* - Allocate memory space for the Meteor */
 /* - Generate random landing location */

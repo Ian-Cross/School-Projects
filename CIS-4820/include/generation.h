@@ -11,6 +11,7 @@
 #include "cloud.h"
 #include "hill.h"
 #include "meteor.h"
+#include "team.h"
 #include "timing.h"
 #include "valley.h"
 
@@ -41,6 +42,7 @@ typedef struct WorldDatas {
   Object *objects[MAX_VALLEY_COUNT + MAX_HILL_COUNT + BASE_COUNT];
   Cloud *clouds[MAX_CLOUD_COUNT];
   Meteor *meteors;
+  Team *teams[2];
 } WorldData;
 
 WorldData *newWorld;

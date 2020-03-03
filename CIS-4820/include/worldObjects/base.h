@@ -7,7 +7,7 @@
 #include <OpenGL/glu.h>
 #endif
 
-#define BASE_SIZE 10
+#define BASE_SIZE 5
 #define BASE_COUNT 2
 
 #ifndef RECT_OBJ
@@ -26,6 +26,7 @@ typedef struct Bases {
   int height;
   int xLoc;
   int zLoc;
+  int colour;
   Rect *(*getSurrounding)(struct Bases *);
 } Base;
 

@@ -32,10 +32,11 @@ void createBase(Base *base, int baseNum) {
 
   // randomize base values
   base->width = BASE_SIZE;
-  base->length = BASE_SIZE - 2;
-  base->height = 5;
+  base->length = BASE_SIZE;
+  base->height = 3;
   base->xLoc = xLoc;
   base->zLoc = zLoc;
+  base->colour = baseNum + 27;
   base->getSurrounding = getSurroudingRect;
 }
 
@@ -46,5 +47,5 @@ void drawBase(Base *base) {
   for (y = 0; y < base->height; y++)
     for (z = 0; z < base->length; z++)
       for (x = 0; x < base->width; x++)
-        world[base->xLoc + x][5 + y][base->zLoc + z] = 19;
+        world[base->xLoc + x][5 + y][base->zLoc + z] = base->colour;
 }
