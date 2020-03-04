@@ -9,7 +9,9 @@
 #include "meteor.h"
 
 int x, y, z, idx;
-int groundBlocks[] = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 27, 28};
+int groundBlocks[] = {
+    GRASS_1, GRASS_2, GRASS_3, GRASS_4, GRASS_5,           DIRT_1, DIRT_2,
+    DIRT_3,  DIRT_4,  DIRT_5,  METEOR,  IDENTIFIED_METEOR, BASE_1, BASE_2};
 
 /******* hitGround *******/
 /* */
@@ -30,7 +32,6 @@ int hitGround(int x, int y, int z) {
 void moveMeteor(Meteor *meteor) {
   if (meteor->falling == 1) {
     int newXLoc = meteor->xLoc - meteor->xVel;
-
     int newYLoc = meteor->yLoc + meteor->yVel;
     int newZLoc = meteor->zLoc - meteor->zVel;
 

@@ -405,7 +405,8 @@ void setObjectColour(int colourID) {
   } else {
     /* user define colour */
     if (uColourUsed[colourID] != 1) {
-      printf("ERROR, attempt to access colour which is not allocated.\n");
+      printf("ERROR, attempt to access colour which is not allocated. %d\n",
+             colourID);
     }
     /* user defined colours, look up the RGBA colour values */
     /* for the world value in the user defined colour array */

@@ -17,4 +17,9 @@ void moveClouds();
 /* - Move each meteor by its velocity vectory 0.5 seconds */
 void moveMeteors();
 
+/******* moveTrucks() *******/
+/* - Iterate over all of the trucks */
+/* - Move each by 1 block each time their internal clock allows */
+void moveTrucks();
+
 #endif

@@ -17,6 +17,35 @@
 
 #define RELOCATE_CHANCE 100
 
+typedef enum userColours {
+  GRASS_1 = 9,
+  GRASS_2 = 10,
+  GRASS_3 = 11,
+  GRASS_4 = 12,
+  GRASS_5 = 13,
+
+  DIRT_1 = 14,
+  DIRT_2 = 15,
+  DIRT_3 = 16,
+  DIRT_4 = 17,
+  DIRT_5 = 18,
+
+  OLD_BASE = 19,
+  CLOUD_1 = 20,
+  CLOUD_2 = 21,
+  CLOUD_3 = 22,
+  FIRE_1 = 23,
+  FIRE_2 = 24,
+  FIRE_3 = 25,
+  METEOR = 26,
+  BASE_1 = 27,
+  BASE_2 = 28,
+  IDENTIFIED_METEOR = 29,
+  VEHICLE_1 = 30,
+  VEHICLE_2 = 31,
+  TIRES = 32,
+} UserColours;
+
 typedef struct Coords {
   int x;
   int y;

@@ -41,28 +41,22 @@ void moveClouds() {
 /* - Move each meteor by its velocity vectory 500 milli-seconds */
 void moveMeteors() {
   double currTime = getTimeMS();
-
-  Meteor *meteor = newWorld->meteors;
   // make sure enough time has passed
   if (currTime - lastMeteorTime > METEOR_MOVE_SPEED) {
     lastMeteorTime = currTime;
+
+    Meteor *meteor = newWorld->meteors;
     while (meteor != NULL) {
-      if (meteor->render != 0) {
-        clearMeteor(meteor);
-        moveMeteor(meteor);
-        drawMeteor(meteor);
-      }
+      clearMeteor(meteor);
+      moveMeteor(meteor);
+      drawMeteor(meteor);
 
       if (meteor->falling == 0) {
         clearTail(meteor);
-        meteor->render = 0;
-        // meteor = removeMeteor(meteor);
-        // if (meteor != NULL && meteor->prev != NULL) {
-        //   //   printf("Moving list\n");
-        //   meteor = meteor->next;
-        // }
+        meteor = removeMeteor(meteor);
+      } else {
+        meteor = meteor->next;
       }
-      meteor = meteor->next;
     }
   }
 
@@ -75,6 +69,24 @@ void moveMeteors() {
     meteorSpawnCount = 0;
     for (int i = 0; i < 10; i++) {
       addMeteor(createMeteor());
+    }
+  }
+}
+
+/******* moveTrucks() *******/
+/* - Iterate over all of the trucks */
+/* - Move each by 1 block each time their internal clock allows */
+void moveTrucks() {
+  double currTime = getTimeMS();
+  for (int i = 0; i < TEAM_COUNT; i++) {
+    for (int j = 0; j < TRUCK_COUNT; j++) {
+      if (currTime - newWorld->teams[i]->trucks[j]->lastTimeMoved >=
+          TRUCK_SPEED) {
+        newWorld->teams[i]->trucks[j]->lastTimeMoved = currTime;
+        clearTruck(newWorld->teams[i]->trucks[j], newWorld->teams[i]);
+        moveTruck(newWorld->teams[i]->trucks[j], newWorld->teams[i]);
+        drawTruck(newWorld->teams[i]->trucks[j], newWorld->teams[i]);
+      }
     }
   }
 }

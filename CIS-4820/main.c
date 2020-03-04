@@ -91,7 +91,7 @@ void drawMap(int startX, int startY, int width, int height, int cubeWidth,
           set2Dcolour(colour);
 
           cubeStartX = startX + i * cubeWidth;
-          cubeStartY = startY + width - j * cubeWidth;
+          cubeStartY = startY + width - (j + 1) * cubeWidth;
           draw2Dbox(cubeStartX, cubeStartY, cubeStartX + cubeWidth,
                     cubeStartY + cubeWidth);
         }
@@ -247,8 +247,9 @@ void update() {
     /* end testworld animation */
 
   } else {
-    moveClouds();
+    // moveClouds();
     moveMeteors();
+    moveTrucks();
     if (mobVisible[0] == 1) {
       float mobX = mobPosition[0][0], mobY = mobPosition[0][1],
             mobZ = mobPosition[0][2];
@@ -277,6 +278,14 @@ void update() {
           }
         }
       }
+    }
+    for (int i = 0; i < TEAM_COUNT; i++) {
+      if (newWorld->teams[i]->meteorCount >= 27) {
+        printf("Congradulations Team %s, you have won!\n",
+               i == 0 ? "RED!" : "BLUE!");
+        exit(0);
+      }
+      drawVault(newWorld->teams[i]);
     }
   }
 }

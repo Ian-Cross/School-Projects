@@ -10,15 +10,21 @@
 #include "base.h"
 #include "truck.h"
 
-#define TRUCKCOUNT 5
+#define TRUCK_COUNT 5
+#define TEAM_COUNT 2
+#define TEAM_ONE 0
+#define TEAM_TWO 1
 
 typedef struct Teams {
   int teamNumber;
   int teamColour;
+  int meteorCount;
   Base *base;
-  Truck *trucks[TRUCKCOUNT];
+  Truck *trucks[TRUCK_COUNT];
 } Team;
 
 void createTeams();
+
+void drawVault();
 
 #endif

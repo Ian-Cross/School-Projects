@@ -41,49 +41,61 @@ void setColourAmbDif(int colourCode, int r, int g, int b) {
 /******* setColours() *******/
 /* - register predefind user colours with the game engine */
 void setColours() {
-  // Grass Greens
-  setColourAmbDif(9, 19, 136, 52);
-  setColourAmbDif(10, 19, 110, 52);
-  setColourAmbDif(11, 19, 162, 52);
-  setColourAmbDif(12, 19, 187, 52);
-  setColourAmbDif(13, 19, 85, 52);
-  // Dirt Brown
-  setColourAmbDif(14, 68, 60, 10);
-  setColourAmbDif(15, 123, 91, 24);
-  setColourAmbDif(16, 102, 67, 15);
-  setColourAmbDif(17, 80, 66, 12);
-  setColourAmbDif(18, 125, 99, 15);
-  // Base Grey
-  setColourAmbDif(19, 89, 94, 94);
-  // cloud grey
-  setColourAmbDif(20, 244, 244, 244);
-  setColourAmbDif(21, 250, 250, 250);
-  setColourAmbDif(22, 237, 237, 237);
-  // fire reds
-  setColourAmbDif(23, 206, 22, 32);
-  setColourAmbDif(24, 226, 88, 34);
-  setColourAmbDif(25, 255, 222, 173);
-  // meteorite black
-  setColourAmbDif(26, 48, 25, 52);
-  // Base Red
-  setColourAmbDif(27, 200, 50, 50);
-  // Base Blue
-  setColourAmbDif(28, 50, 50, 200);
+
+  // setColourAmbDif(GRASS_1, 19, 136, 52);
+  // setColourAmbDif(GRASS_2, 19, 110, 52);
+  // setColourAmbDif(GRASS_3, 19, 162, 52);
+  // setColourAmbDif(GRASS_4, 19, 187, 52);
+  // setColourAmbDif(GRASS_5, 19, 122, 52);
+  setColourAmbDif(GRASS_1, 53, 102, 33);
+  setColourAmbDif(GRASS_2, 56, 95, 40);
+  setColourAmbDif(GRASS_3, 58, 89, 46);
+  setColourAmbDif(GRASS_4, 39, 70, 26);
+  setColourAmbDif(GRASS_5, 77, 126, 58);
+  // setColourAmbDif(DIRT_1, 68, 60, 10);
+  // setColourAmbDif(DIRT_2, 123, 91, 24);
+  // setColourAmbDif(DIRT_3, 102, 67, 15);
+  // setColourAmbDif(DIRT_4, 80, 66, 12);
+  // setColourAmbDif(DIRT_5, 125, 99, 15);
+  setColourAmbDif(DIRT_1, 134, 88, 44);
+  setColourAmbDif(DIRT_2, 125, 88, 53);
+  setColourAmbDif(DIRT_3, 118, 88, 60);
+  setColourAmbDif(DIRT_4, 94, 64, 36);
+  setColourAmbDif(DIRT_5, 122, 88, 54);
+  setColourAmbDif(OLD_BASE, 89, 94, 94);
+  setColourAmbDif(CLOUD_1, 244, 244, 244);
+  setColourAmbDif(CLOUD_2, 250, 250, 250);
+  setColourAmbDif(CLOUD_3, 237, 237, 237);
+  setColourAmbDif(FIRE_1, 206, 22, 32);
+  setColourAmbDif(FIRE_2, 226, 88, 34);
+  setColourAmbDif(FIRE_3, 255, 222, 173);
+  setColourAmbDif(METEOR, 48, 25, 52);
+  setColourAmbDif(BASE_1, 200, 50, 50);
+  setColourAmbDif(BASE_2, 50, 50, 200);
+  setColourAmbDif(IDENTIFIED_METEOR, 48, 25, 52);
+  setColourAmbDif(VEHICLE_1, 200, 50, 50);
+  setColourAmbDif(VEHICLE_2, 50, 50, 200);
+  setColourAmbDif(TIRES, 50, 50, 50);
 }
 
 /******* makeFloor() *******/
 /* - fill the bottom 4 rows with *dirtColor* */
-/* - fill the 5th rows with *grassColor* */
+/* - fill the 5th row with *grassColor* */
 /* - *dirtColor* and *grassColor* are random between 5 colour options */
 void makeFloor() {
+  int grassColours[5] = {GRASS_1, GRASS_2, GRASS_3, GRASS_4, GRASS_5};
+  int dirtColours[5] = {DIRT_1, DIRT_2, DIRT_3, DIRT_4, DIRT_5};
+
   for (x = 0; x < WORLDX; x++) {
     for (z = 0; z < WORLDZ; z++) {
-      int grassColor = rand() % 12 + 2;
+      int grassColor = rand() % 5;
       for (y = 0; y < 4; y++) {
-        int dirtColor = rand() % 12 + 6;
-        world[x][y][z] = dirtColor < 14 ? 14 : dirtColor;
+        int dirtColor = rand() % 5;
+        // world[x][y][z] = dirtColor < 14 ? 14 : dirtColor;
+        world[x][y][z] = dirtColours[dirtColor];
       }
-      world[x][4][z] = grassColor < 9 ? 9 : grassColor;
+      // world[x][4][z] = grassColor < 9 ? 9 : grassColor;
+      world[x][4][z] = grassColours[grassColor];
     }
   }
 }
@@ -285,13 +297,11 @@ void addMeteor(Meteor *newMeteor) {
 Meteor *removeMeteor(Meteor *meteor) {
   if (meteor == NULL)
     return NULL;
-  printf("%p %p %p\n", meteor->prev, meteor, meteor->next);
   Meteor *next = meteor->next;
   Meteor *prev = meteor->prev;
 
   // if this is the only item in the list besides the head
   if (next == NULL && prev == NULL) {
-    printf("Only Item In list %p\n", meteor);
     free(meteor);
     newWorld->meteors = NULL;
     return NULL;
@@ -299,7 +309,6 @@ Meteor *removeMeteor(Meteor *meteor) {
 
   // if this is the last item in the list
   if (next == NULL) {
-    printf("Last Item In list %p\n", meteor);
     free(meteor);
     prev->next = NULL;
     return NULL;
@@ -307,13 +316,12 @@ Meteor *removeMeteor(Meteor *meteor) {
 
   // if this is the first item in the list
   if (prev == NULL) {
-    printf("First Item In list %p %d\n", meteor, meteor->falling);
     free(meteor);
     next->prev = NULL;
-    return newWorld->meteors;
+    newWorld->meteors = next;
+    return next;
   }
 
-  printf("Normal Item In list %p\n", meteor);
   free(meteor);
   prev->next = next;
   next->prev = prev;
@@ -471,7 +479,7 @@ void genWorld() {
   makeBases();
   makeValleys();
   makeHills();
-  makeClouds();
+  // makeClouds();
   makeMeteors();
   fixOverlap();
 
