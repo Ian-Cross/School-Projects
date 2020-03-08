@@ -13,7 +13,7 @@
 #define WORLDZ 100
 
 /* Entity Counts */
-#define MOB_COUNT 10
+#define MOB_COUNT 100
 #define PLAYER_COUNT 10
 #define TUBE_COUNT 10
 

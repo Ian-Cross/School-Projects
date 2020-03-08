@@ -13,6 +13,7 @@ typedef struct Meteors {
   int xLoc;
   int zLoc;
   int yLoc;
+  int oldColours[4];
   int xVel;
   int zVel;
   int yVel;

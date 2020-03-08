@@ -64,7 +64,8 @@ Meteor *createMeteor() {
   newMeteor->yLoc = 0;
   newMeteor->falling = 1;
   newMeteor->render = 1;
-
+  for (int i = 0; i < 4; i++)
+    newMeteor->oldColours[i] = 0;
   newMeteor->next = NULL;
   newMeteor->prev = NULL;
 
@@ -100,6 +101,18 @@ Meteor *createMeteor() {
   return newMeteor;
 }
 
+int saveColour(int colour) {
+  switch (colour) {
+  case METEOR:
+  case FIRE_1:
+  case FIRE_2:
+  case FIRE_3:
+    return 0;
+  default:
+    return colour;
+  }
+}
+
 /******* drawMeteor() *******/
 /* - Input Meteor object  */
 /* - Draw the meteor at its location, add on flame tail */
@@ -107,16 +120,23 @@ Meteor *createMeteor() {
 void drawMeteor(Meteor *meteor) {
   // ensure the meteor is in the world bounds before drawing
   if (withinBounds(meteor->xLoc, meteor->yLoc, meteor->zLoc)) {
-    world[meteor->xLoc][meteor->yLoc][meteor->zLoc] = 26;
+
+    meteor->oldColours[0] = world[meteor->xLoc][meteor->yLoc][meteor->zLoc];
+    world[meteor->xLoc][meteor->yLoc][meteor->zLoc] = METEOR;
   }
 
   // Draw flame trails, ensure each new trail block is in the world bounds
   for (int i = 1; i <= 3; i++) {
     if (withinBounds(meteor->xLoc + i * meteor->xVel,
                      meteor->yLoc - i * meteor->yVel,
-                     meteor->zLoc + i * meteor->zVel))
+                     meteor->zLoc + i * meteor->zVel)) {
+      meteor->oldColours[i] = world[meteor->xLoc + i * meteor->xVel]
+                                   [meteor->yLoc - i * meteor->yVel]
+                                   [meteor->zLoc + i * meteor->zVel];
+      // meteor->oldColours[i] = FIRE_1 + i - 1;
       world[meteor->xLoc + i * meteor->xVel][meteor->yLoc - i * meteor->yVel]
-           [meteor->zLoc + i * meteor->zVel] = 22 + i;
+           [meteor->zLoc + i * meteor->zVel] = FIRE_1 + i - 1;
+    }
   }
 }
 
@@ -126,7 +146,8 @@ void drawMeteor(Meteor *meteor) {
 /* - Ensure the meteor spot is within the world */
 void clearMeteor(Meteor *meteor) {
   if (withinBounds(meteor->xLoc, meteor->yLoc, meteor->zLoc))
-    world[meteor->xLoc][meteor->yLoc][meteor->zLoc] = 0;
+    world[meteor->xLoc][meteor->yLoc][meteor->zLoc] =
+        saveColour(meteor->oldColours[0]);
   clearTail(meteor);
 }
 
@@ -140,6 +161,7 @@ void clearTail(Meteor *meteor) {
                      meteor->yLoc - i * meteor->yVel,
                      meteor->zLoc + i * meteor->zVel))
       world[meteor->xLoc + i * meteor->xVel][meteor->yLoc - i * meteor->yVel]
-           [meteor->zLoc + i * meteor->zVel] = 0;
+           [meteor->zLoc + i * meteor->zVel] =
+               saveColour(meteor->oldColours[i]);
   }
 }

@@ -7,6 +7,8 @@
 #include <OpenGL/glu.h>
 #endif
 
+#include "graphics.h"
+
 /******* moveClouds() *******/
 /* - Iterate over all the clouds */
 /* - Move each cloud by 1 space every 1 second */
@@ -21,5 +23,7 @@ void moveMeteors();
 /* - Iterate over all of the trucks */
 /* - Move each by 1 block each time their internal clock allows */
 void moveTrucks();
+
+void moveProjectiles();
 
 #endif

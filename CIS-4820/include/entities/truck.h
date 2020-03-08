@@ -9,7 +9,7 @@
 
 #include "generation.h"
 
-#define TRUCK_SPEED 50
+#define TRUCK_SPEED 200
 
 typedef enum truckState {
   searching = 0,
@@ -29,6 +29,8 @@ typedef struct truck {
   int hasMeteor;
   double lastTimeMoved;
   int loadCount;
+  int health;
+  int team;
 } Truck;
 
 Truck *createTruck();
@@ -37,5 +39,9 @@ void drawTruck();
 
 void moveTruck();
 void clearTruck();
+int wasHit();
+
+Truck *truckLookup();
+void teleportToBase();
 
 #endif

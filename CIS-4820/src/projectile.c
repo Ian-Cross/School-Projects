@@ -25,7 +25,9 @@ strait down
 447.000000 899.000000 0.000000
 */
 
-void fireProjectile() {
+int totalProjectiles = 0;
+
+void fireMouseProjectile() {
   float x, y, z;
   getViewPosition(&x, &y, &z);
 
@@ -33,4 +35,11 @@ void fireProjectile() {
     getViewOrientation(&mouseRotX, &mouseRotY, &mouseRotZ);
     createMob(0, -x, -y, -z, 0.0);
   }
+}
+
+void fireTowerProjectile(int sourceX, int sourceY, int sourceZ, int targetX,
+                         int targetY, int targetZ) {
+  float rotX, rotY, rotZ;
+
+  // createMob(0, -x, -y, -z, 0.0);
 }

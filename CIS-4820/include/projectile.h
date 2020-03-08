@@ -8,7 +8,13 @@
 #endif
 
 float mouseRotX, mouseRotY, mouseRotZ;
+int totalProjectiles;
 
-void fireProjectile();
+typedef struct projectile {
+  int id;
+} Projectile;
+
+void fireMouseProjectile();
+void fireTowerProjectile();
 
 #endif

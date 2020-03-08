@@ -247,45 +247,15 @@ void update() {
     /* end testworld animation */
 
   } else {
-    // moveClouds();
-    moveMeteors();
-    moveTrucks();
-    if (mobVisible[0] == 1) {
-      float mobX = mobPosition[0][0], mobY = mobPosition[0][1],
-            mobZ = mobPosition[0][2];
-
-      float rotx = (mouseRotX / 180.0 * 3.141592);
-      float roty = (mouseRotY / 180.0 * 3.141592);
-      mobX += sin(roty) * 0.8;
-      mobY -= sin(rotx) * 0.8;
-      mobZ -= cos(roty) * 0.8;
-
-      // setMobPosition(0, mobX, mobY, mobZ, 0.0);
-      setMobPosition(0, mobX, mobY, mobZ, 0.0);
-      if (withinBounds(mobX, mobY, mobZ))
-        showMob(0);
-      else
-        hideMob(0);
-
-      for (float j = mobY - 0.4; j < mobY + 0.8; j += 0.4) {
-        for (float i = mobX - 0.4; i < mobX + 0.8; i += 0.4) {
-          for (float k = mobZ - 0.4; k < mobZ + 0.8; k += 0.4) {
-            if (doesCollide((int)i, (int)j, (int)k)) {
-              hideMob(0);
-              world[(int)i][(int)j][(int)k] = 0;
-              return;
-            }
-          }
-        }
-      }
-    }
-    for (int i = 0; i < TEAM_COUNT; i++) {
-      if (newWorld->teams[i]->meteorCount >= 27) {
-        printf("Congradulations Team %s, you have won!\n",
-               i == 0 ? "RED!" : "BLUE!");
-        exit(0);
-      }
-      drawVault(newWorld->teams[i]);
+    if (!paused) {
+      // moveClouds();
+      moveMeteors();
+      moveTrucks();
+      moveProjectiles();
+      // try and fire towers
+      towerSurvey();
+      // check win condition
+      checkVault();
     }
   }
 }
@@ -298,7 +268,7 @@ void update() {
 void mouse(int button, int state, int x, int y) {
 
   if (button == GLUT_LEFT_BUTTON) {
-    fireProjectile();
+    fireMouseProjectile();
   } else if (button == GLUT_MIDDLE_BUTTON)
     printf("middle button - ");
   else

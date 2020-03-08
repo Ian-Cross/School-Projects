@@ -7,15 +7,22 @@
 #include <OpenGL/glu.h>
 #endif
 
+#include "team.h"
+#include "timing.h"
+
+typedef struct Coords {
+  int x;
+  int y;
+  int z;
+} Coord;
+
+#define RELOCATE_CHANCE 100
+
 #include "base.h"
 #include "cloud.h"
 #include "hill.h"
 #include "meteor.h"
-#include "team.h"
-#include "timing.h"
 #include "valley.h"
-
-#define RELOCATE_CHANCE 100
 
 typedef enum userColours {
   GRASS_1 = 9,
@@ -46,12 +53,6 @@ typedef enum userColours {
   TIRES = 32,
 } UserColours;
 
-typedef struct Coords {
-  int x;
-  int y;
-  int z;
-} Coord;
-
 typedef enum StructureId {
   invaldId = 0,
   valleyId,
@@ -75,6 +76,7 @@ typedef struct WorldDatas {
 } WorldData;
 
 WorldData *newWorld;
+int paused;
 
 /* the first part of this if statement builds a sample */
 /* world which will be used for testing */

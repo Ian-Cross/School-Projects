@@ -13,6 +13,7 @@
 int x, y, z, idx, jdx;
 int hillCount, valleyCount;
 int cloudHeight = WORLDY - 3;
+int paused = 0;
 
 Coord flatPlusSign[4] = {{-1, 0, 0}, {1, 0, 0}, {0, 0, -1}, {0, 0, 1}};
 
@@ -277,6 +278,11 @@ void makeMeteors() {
   for (idx = 0; idx < 30; idx++) {
     addMeteor(createMeteor());
   }
+  Meteor *currMeteor = newWorld->meteors;
+  while (currMeteor != NULL) {
+    drawMeteor(currMeteor);
+    currMeteor = currMeteor->next;
+  }
 }
 
 void addMeteor(Meteor *newMeteor) {
@@ -473,7 +479,7 @@ void genWorld() {
   }
 
   // place player
-  setViewPosition(-1, -10, -1);
+  setViewPosition(-25, -15, -25);
 
   // Generate random values for structures
   makeBases();

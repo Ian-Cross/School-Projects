@@ -20,7 +20,8 @@ SOURCES = main.c \
 					src/worldObjects/meteor.c \
 					src/projectile.c \
 					src/team.c \
-					src/entities/truck.c
+					src/entities/truck.c \
+					src/entities/tower.c
 
 
 OBJS = $(SOURCES:%.c=%.o)

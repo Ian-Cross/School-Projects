@@ -515,14 +515,14 @@ void display(void) {
                    mobPosition[i][2] + 0.5);
       glMaterialfv(GL_FRONT, GL_AMBIENT, black);
       glMaterialfv(GL_FRONT, GL_DIFFUSE, gray);
-      glutSolidSphere(0.5, 8, 8);
+      glutSolidSphere(0.3, 8, 8);
       /* white eyes */
       glRotatef(mobPosition[i][3], 0.0, 1.0, 0.0);
-      glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
-      glTranslatef(0.3, 0.1, 0.3);
-      glutSolidSphere(0.1, 4, 4);
-      glTranslatef(-0.6, 0.0, 0.0);
-      glutSolidSphere(0.1, 4, 4);
+      // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
+      // glTranslatef(0.3, 0.1, 0.3);
+      // glutSolidSphere(0.1, 4, 4);
+      // glTranslatef(-0.6, 0.0, 0.0);
+      // glutSolidSphere(0.1, 4, 4);
       glPopMatrix();
     }
   }

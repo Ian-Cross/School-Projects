@@ -8,6 +8,7 @@
 #include "generation.h"
 #include "graphics.h"
 #include "meteor.h"
+#include "projectile.h"
 
 double lastCloudTime = 0;
 double lastMeteorTime = 0;
@@ -79,13 +80,57 @@ void moveMeteors() {
 void moveTrucks() {
   double currTime = getTimeMS();
   for (int i = 0; i < TEAM_COUNT; i++) {
+    Team *currTeam = newWorld->teams[i];
     for (int j = 0; j < TRUCK_COUNT; j++) {
-      if (currTime - newWorld->teams[i]->trucks[j]->lastTimeMoved >=
-          TRUCK_SPEED) {
-        newWorld->teams[i]->trucks[j]->lastTimeMoved = currTime;
-        clearTruck(newWorld->teams[i]->trucks[j], newWorld->teams[i]);
-        moveTruck(newWorld->teams[i]->trucks[j], newWorld->teams[i]);
-        drawTruck(newWorld->teams[i]->trucks[j], newWorld->teams[i]);
+      Truck *currTruck = currTeam->trucks[j];
+      if (currTime - currTruck->lastTimeMoved >= TRUCK_SPEED) {
+        currTruck->lastTimeMoved = currTime;
+        clearTruck(currTruck);
+        moveTruck(currTruck, currTeam);
+        drawTruck(currTruck);
+      }
+    }
+  }
+}
+
+void moveProjectiles() {
+  if (mobVisible[0] == 1) {
+    float mobX = mobPosition[0][0], mobY = mobPosition[0][1],
+          mobZ = mobPosition[0][2];
+
+    float rotx = (mouseRotX / 180.0 * 3.141592);
+    float roty = (mouseRotY / 180.0 * 3.141592);
+    mobX += sin(roty) * 0.8;
+    mobY -= sin(rotx) * 0.8;
+    mobZ -= cos(roty) * 0.8;
+
+    setMobPosition(0, mobX, mobY, mobZ, 0.0);
+    if (withinBounds(mobX, mobY, mobZ))
+      showMob(0);
+    else
+      hideMob(0);
+
+    for (float j = mobY + 0.4; j > mobY - 0.8; j -= 0.4) {
+      for (float i = mobX + 0.4; i > mobX - 0.8; i -= 0.4) {
+        for (float k = mobZ + 0.4; k > mobZ - 0.8; k -= 0.4) {
+          if (world[(int)i][(int)j][(int)k] != 0) {
+            hideMob(0);
+            if (world[(int)i][(int)j][(int)k] == VEHICLE_1 ||
+                world[(int)i][(int)j][(int)k] == VEHICLE_2 ||
+                world[(int)i][(int)j][(int)k] == TIRES) {
+              Truck *hurtTruck = truckLookup((int)i, (int)j, (int)k);
+              if (hurtTruck != NULL) {
+                hurtTruck->health -= 2;
+                if (hurtTruck->health == 0)
+                  teleportToBase(hurtTruck);
+              } else {
+                printf("Null Hurt truck\n");
+              }
+            }
+            world[(int)i][(int)j][(int)k] = 0;
+            return;
+          }
+        }
       }
     }
   }
