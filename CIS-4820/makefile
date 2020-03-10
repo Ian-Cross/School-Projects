@@ -41,4 +41,4 @@ run:
 # 	gcc $(INC) $(CFLAGS) $(LFLAGS) main.c src/graphics.c src/visible.c src/generation.c src/timing.c src/worldObjects/valley.c src/worldObjects/hill.c src/worldObjects/base.c src/worldObjects/cloud.c -o $(EXE)
 
 clean:
-	rm $(EXE) *.o src/*.o src/worldObjects/*.o
+	rm $(EXE) *.o src/*.o src/worldObjects/*.o src/entities/*.o
