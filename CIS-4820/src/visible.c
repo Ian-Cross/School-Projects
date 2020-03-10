@@ -8,14 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/graphics.h"
-
-#define OCTREE_LEVEL 1
-
-/* frustum corner coordinates */
-float corners[4][3];
-
-/***********************/
+#include "main.h"
 
 float lengthTwoPoints(float x1, float y1, float z1, float x2, float y2,
                       float z2) {
@@ -91,9 +84,6 @@ void intersect(float a1, float b1, float c1, float d1, float a2, float b2,
 /* calculate the viewing frustum and test if cubes fall inside it */
 /* code from */
 /* http://www.crownandcutlass.com/features/technicaldetails/frustum.html */
-float frustum[6][4];
-int true = 1;
-int false = 0;
 
 void ExtractFrustum() {
   float proj[16];
@@ -236,8 +226,8 @@ int PointInFrustum(float x, float y, float z) {
     if (frustum[p][0] * x + frustum[p][1] * y + frustum[p][2] * z +
             frustum[p][3] <=
         0)
-      return false;
-  return true;
+      return FALSE;
+  return TRUE;
 }
 
 int CubeInFrustum(float x, float y, float z, float size) {
@@ -324,18 +314,15 @@ int CubeInFrustum2(float x, float y, float z, float size) {
             frustum[p][2] * (z + size) + frustum[p][3] >
         0)
       continue;
-    return false;
+    return FALSE;
   }
-  return true;
+  return TRUE;
 }
-
-/*****/
 
 // if frustum test shows box in view
 //    if level == max level then draw contents of cube
 //    else call 8 subdivisions, increment level
 // assumes all t[xyz] are larger than b[xyz] respectively
-
 void tree(float bx, float by, float bz, float tx, float ty, float tz,
           int level) {
   float length;

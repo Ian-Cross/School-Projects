@@ -12,21 +12,22 @@ SOURCES = main.c \
 					src/graphics.c \
 					src/visible.c  \
 					src/generation.c \
-					src/timing.c \
+					src/worldObjects/base.c \
 					src/worldObjects/valley.c \
 					src/worldObjects/hill.c \
-					src/worldObjects/base.c \
 					src/worldObjects/cloud.c \
 					src/worldObjects/meteor.c \
-					src/projectile.c \
+					src/timing.c \
 					src/team.c \
 					src/entities/truck.c \
-					src/entities/tower.c
-
+					src/entities/tower.c \
+					src/projectile.c
 
 OBJS = $(SOURCES:%.c=%.o)
 
 all: $(EXE) run
+
+new: clean $(EXE) run
 
 .c.o: $(OBJS)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@

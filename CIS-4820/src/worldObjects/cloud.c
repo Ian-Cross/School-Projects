@@ -4,11 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "cloud.h"
-#include "generation.h"
-#include "graphics.h"
-
-int x, y, z, idx;
+#include "main.h"
 
 /******* createCloud() *******/
 /* - Allocate memory space for the cloud */
@@ -22,7 +18,7 @@ Cloud *createCloud(int xLoc, int zLoc) {
   newCloud->xLoc = xLoc;
   newCloud->yLoc = WORLDY - 3;
   newCloud->zLoc = zLoc;
-  newCloud->colour = rand() % 3 + 20;
+  newCloud->colour = rand() % 3 + CLOUD_1;
   drawCloud(newCloud);
   return (newCloud);
 }

@@ -4,11 +4,7 @@
 #include <string.h>
 #include <sys/time.h>
 
-#include "cloud.h"
-#include "generation.h"
-#include "graphics.h"
-#include "meteor.h"
-#include "projectile.h"
+#include "main.h"
 
 double lastCloudTime = 0;
 double lastMeteorTime = 0;
@@ -95,43 +91,12 @@ void moveTrucks() {
 
 void moveProjectiles() {
   if (mobVisible[0] == 1) {
-    float mobX = mobPosition[0][0], mobY = mobPosition[0][1],
-          mobZ = mobPosition[0][2];
-
-    float rotx = (mouseRotX / 180.0 * 3.141592);
-    float roty = (mouseRotY / 180.0 * 3.141592);
-    mobX += sin(roty) * 0.8;
-    mobY -= sin(rotx) * 0.8;
-    mobZ -= cos(roty) * 0.8;
-
-    setMobPosition(0, mobX, mobY, mobZ, 0.0);
-    if (withinBounds(mobX, mobY, mobZ))
-      showMob(0);
-    else
-      hideMob(0);
-
-    for (float j = mobY + 0.4; j > mobY - 0.8; j -= 0.4) {
-      for (float i = mobX + 0.4; i > mobX - 0.8; i -= 0.4) {
-        for (float k = mobZ + 0.4; k > mobZ - 0.8; k -= 0.4) {
-          if (world[(int)i][(int)j][(int)k] != 0) {
-            hideMob(0);
-            if (world[(int)i][(int)j][(int)k] == VEHICLE_1 ||
-                world[(int)i][(int)j][(int)k] == VEHICLE_2 ||
-                world[(int)i][(int)j][(int)k] == TIRES) {
-              Truck *hurtTruck = truckLookup((int)i, (int)j, (int)k);
-              if (hurtTruck != NULL) {
-                hurtTruck->health -= 2;
-                if (hurtTruck->health == 0)
-                  teleportToBase(hurtTruck);
-              } else {
-                printf("Null Hurt truck\n");
-              }
-            }
-            world[(int)i][(int)j][(int)k] = 0;
-            return;
-          }
-        }
-      }
-    }
+    moveMouseProjectile();
+  }
+  Projectile *worldProjectile = newWorld->projectiles;
+  while (worldProjectile != NULL) {
+    if (worldProjectile->visible == TRUE)
+      moveProjectile(worldProjectile);
+    worldProjectile = worldProjectile->next;
   }
 }

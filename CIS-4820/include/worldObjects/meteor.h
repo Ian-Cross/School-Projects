@@ -9,7 +9,7 @@
 
 #define METEOR_MOVE_SPEED 50
 
-typedef struct Meteors {
+typedef struct meteor {
   int xLoc;
   int zLoc;
   int yLoc;
@@ -19,16 +19,9 @@ typedef struct Meteors {
   int yVel;
   int falling;
   int render;
-  struct Meteors *next;
-  struct Meteors *prev;
+  struct meteor *next;
+  struct meteor *prev;
 } Meteor;
-
-/******* createFalseMeteor() *******/
-/* - Allocate memory space for the Meteor */
-/* - fill everything in with garbage values */
-/* - set render to false, so it will never show */
-/* - only use this for list managment */
-Meteor *createFalseMeteor();
 
 /******* createMeteor() *******/
 /* - Allocate memory space for the Meteor */
@@ -61,5 +54,14 @@ void clearMeteor(Meteor *meteor);
 /* - Remove the meteor's trailing flames from the world array */
 /* - Ensure the tail spot is in the world bounds */
 void clearTail(Meteor *meteor);
+
+/*** addMeteor() ***/
+/* - Add the input meteor onto the list of meteors in the world object */
+void addMeteor(Meteor *newMeteor);
+
+/*** removeMeteor() ***/
+/* - Remove the input meteor from its place in the list */
+/* - adjust the list around it so no errors occur */
+Meteor *removeMeteor(Meteor *meteor);
 
 #endif

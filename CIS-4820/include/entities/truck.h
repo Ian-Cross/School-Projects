@@ -7,9 +7,9 @@
 #include <OpenGL/glu.h>
 #endif
 
-#include "generation.h"
-
 #define TRUCK_SPEED 200
+#define TRUCK_SEARCH_RADIUS 10
+#define TRUCK_EXPLOSION_RADIUS 4
 
 typedef enum truckState {
   searching = 0,
@@ -33,15 +33,43 @@ typedef struct truck {
   int team;
 } Truck;
 
-Truck *createTruck();
+/*** createTruck() ***/
+/* - Allocate space and fill values for the truck object */
+Truck *createTruck(Base *, int, int);
 
-void drawTruck();
+/*** drawTruck() ***/
+/* - Render the truck at its current x and z location */
+/* - Pick a y location that puts it ontop of the world to account for hills and
+ * valleys */
+/* - uses two offset arrays to build the truck based on 1 (x,z) location */
+void drawTruck(Truck *);
 
-void moveTruck();
-void clearTruck();
-int wasHit();
+/*** moveTruck() ***/
+/* - parent function to decide, based on the truck state machine, how the truck
+ * is going to move */
+/* - Possible states are:
+       seaching for meteor,
+       moving towards meteor,
+       loading meteor,
+       returning to base */
+void moveTruck(Truck *, Team *);
 
-Truck *truckLookup();
-void teleportToBase();
+/*** clearTruck() ***/
+/* - when the truck moves, remove the old truck from the world array */
+void clearTruck(Truck *);
+
+/*** truckLookup() ***/
+/* - used for when a projectile hits a truck */
+/* - input with the world location that was hit */
+/* - check if the inputted location matches any that would be a part of a truck
+on an enemy team */
+/* - return the truck if anything mathes, null on error /not found */
+Truck *truckLookup(int, int, int);
+
+/*** teleportToBase() ***/
+/* - used when the truck is hit and killed */
+/* - moves the truck back to its spawn location and resets stats */
+/* - leaves an "explosion crater" where the truck was killed */
+void teleportToBase(Truck *);
 
 #endif

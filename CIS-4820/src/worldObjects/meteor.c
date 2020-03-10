@@ -4,9 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "generation.h"
-#include "graphics.h"
-#include "meteor.h"
+#include "main.h"
 
 int x, y, z, idx;
 int groundBlocks[] = {
@@ -14,14 +12,15 @@ int groundBlocks[] = {
     DIRT_3,  DIRT_4,  DIRT_5,  METEOR,  IDENTIFIED_METEOR, BASE_1, BASE_2};
 
 /******* hitGround *******/
-/* */
+/* - test against a specific set of blocks to see if the meteor has reached
+ * GROUND_HEIGHT*/
 int hitGround(int x, int y, int z) {
   size_t length = sizeof(groundBlocks) / sizeof(groundBlocks[0]);
   for (int i = 0; i < length; i++) {
     if (world[x][y][z] == groundBlocks[i])
-      return 1;
+      return TRUE;
   }
-  return 0;
+  return FALSE;
 }
 
 /******* moveMeteor() *******/
@@ -101,6 +100,9 @@ Meteor *createMeteor() {
   return newMeteor;
 }
 
+/*** saveColour ***/
+/* - Used for the replacement of blocks as the metoer moves, */
+/* - any block it passes through will be replaced, except itself */
 int saveColour(int colour) {
   switch (colour) {
   case METEOR:
@@ -164,4 +166,57 @@ void clearTail(Meteor *meteor) {
            [meteor->zLoc + i * meteor->zVel] =
                saveColour(meteor->oldColours[i]);
   }
+}
+/*** addMeteor() ***/
+/* - Add the input meteor onto the list of meteors in the world object */
+void addMeteor(Meteor *newMeteor) {
+  Meteor *meteor = newWorld->meteors;
+  // If the meteor list is empty
+  if (meteor == NULL) {
+    newWorld->meteors = newMeteor;
+  } else {
+    // otherwise move to the end of the list and add the meteor
+    while (meteor->next != NULL) {
+      meteor = meteor->next;
+    }
+    meteor->next = newMeteor;
+    newMeteor->prev = meteor;
+  }
+}
+
+/*** removeMeteor() ***/
+/* - Remove the input meteor from its place in the list */
+/* - adjust the list around it so no errors occur */
+Meteor *removeMeteor(Meteor *meteor) {
+  if (meteor == NULL)
+    return NULL;
+  Meteor *next = meteor->next;
+  Meteor *prev = meteor->prev;
+
+  // if this is the only item in the list besides the head
+  if (next == NULL && prev == NULL) {
+    free(meteor);
+    newWorld->meteors = NULL;
+    return NULL;
+  }
+
+  // if this is the last item in the list
+  if (next == NULL) {
+    free(meteor);
+    prev->next = NULL;
+    return NULL;
+  }
+
+  // if this is the first item in the list
+  if (prev == NULL) {
+    free(meteor);
+    next->prev = NULL;
+    newWorld->meteors = next;
+    return next;
+  }
+
+  free(meteor);
+  prev->next = next;
+  next->prev = prev;
+  return prev;
 }

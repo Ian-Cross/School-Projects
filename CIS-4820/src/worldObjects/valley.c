@@ -4,11 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "generation.h"
-#include "graphics.h"
-#include "valley.h"
-
-int x, y, z, idx;
+#include "main.h"
 
 /******* getValleyRect() *******/
 /* - Input Valley object, allocate memory for a rectangle object */
@@ -54,12 +50,12 @@ Valley *createValley() {
 /* - Builds the circles line by line */
 /* - Dig into the world in shinking circles to build a Valley */
 void drawValley(Valley *valley) {
-  for (y = 0; y < valley->depth; y++) {
+  for (int y = 0; y < valley->depth; y++) {
     int radius = valley->radius - y; // shrink the circle
-    for (z = -radius; z < radius; z++) {
+    for (int z = -radius; z < radius; z++) {
       // calculate the length of current line by the distance from the centre
       int half_row_width = sqrt(radius * radius - z * z);
-      for (x = -half_row_width; x < half_row_width; x++) {
+      for (int x = -half_row_width; x < half_row_width; x++) {
         // keep from a 1 length line at the very edge
         if ((z != 0 || x != half_row_width - 1) &&
             (z != 0 || x != -half_row_width)) {

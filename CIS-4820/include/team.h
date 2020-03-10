@@ -7,15 +7,14 @@
 #include <OpenGL/glu.h>
 #endif
 
-#include "base.h"
-#include "tower.h"
-#include "truck.h"
-
-#define TRUCK_COUNT 5
-#define TOWER_COUNT 5
+#define TRUCK_COUNT 1
+#define TOWER_COUNT 1
 #define TEAM_COUNT 2
 #define TEAM_ONE 0
 #define TEAM_TWO 1
+
+typedef struct truck Truck;
+typedef struct tower Tower;
 
 typedef struct Teams {
   int teamNumber;
@@ -27,8 +26,18 @@ typedef struct Teams {
   Tower *towers[TOWER_COUNT];
 } Team;
 
+/*** createTeams() ***/
+/* - Allocate Memory for, and fill the team objects */
+/* - Contains:
+      a reference to the team base,
+      a winCounter (meteorCount),
+      a list of the team trucks,
+      a list of the team towers */
 void createTeams();
+
+/*** checkVault() ***/
+/* - Checks both teams for the win condition */
+/* - Randomly chooses which team to check first to remove bias */
 void checkVault();
-void drawVault();
 
 #endif

@@ -10,16 +10,6 @@
 #define BASE_SIZE 5
 #define BASE_COUNT 2
 
-#ifndef RECT_OBJ
-typedef struct Rects {
-  int x;
-  int z;
-  int hx;
-  int hz;
-} Rect;
-#define RECT_OBJ
-#endif
-
 typedef struct Bases {
   int width;
   int length;
@@ -31,13 +21,14 @@ typedef struct Bases {
 } Base;
 
 /******* createBase() *******/
-/* - Input base object, and base id */
-/* - randomize values and fill the object */
-void createBase(Base *base, int baseNum);
+/* - Input base id */
+/* - allocate memory for the base */
+/* - randomize values and fill the object returning it */
+Base *createBase(int);
 
 /******* drawBase() *******/
 /* - Input base object  */
 /* - Iterate over 3 dimensions to build the base block by block */
-void drawBase(Base *base);
+void drawBase(Base *);
 
 #endif

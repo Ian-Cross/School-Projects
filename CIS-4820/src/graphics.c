@@ -8,13 +8,25 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "graphics.h"
+#include "main.h"
 
-extern void update();
-extern void collisionResponse();
-extern void buildDisplayList();
-extern void mouse(int, int, int, int);
-extern void draw2D();
+int flycontrol = 0; // flag which is set to 0 when flying behaviour is desired
+int fps = 0;        // flag to print out frames per sxecond
+int space = 0;      // flag to indicate the space bar has been pressed
+int netClient = 0;  // flag indicates the program is a client when set = 1
+int netServer = 0;  // flag indicates the program is a server when set = 1
+
+int screenWidth = 1320;
+int screenHeight = 1068;
+// int screenWidth = 1024;
+// int screenHeight = 768;
+
+int displayMap = 1;      // flag indicates if map is to be printed
+int displayAllCubes = 0; // draw all of the cubes in the world when 1
+int fixedVP = 0;         // flag indicates use of a fixed viewpoint
+double fastFly = 1;      // speedier flying flag, is true when = 1.0
+
+int displayCount = 0; // count of cubes in displayList[][]
 
 /* flags used to control the appearance of the image */
 int lineDrawing = 0;   // draw polygons as solid or lines
@@ -22,82 +34,17 @@ int lighting = 1;      // use diffuse and specular lighting
 int smoothShading = 1; // smooth or flat shading
 int textures = 0;
 
-/* texture data */
-GLubyte Image[64][64][4];
-GLuint textureID[1];
-
-/* viewpoint coordinates */
-float vpx = -50.0, vpy = -50.0, vpz = -50.0;
-float oldvpx, oldvpy, oldvpz;
-
-/* mouse direction coordiates */
-float mvx = 0.0, mvy = 45.0, mvz = 0.0;
-
-/* stores current mouse position value */
-float oldx, oldy;
-
 /* location for the light source (the sun), the first three
    values are the x,y,z coordinates */
 GLfloat lightPosition[] = {0.0, 49.0, 0.0, 0.0};
 /* location for light source that is kept at viewpoint location */
 GLfloat viewpointLight[] = {-50.0, -50.0, -50.0, 1.0};
 
-/* sky cube size */
-float skySize;
+/* viewpoint coordinates */
+float vpx = -50.0, vpy = -50.0, vpz = -50.0;
 
-/* screen dimensions */
-int screenWidth = 1320;
-int screenHeight = 1068;
-// int screenWidth = 1024;
-// int screenHeight = 768;
-
-/* command line flags */
-int displayAllCubes = 0; // draw all of the cubes in the world when 1
-
-/* list of cubes to display */
-int displayList[MAX_DISPLAY_LIST][3];
-int displayCount = 0; // count of cubes in displayList[][]
-
-/* list of players - number of mobs, xyz values and rotation about y */
-float playerPosition[PLAYER_COUNT][4];
-/* visibility of players, 0 not drawn, 1 drawn */
-short playerVisible[PLAYER_COUNT];
-
-/* list of tubes - number of tubes, staring x, y, z position, ending  */
-/*  x, y, z position */
-float tubeData[TUBE_COUNT][6];
-/* tube colour for each tube */
-int tubeColour[TUBE_COUNT];
-/* visibility of tubes, 0 not drawn, 1 drawn */
-short tubeVisible[TUBE_COUNT];
-
-/* flag indicating the user wants the cube in front of them removed */
-int space = 0;
-/* flag indicates if map is to be printed */
-int displayMap = 1;
-/* flag indicating a fixed viewpoint - not updated by mouse/keyboard */
-int fixedVP = 0;
-
-/* list of user defined colours */
-/* ambient (RGBA) followed by diffuse (RGBA) */
-GLfloat uAmbColour[NUMBERCOLOURS][4];
-GLfloat uDifColour[NUMBERCOLOURS][4];
-/* flag indicating user defined colour has been allocated */
-/* initialized to 0, set to 1 when colour stored in uColour[][] */
-int uColourUsed[NUMBERCOLOURS];
-
-/***************/
-/* TODO: Comment */
-int withinBounds(int xLoc, int yLoc, int zLoc) {
-  // printf("%d %d %d", xLoc, yLoc, zLoc);
-  if (xLoc >= WORLDX || xLoc < 0)
-    return 0;
-  if (yLoc >= WORLDY || yLoc < 0)
-    return 0;
-  if (zLoc >= WORLDZ || zLoc < 0)
-    return 0;
-  return 1;
-}
+/* mouse direction coordiates */
+float mvx = 0.0, mvy = 45.0, mvz = 0.0;
 
 /* player control functions */
 /* set all player location, rotation, and visibility values to zero */
@@ -506,9 +453,25 @@ void display(void) {
   /* turn off emision lighting, use only for sky */
   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, black);
 
+  /* Draw cannon balls in the world */
+  Projectile *worldProjectile = newWorld->projectiles;
+  while (worldProjectile != NULL) {
+    if (worldProjectile->visible == TRUE) {
+      glPushMatrix();
+      /* black body */
+      glTranslatef(worldProjectile->xLoc + 0.5, worldProjectile->yLoc + 0.5,
+                   worldProjectile->zLoc + 0.5);
+      glMaterialfv(GL_FRONT, GL_AMBIENT, black);
+      glMaterialfv(GL_FRONT, GL_DIFFUSE, gray);
+      glutSolidSphere(0.3, 8, 8);
+      glPopMatrix();
+    }
+    worldProjectile = worldProjectile->next;
+  }
+
   /* draw mobs in the world */
   for (i = 0; i < MOB_COUNT; i++) {
-    if (mobVisible[i] == 1) {
+    if (mobVisible[i] == TRUE) {
       glPushMatrix();
       /* black body */
       glTranslatef(mobPosition[i][0] + 0.5, mobPosition[i][1] + 0.5,
@@ -517,7 +480,7 @@ void display(void) {
       glMaterialfv(GL_FRONT, GL_DIFFUSE, gray);
       glutSolidSphere(0.3, 8, 8);
       /* white eyes */
-      glRotatef(mobPosition[i][3], 0.0, 1.0, 0.0);
+      // glRotatef(mobPosition[i][3], 0.0, 1.0, 0.0);
       // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, white);
       // glTranslatef(0.3, 0.1, 0.3);
       // glutSolidSphere(0.1, 4, 4);
@@ -834,8 +797,6 @@ void graphicsInit(int *argc, char **argv) {
       fullscreen = 1;
     if (strcmp(argv[i], "-drawall") == 0)
       displayAllCubes = 1;
-    if (strcmp(argv[i], "-testworld") == 0)
-      testWorld = 1;
     if (strcmp(argv[i], "-fps") == 0)
       fps = 1;
     if (strcmp(argv[i], "-client") == 0)

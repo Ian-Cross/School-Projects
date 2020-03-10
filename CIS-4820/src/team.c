@@ -3,13 +3,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "generation.h"
-#include "graphics.h"
-#include "tower.h"
-#include "truck.h"
+#include "main.h"
 
 /*** createTeams() ***/
-/* - */
+/* - Allocate Memory for, and fill the team objects */
+/* - Contains:
+      a reference to the team base,
+      a winCounter (meteorCount),
+      a list of the team trucks,
+      a list of the team towers */
 void createTeams() {
   for (int i = 0; i < 2; i++) {
     newWorld->teams[i] = (Team *)malloc(sizeof(Team));
@@ -25,7 +27,7 @@ void createTeams() {
     for (int j = 0; j < TRUCK_COUNT; j++) {
       newWorld->teams[i]->trucks[j] =
           createTruck(newWorld->teams[i]->base, j, i);
-      drawTruck(newWorld->teams[i]->trucks[j], newWorld->teams[i]);
+      drawTruck(newWorld->teams[i]->trucks[j]);
     }
 
     for (int j = 0; j < TOWER_COUNT; j++) {
@@ -36,18 +38,10 @@ void createTeams() {
   }
 }
 
-void checkVault() {
-  for (int i = 0; i < TEAM_COUNT; i++) {
-    if (newWorld->teams[i]->meteorCount >= 27) {
-      printf("Congradulations Team %s, you have won!\n",
-             i == 0 ? "RED!" : "BLUE!");
-      exit(0);
-    }
-    drawVault(newWorld->teams[i]);
-  }
-}
-
 int lastMeteorCount = 0;
+/*** drawVault() ***/
+/* - draws a pile of meteors behind the base to signify score */
+/* - only redraws if there is a new value */
 void drawVault(Team *team) {
   int meteorCount = team->meteorCount;
   if (meteorCount == lastMeteorCount)
@@ -66,4 +60,28 @@ void drawVault(Team *team) {
       }
     }
   }
+}
+
+/*** checkVault() ***/
+/* - Checks both teams for the win condition */
+/* - Randomly chooses which team to check first to remove bias */
+void checkVault() {
+  int firstTeam = rand() % 2;
+
+  if (newWorld->teams[firstTeam]->meteorCount >= 27) {
+    printf("Congradulations Team %s, you have won!\n",
+           firstTeam == 0 ? "RED!" : "BLUE!");
+    exit(0);
+  }
+
+  int secondTeam = firstTeam == TEAM_ONE ? TEAM_TWO : TEAM_ONE;
+
+  if (newWorld->teams[secondTeam]->meteorCount >= 27) {
+    printf("Congradulations Team %s, you have won!\n",
+           secondTeam == 0 ? "RED!" : "BLUE!");
+    exit(0);
+  }
+
+  drawVault(newWorld->teams[TEAM_ONE]);
+  drawVault(newWorld->teams[TEAM_TWO]);
 }
