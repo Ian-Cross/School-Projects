@@ -7,6 +7,8 @@
 #include <OpenGL/glu.h>
 #endif
 
+#define PROJECTILE_SPEED 10
+
 float mouseRotX, mouseRotY, mouseRotZ;
 int totalProjectiles;
 
@@ -16,10 +18,11 @@ typedef struct projectile {
   float xLoc;
   float yLoc;
   float zLoc;
-  float targetX;
-  float targetY;
-  float targetZ;
+  float xVel;
+  float yVel;
+  float zVel;
   struct projectile *next;
+  double lastTimeMoved;
 } Projectile;
 
 int totalProjectiles;

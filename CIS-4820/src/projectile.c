@@ -33,10 +33,11 @@ Projectile *createProjectile() {
   newProjectile->xLoc = 0;
   newProjectile->yLoc = 0;
   newProjectile->zLoc = 0;
-  newProjectile->targetX = 0;
-  newProjectile->targetY = 0;
-  newProjectile->targetZ = 0;
+  newProjectile->xVel = 0;
+  newProjectile->yVel = 0;
+  newProjectile->xVel = 0;
   newProjectile->next = NULL;
+  newProjectile->lastTimeMoved = 0;
   return newProjectile;
 }
 
@@ -102,7 +103,7 @@ void moveMouseProjectile() {
               world[(int)i][(int)j][(int)k] == TIRES) {
             Truck *hurtTruck = truckLookup((int)i, (int)j, (int)k);
             if (hurtTruck != NULL) {
-              hurtTruck->health -= 2;
+              hurtTruck->health--;
               if (hurtTruck->health == 0)
                 teleportToBase(hurtTruck);
             } else {
@@ -118,35 +119,14 @@ void moveMouseProjectile() {
 }
 
 void moveProjectile(Projectile *projectile) {
+
   float mobX = projectile->xLoc, mobY = projectile->yLoc,
         mobZ = projectile->zLoc;
 
-  float xDif = mobX - projectile->targetX;
-  float yDif = mobY - projectile->targetY;
-  float zDif = mobZ - projectile->targetZ;
+  mobX += projectile->xVel * 0.8;
+  mobY += projectile->yVel * 0.8;
+  mobZ += projectile->zVel * 0.8;
 
-  float maxDif = 0;
-  if (fabs(xDif) > maxDif)
-    maxDif = xDif;
-  if (fabs(yDif) > maxDif)
-    maxDif = yDif;
-  if (fabs(zDif) > maxDif)
-    maxDif = zDif;
-
-  mobX += xDif / maxDif * 0.8;
-  mobY -= yDif / maxDif * 0.8;
-  mobZ -= zDif / maxDif * 0.8;
-
-  // float rotx = (atan2(abs(projectile->targetY - projectile->yLoc),
-  //                     abs(projectile->targetX - projectile->xLoc)) /
-  //               180.0 * 3.141592);
-  // float roty = ((projectile->targetX - projectile->xLoc) / 180.0 * 3.141592);
-
-  // mobX += sin(roty) * 0.8;
-  // mobY -= sin(rotx) * 0.8;
-  // mobZ -= cos(roty) * 0.8;
-
-  // setMobPosition(0, mobX, mobY, mobZ, 0.0);
   if (withinBounds(mobX, mobY, mobZ))
     projectile->visible = TRUE;
   else
@@ -156,29 +136,29 @@ void moveProjectile(Projectile *projectile) {
   projectile->yLoc = mobY;
   projectile->zLoc = mobZ;
 
-  // for (float j = mobY + 0.4; j > mobY - 0.8; j -= 0.4) {
-  //   for (float i = mobX + 0.4; i > mobX - 0.8; i -= 0.4) {
-  //     for (float k = mobZ + 0.4; k > mobZ - 0.8; k -= 0.4) {
-  //       if (world[(int)i][(int)j][(int)k] != 0) {
-  //         projectile->visible = FALSE;
-  //         if (world[(int)i][(int)j][(int)k] == VEHICLE_1 ||
-  //             world[(int)i][(int)j][(int)k] == VEHICLE_2 ||
-  //             world[(int)i][(int)j][(int)k] == TIRES) {
-  //           Truck *hurtTruck = truckLookup((int)i, (int)j, (int)k);
-  //           if (hurtTruck != NULL) {
-  //             hurtTruck->health -= 2;
-  //             if (hurtTruck->health == 0)
-  //               teleportToBase(hurtTruck);
-  //           } else {
-  //             printf("Null Hurt truck\n");
-  //           }
-  //         }
-  //         world[(int)i][(int)j][(int)k] = 0;
-  //         return;
-  //       }
-  //     }
-  //   }
-  // }
+  for (float j = mobY + 0.4; j > mobY - 0.8; j -= 0.4) {
+    for (float i = mobX + 0.4; i > mobX - 0.8; i -= 0.4) {
+      for (float k = mobZ + 0.4; k > mobZ - 0.8; k -= 0.4) {
+        if (world[(int)i][(int)j][(int)k] != 0) {
+          projectile->visible = FALSE;
+          if (world[(int)i][(int)j][(int)k] == VEHICLE_1 ||
+              world[(int)i][(int)j][(int)k] == VEHICLE_2 ||
+              world[(int)i][(int)j][(int)k] == TIRES) {
+            Truck *hurtTruck = truckLookup((int)i, (int)j, (int)k);
+            if (hurtTruck != NULL) {
+              hurtTruck->health--;
+              if (hurtTruck->health == 0)
+                teleportToBase(hurtTruck);
+            } else {
+              printf("Null Hurt truck\n");
+            }
+          }
+          world[(int)i][(int)j][(int)k] = 0;
+          return;
+        }
+      }
+    }
+  }
 }
 
 void fireMouseProjectile() {
@@ -198,10 +178,24 @@ void fireTowerProjectile(Tower *tower, Coord target) {
       worldProjectile->xLoc = tower->xLoc;
       worldProjectile->zLoc = tower->zLoc;
       worldProjectile->yLoc = tower->yLoc + TOWER_HEIGHT;
-      worldProjectile->targetX = target.x;
-      worldProjectile->targetY = target.y;
-      worldProjectile->targetZ = target.z;
       worldProjectile->visible = TRUE;
+
+      float xDif = target.x - worldProjectile->xLoc;
+      float yDif = target.y - worldProjectile->yLoc;
+      float zDif = target.z - worldProjectile->zLoc;
+
+      float maxDif = 0;
+      if (fabs(xDif) > maxDif)
+        maxDif = fabs(xDif);
+      if (fabs(yDif) > maxDif)
+        maxDif = fabs(yDif);
+      if (fabs(zDif) > maxDif)
+        maxDif = fabs(zDif);
+      worldProjectile->xVel = xDif / maxDif;
+      worldProjectile->yVel = yDif / maxDif;
+      worldProjectile->zVel = zDif / maxDif;
+
+      break;
     }
     worldProjectile = worldProjectile->next;
   }

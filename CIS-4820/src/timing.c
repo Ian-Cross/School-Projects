@@ -90,11 +90,14 @@ void moveTrucks() {
 }
 
 void moveProjectiles() {
+  double currTime = getTimeMS();
   if (mobVisible[0] == 1) {
     moveMouseProjectile();
   }
   Projectile *worldProjectile = newWorld->projectiles;
   while (worldProjectile != NULL) {
+    // if (currTime - worldProjectile->lastTimeMoved >= PROJECTILE_SPEED)
+    // worldProjectile->lastTimeMoved = currTime;
     if (worldProjectile->visible == TRUE)
       moveProjectile(worldProjectile);
     worldProjectile = worldProjectile->next;

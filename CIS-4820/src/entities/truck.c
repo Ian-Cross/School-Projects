@@ -207,6 +207,7 @@ void teleportToBase(Truck *truck) {
   truck->yLoc = 0;
   truck->zLoc = base->zLoc + TRUCK_ADJUST[2];
   truck->state = searching;
+  newSearchArea(truck);
 }
 
 /*** searchArea() ***/

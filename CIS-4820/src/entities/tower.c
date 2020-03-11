@@ -39,13 +39,11 @@ void drawTower(Tower *tower, Team *team) {
   }
 }
 
-// void fireProjectile() {}
-
 Coord checkSurroundings(Tower *tower, Team *team) {
   Coord target = {-1, -1, -1};
   int enemyColour = team->teamNumber == TEAM_ONE ? VEHICLE_2 : VEHICLE_1;
-  int radius = 100;
-  for (int y = tower->yLoc - 3; y < tower->yLoc + 3; y++) {
+  int radius = 10;
+  for (int y = tower->yLoc - 3; y < tower->yLoc + 5; y++) {
     for (int z = -radius; z < radius; z++) {
       int half_row_width = sqrt(radius * radius - z * z);
       for (int x = -half_row_width; x < half_row_width; x++) {

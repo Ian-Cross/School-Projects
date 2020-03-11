@@ -7,8 +7,8 @@
 #include <OpenGL/glu.h>
 #endif
 
-#define TRUCK_COUNT 1
-#define TOWER_COUNT 1
+#define TRUCK_COUNT 5
+#define TOWER_COUNT 5
 #define TEAM_COUNT 2
 #define TEAM_ONE 0
 #define TEAM_TWO 1
