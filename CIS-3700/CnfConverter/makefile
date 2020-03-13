@@ -3,10 +3,10 @@ JAVAC=javac
 INFILE=ExpFile
 OUTFILE=CnfFile
 
-All: ExpToCnf.class
+All: Bop.class Exp.class ExpToCnf.class run
 
 %.class: %.java
-	$(JAVAC) $^
+	$(JAVAC) -Xlint:unchecked $^
 
 run:
 	java ExpToCnf $(INFILE) $(OUTFILE)
