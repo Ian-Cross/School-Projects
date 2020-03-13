@@ -123,9 +123,9 @@ void moveProjectile(Projectile *projectile) {
   float mobX = projectile->xLoc, mobY = projectile->yLoc,
         mobZ = projectile->zLoc;
 
-  mobX += projectile->xVel * 0.8;
-  mobY += projectile->yVel * 0.8;
-  mobZ += projectile->zVel * 0.8;
+  mobX += projectile->xVel * 0.5;
+  mobY += projectile->yVel * 0.5;
+  mobZ += projectile->zVel * 0.5;
 
   if (withinBounds(mobX, mobY, mobZ))
     projectile->visible = TRUE;
