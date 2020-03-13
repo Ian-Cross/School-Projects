@@ -318,6 +318,64 @@ When the vehicle is destroyed and sent back to the base, make a crater in the gr
 
 When a vehicle brings a meteor back the its base, remove the meteor from the vehicle and place it beside the base. The goal is to create a 3x3 cube of meteors. Once the vehicle has dropped off the meteor it should begin searching for another meteor to retrieve.
 
+## Assignment 4 - Game Control and Opponent AI
+
+Due. March 20, 2020
+
+---
+
+### Creating Towers and Trucks on Command
+
+---
+
+Use the tower and truck creation code from assignment 3. Add the
+ability to create trucks and towers by the user instead of automatically
+creating five of them at the start of the game.
+
+Trucks will still appear near the player's base when they are created.
+When created they will immediately start searching for meteors.
+Each player will start the game with one truck.
+
+When the player presses the t key a truck should be created. When they press the y key a tower should be created. You can look at the keyboard() function to see how keyboard input occurs.
+
+The towers should be placeable by the player. When they press the y key they should see a marker that indicates the position on the ground where the tower will be created. By moving the mouse they should see this position move across the world. When they press the y key a second time it will build the tower at the location of the marker. As in assignment 3, the towers should shoot at enemy vehicles and towers.
+
+If you cannot get the mouse to work correctly to place the tower then a reasonable fallback is to use keyboard input to control the positioning of the marker and tower. This solution wont get full marks but it will get some marks for positioning the towers. If you choose this option then mention it in the readme.txt file.
+
+Towers can only be built if they are within 10 units of another tower or the player's base. You don't need to do anything if a tower is destroyed and that action leaves other towers which are more than 10 units from a base (you only need to test the distance when the tower is built).
+
+---
+
+### Count and Display Collected Meteors
+
+---
+
+As meteors are collected the number of them should be displayed on the screen using a 2D display. In assignment 3 you needed to build a 3x3 block which illustrated the collected meteors for each player. Draw three small 2D square made of 3x3 squares which represent the number of meteors collected. Place the 2d images along the side or bottom of the screen. This will show the player how many meteors they have collected and how many more they need to win the game.
+
+If either the player or the AI collect 27 meteors then print a message indicating that they have won the game.
+
+When the player builds a truck or a tower is will cost them some meteors. Decrease the number of meteors a player has when they build a truck or tower. Trucks cost one meteor, towers cost two meteors.
+
+---
+
+### Opponent AI
+
+---
+
+Write the AI to run the other player. The opponent should control the building of trucks and towers. Design a strategy for the player and write the code to run that AI.
+
+Strategies could be things like:
+
+- build a lot of trucks
+- build a balance of trucks and towers
+- defend the base with some towers and then build trucks
+
+Other strategies are fine but the strategy cannot be to allow the one starting truck to collect meteors and do nothing else.
+
+It isn't important if the strategy is particularly successful or if it reacts to what the human player is doing.
+
+Describe the strategy in the readme.txt file.
+
 ---
 
 ## Details
