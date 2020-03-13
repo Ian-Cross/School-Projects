@@ -27,7 +27,7 @@ OBJS = $(SOURCES:%.c=%.o)
 
 all: $(EXE) run
 
-new: clean $(EXE) run
+new: $(EXE)
 
 .c.o: $(OBJS)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
