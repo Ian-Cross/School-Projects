@@ -36,16 +36,21 @@ working-storage section.
   02 filler pic X(13) value 'Square Root: '.
   02 pri-y  pic Z(11)9.9(6).
 
+*> A program that repeatedly allows the user to calculate square roots.
 procedure division.
   open output standard-output.
+  *> Program intro
   write out-line from title-line after advancing 0 lines.
   write out-line from under-line after advancing 1 line.
 
+  *> Run the program until the user quits
   perform until flag is equal 1
     write out-line from prompt-line after advancing 1 line
     accept z
+    *> Only compute when a positive natural number is entered
     if z is greater than 0
     then
+      *> Calculate the square root
       call "calcSqrt" using z, pri-y
       move z to pri-z
       write out-line from print-line after advancing 1 line

@@ -40,19 +40,28 @@ working-storage section.
   02 filler pic X(13) value 'Square Root: '.
   02 pri-y  pic Z(11)9.9(6).
 
+*> A program that uses Babylonian estimation to calculate square roots.
 procedure division.
   open output standard-output.
+  *> Program intro
   write out-line from title-line after advancing 0 lines.
   write out-line from under-line after advancing 1 line.
 
+  *> Run the program until the user quits
   perform until flag is equal 1
     write out-line from prompt-line after advancing 1 line
     accept z
+    *> Only compute when a positive natural number is entered
     if z is greater than 0
     then
+      *> Get the first approximation
       divide 2 into z giving x rounded
+      
+      *> Calculate to the 1000th element in the series
+      *> If it still isn't close enough to the desired precision, quit
       perform varying k from 1 by 1
         until k is greater than 1000
+        *> Get the next approximation
         compute y rounded = 0.5 * (x + z / x)
         subtract x from y giving temp
 
@@ -61,6 +70,7 @@ procedure division.
           compute temp = -temp
         end-if
 
+        *> If it is precise enough, provide the output and quit, otherwise continue
         if temp/(y+x) is greater than diff
         then
           move y to x
@@ -72,6 +82,7 @@ procedure division.
         end-if
       end-perform
 
+      *> If it still isn't close enough to the desired precision, quit
       if k is greater than 1000
       then
         move z to abo-z
