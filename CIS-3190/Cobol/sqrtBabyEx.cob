@@ -13,10 +13,6 @@ fd standard-output.
 working-storage section.
 77 diff pic v9(5) value .00100.
 77 z    pic s9(11)v9(6).
-77 k    pic s9999.
-77 x    pic 9(11)v9(6).
-77 y    pic 9(11)v9(6).
-77 temp pic 9(11)v9(6).
 77 flag pic 9 value 0.
 01 title-line.
   02 filler pic X(9) value spaces.
@@ -50,33 +46,9 @@ procedure division.
     accept z
     if z is greater than 0
     then
-      divide 2 into z giving x rounded
-      perform varying k from 1 by 1
-        until k is greater than 1000
-        compute y rounded = 0.5 * (x + z / x)
-        subtract x from y giving temp
-
-        if temp is less than 0
-        then
-          compute temp = -temp
-        end-if
-
-        if temp/(y+x) is greater than diff
-        then
-          move y to x
-        else
-          move z to pri-z
-          move y to pri-y
-          write out-line from print-line after advancing 1 line
-          exit perform
-        end-if
-      end-perform
-
-      if k is greater than 1000
-      then
-        move z to abo-z
-        write out-line from abort-line after advancing 1 line
-      end-if
+      call "calcSqrt" using z, pri-y
+      move z to pri-z
+      write out-line from print-line after advancing 1 line
 
     else if z is equal 0
       display 'Quitting'
