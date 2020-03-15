@@ -109,6 +109,35 @@ void drawMap(int startX, int startY, int width, int height, int cubeWidth,
   }
 }
 
+/*** drawScore() ***/
+/* - */
+void drawScore(Team *team) {
+  int cubeSide = 18;
+  int score = team->meteorCount;
+  int startX, startY;
+  GLfloat white[] = {1, 1, 1, 1};
+  getUserColour(METEOR, &ambRed, &ambGreen, &ambBlue, &ambAlpha, &difRed,
+                &difGreen, &difBlue, &difAlpha);
+  GLfloat meteor[] = {ambRed, ambGreen, ambBlue, 1};
+  // Draw score of team
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      for (int k = 0; k < 3; k++) {
+        set2Dcolour(white);
+        startX = 20 + j + i * (cubeSide * 4) + j * cubeSide;
+        startY = 20 + k + k * cubeSide;
+        if (score > 0) {
+          set2Dcolour(meteor);
+          draw2Dbox(startX, startY, startX + cubeSide, startY + cubeSide);
+          score--;
+        } else {
+          draw2Dbox(startX, startY, startX + cubeSide, startY + cubeSide);
+        }
+      }
+    }
+  }
+}
+
 /******* draw2D() *******/
 /* - draws 2D shapes on screen */
 /* - use the following functions: */
@@ -136,6 +165,7 @@ void draw2D() {
     int cubeWidth = mapHeight / WORLDX;
     drawMap(mapStartX, mapStartY, mapHeight, mapHeight, cubeWidth, cubeWidth);
   }
+  drawScore(newWorld->teams[1]);
 }
 
 /*** update() ***/
