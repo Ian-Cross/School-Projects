@@ -726,6 +726,18 @@ void keyboard(unsigned char key, int x, int y) {
     else
       fixedVP = 0;
     break;
+  case 't': // Buy a truck
+    if (newWorld->teams[1]->meteorCount > 0) {
+      newWorld->teams[1]->meteorCount--;
+      addTruck(1);
+    }
+    break;
+  case 'y': // Buy a tower
+    if (newWorld->teams[1]->meteorCount > 1) {
+      newWorld->teams[1]->meteorCount -= 2;
+      addTower(1);
+    }
+    break;
   }
 }
 

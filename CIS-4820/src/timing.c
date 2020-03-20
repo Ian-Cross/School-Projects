@@ -77,14 +77,15 @@ void moveTrucks() {
   double currTime = getTimeMS();
   for (int i = 0; i < TEAM_COUNT; i++) {
     Team *currTeam = newWorld->teams[i];
-    for (int j = 0; j < TRUCK_COUNT; j++) {
-      Truck *currTruck = currTeam->trucks[j];
+    Truck *currTruck = currTeam->trucks;
+    while (currTruck != NULL) {
       if (currTime - currTruck->lastTimeMoved >= TRUCK_SPEED) {
         currTruck->lastTimeMoved = currTime;
         clearTruck(currTruck);
         moveTruck(currTruck, currTeam);
         drawTruck(currTruck);
       }
+      currTruck = currTruck->next;
     }
   }
 }

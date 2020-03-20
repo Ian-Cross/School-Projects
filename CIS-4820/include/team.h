@@ -22,8 +22,8 @@ typedef struct Teams {
   int teamVehicleColour;
   int meteorCount;
   Base *base;
-  Truck *trucks[TRUCK_COUNT];
-  Tower *towers[TOWER_COUNT];
+  Truck *trucks;
+  Tower *towers;
 } Team;
 
 /*** createTeams() ***/

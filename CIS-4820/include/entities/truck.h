@@ -31,11 +31,14 @@ typedef struct truck {
   int loadCount;
   int health;
   int team;
+  struct truck *next;
 } Truck;
 
 /*** createTruck() ***/
 /* - Allocate space and fill values for the truck object */
-Truck *createTruck(Base *, int, int);
+Truck *createTruck(Base *, int);
+
+void addTruck(int);
 
 /*** drawTruck() ***/
 /* - Render the truck at its current x and z location */

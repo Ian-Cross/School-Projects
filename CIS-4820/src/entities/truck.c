@@ -9,7 +9,6 @@ Coord TRUCK_SHAPE[5] = {
     {-1, 0, 0}, {0, 0, 0}, {1, 0, 0}, {-1, 1, 0}, {0, 1, 0}};
 Coord TRUCK_TIRES[4] = {{-1, 0, -1}, {-1, 0, 1}, {1, 0, -1}, {1, 0, 1}};
 
-int TRUCK_ADJUST[5] = {-8, -4, 0, 4, 8};
 int direction[4][3] = {{1, 1, 1}, {-1, 1, 1}, {1, 1, -1}, {1, 1, -1}};
 
 /*** newSearchArea() ***/
@@ -21,14 +20,14 @@ void newSearchArea(Truck *truck) {
 
 /*** createTruck() ***/
 /* - Allocate space and fill values for the truck object */
-Truck *createTruck(Base *base, int truckNum, int teamNumber) {
+Truck *createTruck(Base *base, int teamNumber) {
   Truck *newTruck = (Truck *)malloc(sizeof(Truck));
   if (newTruck == NULL)
     printf("Unable to allocate space for truck");
 
   newTruck->xLoc = base->xLoc + (teamNumber == TEAM_ONE ? -10 : 10);
   newTruck->yLoc = 0;
-  newTruck->zLoc = base->zLoc + TRUCK_ADJUST[truckNum];
+  newTruck->zLoc = base->zLoc;
   newTruck->state = searching;
   newTruck->hasMeteor = 0;
   newTruck->loadCount = 0;
@@ -36,8 +35,18 @@ Truck *createTruck(Base *base, int truckNum, int teamNumber) {
   newTruck->lastTimeMoved = 0;
   newSearchArea(newTruck);
   newTruck->team = teamNumber;
+  newTruck->next = NULL;
 
   return newTruck;
+}
+
+void addTruck(int teamNumber) {
+  Team *team = newWorld->teams[teamNumber];
+  Truck *currTruck = team->trucks;
+  while (currTruck->next != NULL) {
+    currTruck = currTruck->next;
+  }
+  currTruck->next = createTruck(team->base, teamNumber);
 }
 
 /*** getDirection() ***/
@@ -149,12 +158,12 @@ void clearTruck(Truck *truck) {
 /* - input with the world location that was hit */
 /* - check if the inputted location matches anyx that would be a part of a truck
 on an enemy team */
-/* - return the truck if anything mathes, null on error /not found */
+/* - return the truck if anything mathes, null on error/not found */
 Truck *truckLookup(int x, int y, int z) {
   for (int i = 0; i < TEAM_COUNT; i++) {
     Team *team = newWorld->teams[i];
-    for (int j = 0; j < TRUCK_COUNT; j++) {
-      Truck *truck = team->trucks[j];
+    Truck *truck = team->trucks;
+    while (truck != NULL) {
       int dir = getDirection(truck, i);
 
       // check the truck body
@@ -174,6 +183,7 @@ Truck *truckLookup(int x, int y, int z) {
             truck->zLoc + TRUCK_TIRES[k].z == z)
           return truck;
       }
+      truck = truck->next;
     }
   }
   return NULL;
@@ -205,7 +215,7 @@ void teleportToBase(Truck *truck) {
   Base *base = (Base *)newWorld->teams[truck->team]->base;
   truck->xLoc = base->xLoc + (truck->team == TEAM_ONE ? -10 : 10);
   truck->yLoc = 0;
-  truck->zLoc = base->zLoc + TRUCK_ADJUST[2];
+  truck->zLoc = base->zLoc;
   truck->state = searching;
   newSearchArea(truck);
 }

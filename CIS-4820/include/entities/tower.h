@@ -14,11 +14,12 @@ typedef struct tower {
   int zLoc;
   int yLoc;
   int projectileID;
+  struct tower *next;
 } Tower;
 
 /*** createTower() ***/
 /* - Allocate memory and fill the tower object */
-Tower *createTower(Base *, int, int);
+Tower *createTower();
 
 /*** drawTower() ***/
 /* - Render the tower at its current x and z location */
@@ -27,5 +28,6 @@ Tower *createTower(Base *, int, int);
 void drawTower();
 
 void towerSurvey();
+void addTower(int);
 
 #endif

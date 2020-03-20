@@ -7,15 +7,18 @@
 
 /*** createTower() ***/
 /* - Allocate memory and fill the tower object */
-Tower *createTower(Base *base, int truckNum, int teamNumber) {
+Tower *createTower() {
   Tower *newTower = (Tower *)malloc(sizeof(Tower));
   if (newTower == NULL)
     printf("Unable to allocate space for truck");
 
-  newTower->xLoc = rand() % (WORLDX - 20) + 10;
+  // newTower->xLoc = rand() % (WORLDX - 20) + 10;
+  newTower->xLoc = 0;
   newTower->yLoc = WORLDY;
-  newTower->zLoc = rand() % (WORLDZ - 20) + 10;
+  // newTower->zLoc = rand() % (WORLDZ - 20) + 10;
+  newTower->zLoc = 0;
   newTower->projectileID = ++totalProjectiles;
+  newTower->next = NULL;
   addProjectile();
   return newTower;
 }
@@ -67,20 +70,36 @@ Coord checkSurroundings(Tower *tower, Team *team) {
 void towerSurvey() {
   for (int i = 0; i < TEAM_COUNT; i++) {
     Team *team = newWorld->teams[i];
-    for (int j = 0; j < TOWER_COUNT; j++) {
-      Tower *tower = team->towers[j];
-
-      // Quickly redrawn the tower incase they have been shot
+    Tower *currTower = team->towers;
+    while (currTower != NULL) {
+      // Quickly redraw the tower incase they have been shot
       for (int i = 0; i < TOWER_HEIGHT; i++) {
-        world[tower->xLoc][tower->yLoc + i][tower->zLoc] = team->teamBaseColour;
+        world[currTower->xLoc][currTower->yLoc + i][currTower->zLoc] =
+            team->teamBaseColour;
       }
 
-      Coord attackLocation = checkSurroundings(tower, team);
+      Coord attackLocation = checkSurroundings(currTower, team);
       if (attackLocation.x != -1) {
-        if (canFireProjectile(tower->projectileID)) {
-          fireTowerProjectile(tower, attackLocation);
+        if (canFireProjectile(currTower->projectileID)) {
+          fireTowerProjectile(currTower, attackLocation);
         }
       }
+      currTower = currTower->next;
     }
   }
+}
+
+void addTower(int teamNumber) {
+  Tower *newTower = createTower();
+  Team *team = newWorld->teams[teamNumber];
+  Tower *teamTowers = team->towers;
+
+  if (teamTowers == NULL) {
+    teamTowers = newTower;
+  } else {
+    while (teamTowers->next != NULL)
+      teamTowers = teamTowers->next;
+    teamTowers->next = newTower;
+  }
+  placeTower(team, newTower)
 }

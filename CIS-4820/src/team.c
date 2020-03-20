@@ -24,17 +24,10 @@ void createTeams() {
     newWorld->teams[i]->meteorCount = 0;
     newWorld->teams[i]->base = (Base *)newWorld->objects[i]->structure;
 
-    for (int j = 0; j < TRUCK_COUNT; j++) {
-      newWorld->teams[i]->trucks[j] =
-          createTruck(newWorld->teams[i]->base, j, i);
-      drawTruck(newWorld->teams[i]->trucks[j]);
-    }
+    newWorld->teams[i]->trucks = createTruck(newWorld->teams[i]->base, i);
+    drawTruck(newWorld->teams[i]->trucks);
 
-    for (int j = 0; j < TOWER_COUNT; j++) {
-      newWorld->teams[i]->towers[j] =
-          createTower(newWorld->teams[i]->base, j, i);
-      drawTower(newWorld->teams[i]->towers[j], newWorld->teams[i]);
-    }
+    newWorld->teams[i]->towers = NULL;
   }
 }
 
