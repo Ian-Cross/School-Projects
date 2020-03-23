@@ -733,7 +733,9 @@ void keyboard(unsigned char key, int x, int y) {
     }
     break;
   case 'y': // Buy a tower
-    if (newWorld->teams[1]->meteorCount > 1) {
+    if (isPlacingTower) {
+      placeTower();
+    } else if (newWorld->teams[1]->meteorCount > 1) {
       newWorld->teams[1]->meteorCount -= 2;
       addTower(1);
     }

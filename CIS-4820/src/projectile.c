@@ -5,25 +5,6 @@
 #include <time.h>
 
 #include "main.h"
-/*
-Start
-------------------------------------
-|   xRot    |   yRot    |   zRot   |
-| 0.000000  | 45.000000 | 0.000000 |
-
-even left
-359.000000 812.000000 0.000000
-
-even right
-359.000000 901.000000 0.000000
-
-straight up
-254.000000 901.000000 0.000000
-
-straight down
-447.000000 899.000000 0.000000
-*/
-
 int totalProjectiles = 0;
 
 Projectile *createProjectile() {

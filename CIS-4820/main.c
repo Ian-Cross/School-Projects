@@ -183,6 +183,10 @@ void update() {
     // try and fire towers
     towerSurvey();
 
+    if (isPlacingTower == TRUE) {
+      pickTowerLocation(placingTower);
+    }
+
     // check win condition
     checkVault();
   }

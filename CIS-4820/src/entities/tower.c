@@ -5,6 +5,11 @@
 
 #include "main.h"
 
+int isPlacingTower = FALSE;
+Tower *placingTower = NULL;
+int lastPlaceColour = -1;
+Coord lastPlaceLocation = {0, 0, 0};
+
 /*** createTower() ***/
 /* - Allocate memory and fill the tower object */
 Tower *createTower() {
@@ -89,17 +94,94 @@ void towerSurvey() {
   }
 }
 
+void pickTowerLocation(Tower *tower) {
+
+  float x, y, z;
+  float mouseRotX, mouseRotY, mouseRotZ;
+  getViewPosition(&x, &y, &z);
+  getViewOrientation(&mouseRotX, &mouseRotY, &mouseRotZ);
+
+  float rotx = (mouseRotX / 180.0 * 3.141592);
+  float roty = (mouseRotY / 180.0 * 3.141592);
+  float towerX = -x, towerY = -y, towerZ = -z;
+  int found = 0;
+
+  while (withinBounds(towerX, towerY, towerZ)) {
+    towerX += sin(roty) * 0.8;
+    towerY -= sin(rotx) * 0.8;
+    towerZ -= cos(roty) * 0.8;
+
+    if (world[(int)towerX][(int)towerY][(int)towerZ] != 0) {
+      found = 1;
+      break;
+    }
+  }
+
+  if (found) {
+    if (lastPlaceColour != -1)
+      world[lastPlaceLocation.x][lastPlaceLocation.y][lastPlaceLocation.z] =
+          lastPlaceColour;
+    lastPlaceColour = world[(int)towerX][(int)towerY][(int)towerZ];
+    lastPlaceLocation.x = (int)towerX;
+    lastPlaceLocation.y = (int)towerY;
+    lastPlaceLocation.z = (int)towerZ;
+    world[(int)towerX][(int)towerY][(int)towerZ] = 4;
+  }
+}
+
+int isStructureNearby(Tower *tower) {
+  int radius = 10;
+  for (int y = tower->yLoc - 3; y < tower->yLoc + 5; y++) {
+    for (int z = -radius; z < radius; z++) {
+      int half_row_width = sqrt(radius * radius - z * z);
+      for (int x = -half_row_width; x < half_row_width; x++) {
+        if (withinBounds(tower->xLoc + x, y, tower->zLoc + z)) {
+          if (world[tower->xLoc + x][y][tower->zLoc + z] == BASE_2) {
+            return TRUE;
+          }
+        }
+      }
+    }
+  }
+  return FALSE;
+}
+
+void placeTower() {
+  placingTower->xLoc = lastPlaceLocation.x;
+  placingTower->zLoc = lastPlaceLocation.z;
+
+  int highestY = 0;
+  for (int i = 0; i < WORLDY; i++) {
+    if (world[placingTower->xLoc][i][placingTower->zLoc] == 0) {
+      highestY = i;
+      break;
+    }
+  }
+  placingTower->yLoc = highestY;
+
+  if (isStructureNearby(placingTower)) {
+    drawTower(placingTower, newWorld->teams[1]);
+    isPlacingTower = FALSE;
+  } else {
+    printf("Cannot Place There\n");
+    placingTower->xLoc = -1;
+    placingTower->zLoc = -1;
+    placingTower->yLoc = -1;
+  }
+}
+
 void addTower(int teamNumber) {
   Tower *newTower = createTower();
   Team *team = newWorld->teams[teamNumber];
   Tower *teamTowers = team->towers;
 
   if (teamTowers == NULL) {
-    teamTowers = newTower;
+    newWorld->teams[teamNumber]->towers = newTower;
   } else {
     while (teamTowers->next != NULL)
       teamTowers = teamTowers->next;
     teamTowers->next = newTower;
   }
-  placeTower(team, newTower)
+  isPlacingTower = TRUE;
+  placingTower = newTower;
 }

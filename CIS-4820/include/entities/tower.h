@@ -8,6 +8,7 @@
 #endif
 
 #define TOWER_HEIGHT 5
+int isPlacingTower;
 
 typedef struct tower {
   int xLoc;
@@ -16,6 +17,8 @@ typedef struct tower {
   int projectileID;
   struct tower *next;
 } Tower;
+
+Tower *placingTower;
 
 /*** createTower() ***/
 /* - Allocate memory and fill the tower object */
@@ -29,5 +32,7 @@ void drawTower();
 
 void towerSurvey();
 void addTower(int);
+void pickTowerLocation(Tower *);
+void placeTower();
 
 #endif

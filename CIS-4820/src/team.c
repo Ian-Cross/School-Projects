@@ -22,6 +22,7 @@ void createTeams() {
     newWorld->teams[i]->teamBaseColour = BASE_1 + i;
     newWorld->teams[i]->teamVehicleColour = VEHICLE_1 + i;
     newWorld->teams[i]->meteorCount = 0;
+    newWorld->teams[i]->lastMeteorCount = 0;
     newWorld->teams[i]->base = (Base *)newWorld->objects[i]->structure;
 
     newWorld->teams[i]->trucks = createTruck(newWorld->teams[i]->base, i);
@@ -31,14 +32,15 @@ void createTeams() {
   }
 }
 
-int lastMeteorCount = 0;
 /*** drawVault() ***/
 /* - draws a pile of meteors behind the base to signify score */
 /* - only redraws if there is a new value */
 void drawVault(Team *team) {
   int meteorCount = team->meteorCount;
-  if (meteorCount == lastMeteorCount)
+  if (meteorCount == team->lastMeteorCount)
     return;
+
+  team->lastMeteorCount = meteorCount;
 
   int vaultX = team->base->xLoc +
                (team->teamNumber == TEAM_ONE ? BASE_SIZE + 2 : -BASE_SIZE);
@@ -46,10 +48,12 @@ void drawVault(Team *team) {
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
       for (int k = 0; k < 3; k++) {
-        if (meteorCount == 0)
-          return;
-        world[vaultX + i][5 + j][vaultZ + k] = IDENTIFIED_METEOR;
-        meteorCount--;
+        if (meteorCount > 0) {
+          world[vaultX + i][5 + j][vaultZ + k] = IDENTIFIED_METEOR;
+          meteorCount--;
+        } else {
+          world[vaultX + i][5 + j][vaultZ + k] = 0;
+        }
       }
     }
   }

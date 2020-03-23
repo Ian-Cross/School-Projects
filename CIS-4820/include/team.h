@@ -21,6 +21,7 @@ typedef struct Teams {
   int teamBaseColour;
   int teamVehicleColour;
   int meteorCount;
+  int lastMeteorCount;
   Base *base;
   Truck *trucks;
   Tower *towers;
