@@ -107,9 +107,9 @@ void pickTowerLocation(Tower *tower) {
   int found = 0;
 
   while (withinBounds(towerX, towerY, towerZ)) {
-    towerX += sin(roty) * 0.8;
+    towerX += sin(roty) * cos(rotx) * 0.8;
     towerY -= sin(rotx) * 0.8;
-    towerZ -= cos(roty) * 0.8;
+    towerZ -= cos(roty) * cos(rotx) * 0.8;
 
     if (world[(int)towerX][(int)towerY][(int)towerZ] != 0) {
       found = 1;
@@ -129,14 +129,14 @@ void pickTowerLocation(Tower *tower) {
   }
 }
 
-int isStructureNearby(Tower *tower) {
+int isStructureNearby(Tower *tower, int structureType) {
   int radius = 10;
   for (int y = tower->yLoc - 3; y < tower->yLoc + 5; y++) {
     for (int z = -radius; z < radius; z++) {
       int half_row_width = sqrt(radius * radius - z * z);
       for (int x = -half_row_width; x < half_row_width; x++) {
         if (withinBounds(tower->xLoc + x, y, tower->zLoc + z)) {
-          if (world[tower->xLoc + x][y][tower->zLoc + z] == BASE_2) {
+          if (world[tower->xLoc + x][y][tower->zLoc + z] == structureType) {
             return TRUE;
           }
         }
@@ -159,7 +159,7 @@ void placeTower() {
   }
   placingTower->yLoc = highestY;
 
-  if (isStructureNearby(placingTower)) {
+  if (isStructureNearby(placingTower, BASE_2)) {
     drawTower(placingTower, newWorld->teams[1]);
     isPlacingTower = FALSE;
   } else {

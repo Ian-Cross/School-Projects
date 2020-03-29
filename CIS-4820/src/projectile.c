@@ -64,9 +64,9 @@ void moveMouseProjectile() {
 
   float rotx = (mouseRotX / 180.0 * 3.141592);
   float roty = (mouseRotY / 180.0 * 3.141592);
-  mobX += sin(roty) * 0.8;
+  mobX += sin(roty) * cos(rotx) * 0.8;
   mobY -= sin(rotx) * 0.8;
-  mobZ -= cos(roty) * 0.8;
+  mobZ -= cos(roty) * cos(rotx) * 0.8;
 
   setMobPosition(0, mobX, mobY, mobZ, 0.0);
   if (withinBounds(mobX, mobY, mobZ))

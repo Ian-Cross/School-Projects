@@ -47,6 +47,7 @@ void addTruck(int teamNumber) {
     currTruck = currTruck->next;
   }
   currTruck->next = createTruck(team->base, teamNumber);
+  team->truckCount++;
 }
 
 /*** getDirection() ***/

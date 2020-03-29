@@ -8,6 +8,7 @@
 
 double lastCloudTime = 0;
 double lastMeteorTime = 0;
+double lastOpponentTime = 0;
 int meteorSpawnCount = 0;
 int lastMeteorSecond = 0;
 
@@ -102,5 +103,57 @@ void moveProjectiles() {
     if (worldProjectile->visible == TRUE)
       moveProjectile(worldProjectile);
     worldProjectile = worldProjectile->next;
+  }
+}
+
+void opponentMove() {
+  double currTime = getTimeMS();
+  int spawnType = rand() % 25;
+  int spawnChance = rand() % 1000;
+
+  if (currTime - lastOpponentTime >= OPPONENT_MOVE_SPEED) {
+    lastOpponentTime = currTime;
+    Team *team = newWorld->teams[0];
+    if (team->truckCount <= MAX_TRUCKS && spawnType >= 15 &&
+        team->meteorCount >= 1) {
+      if (spawnChance < TRUCK_BUILD_CHANCE) {
+        addTruck(0);
+        team->meteorCount--;
+      }
+    } else if (team->towerCount <= MAX_TOWERS && spawnType >= 10 &&
+               team->meteorCount >= 2) {
+      if (spawnChance < TOWER_BUILD_CHANCE) {
+        Tower *newTower = createTower();
+        Tower *teamTowers = team->towers;
+
+        if (teamTowers == NULL) {
+          // Add the first tower next to the base
+          newTower->xLoc = team->base->xLoc - 8;
+          newTower->zLoc = team->base->zLoc + rand() % 5;
+        } else {
+          // search through the towers that are added and extend the train
+          while (teamTowers->next != NULL) {
+            teamTowers = teamTowers->next;
+          }
+          newTower->xLoc = teamTowers->xLoc - 8;
+          newTower->zLoc = teamTowers->zLoc + rand() % 5;
+        }
+
+        if (withinBounds(newTower->xLoc, 5, newTower->zLoc)) {
+          // Add Tower to the teams list
+          if (teamTowers == NULL) {
+            team->towers = newTower;
+          } else {
+            while (teamTowers->next != NULL) {
+              teamTowers = teamTowers->next;
+            }
+            teamTowers->next = newTower;
+          }
+          team->towerCount++;
+          team->meteorCount -= 2;
+          drawTower(newTower, team);
+        }
+      }
+    }
   }
 }

@@ -25,6 +25,8 @@ typedef struct Teams {
   Base *base;
   Truck *trucks;
   Tower *towers;
+  int truckCount;
+  int towerCount;
 } Team;
 
 /*** createTeams() ***/

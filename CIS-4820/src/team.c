@@ -23,6 +23,8 @@ void createTeams() {
     newWorld->teams[i]->teamVehicleColour = VEHICLE_1 + i;
     newWorld->teams[i]->meteorCount = 0;
     newWorld->teams[i]->lastMeteorCount = 0;
+    newWorld->teams[i]->truckCount = 1;
+    newWorld->teams[i]->towerCount = 0;
     newWorld->teams[i]->base = (Base *)newWorld->objects[i]->structure;
 
     newWorld->teams[i]->trucks = createTruck(newWorld->teams[i]->base, i);
@@ -66,16 +68,22 @@ void checkVault() {
   int firstTeam = rand() % 2;
 
   if (newWorld->teams[firstTeam]->meteorCount >= 27) {
-    printf("Congradulations Team %s, you have won!\n",
-           firstTeam == 0 ? "RED!" : "BLUE!");
+    if (firstTeam == 0) {
+      printf("Team Red has won, you lose!\n");
+    } else {
+      printf("Congradulations Blue! You've won.\n");
+    }
     exit(0);
   }
 
   int secondTeam = firstTeam == TEAM_ONE ? TEAM_TWO : TEAM_ONE;
 
   if (newWorld->teams[secondTeam]->meteorCount >= 27) {
-    printf("Congradulations Team %s, you have won!\n",
-           secondTeam == 0 ? "RED!" : "BLUE!");
+    if (secondTeam == 0) {
+      printf("Team Red has won, you lose!\n");
+    } else {
+      printf("Congradulations Blue! You've won.\n");
+    }
     exit(0);
   }
 

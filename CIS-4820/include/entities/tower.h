@@ -34,5 +34,6 @@ void towerSurvey();
 void addTower(int);
 void pickTowerLocation(Tower *);
 void placeTower();
+int isStructureNearby();
 
 #endif

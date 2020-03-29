@@ -186,6 +186,7 @@ void update() {
     if (isPlacingTower == TRUE) {
       pickTowerLocation(placingTower);
     }
+    opponentMove();
 
     // check win condition
     checkVault();

@@ -21,7 +21,7 @@ SOURCES = main.c \
 					src/team.c \
 					src/entities/truck.c \
 					src/entities/tower.c \
-					src/projectile.c
+					src/projectile.c \
 
 OBJS = $(SOURCES:%.c=%.o)
 

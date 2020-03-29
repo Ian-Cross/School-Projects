@@ -26,4 +26,6 @@ void moveTrucks();
 
 void moveProjectiles();
 
+void opponentMove();
+
 #endif

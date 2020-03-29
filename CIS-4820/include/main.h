@@ -81,6 +81,8 @@ WorldData *newWorld;
 #include "tower.h"
 #include "truck.h"
 
+#include "opponent.h"
+
 int paused;
 GLfloat ambRed, ambGreen, ambBlue, ambAlpha, difRed, difGreen, difBlue,
     difAlpha;
