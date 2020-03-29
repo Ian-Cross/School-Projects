@@ -707,7 +707,7 @@ void keyboard(unsigned char key, int x, int y) {
       flycontrol = 0;
     break;
   case 'l': // toggle fastFly flag
-    if (fastFly == 0)
+    if (fastFly == 1)
       fastFly = 1.0;
     else
       fastFly = 0;

@@ -5,7 +5,7 @@
 CFLAGS = -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/ -Wno-deprecated-declarations
 LFLAGS = -framework OpenGL -framework GLUT -lm
 CC = gcc
-EXE = a3
+EXE = a4
 INC = -Iinclude/ -Iinclude/worldObjects/ -Iinclude/entities/
 
 SOURCES = main.c \
@@ -25,7 +25,7 @@ SOURCES = main.c \
 
 OBJS = $(SOURCES:%.c=%.o)
 
-all: $(EXE) run
+all: $(EXE)
 
 new: $(EXE)
 
