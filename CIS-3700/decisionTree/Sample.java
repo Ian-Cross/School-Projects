@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Set;
+import java.util.Iterator;
 
 public class Sample {
   ArrayList<Example> examples;
@@ -13,14 +16,92 @@ public class Sample {
     this.examples = getExamples(examples,scheme);
   }
 
-  public void getInfo() {
+  public double getInfo(ArrayList<Example> examples) {
+    if (examples.size() == 0) return 0.0;
 
+    Hashtable<String, Integer> values = new Hashtable<String, Integer>();
+    for (Example example: examples) {
+      if (values.containsKey(example.funcValue())) {
+        int currCount = values.get(example.funcValue());
+        values.replace(example.funcValue(),currCount,currCount+1);
+      } else {
+        values.put(example.funcValue(),1);
+      }
+    }
+
+    double infoGain = 0.0;
+    Set<String> keys = values.keySet();
+    for(String key: keys) {
+        double pi = (double)values.get(key) / (double)examples.size();
+        if (pi != 0.0) {
+            infoGain += pi * -Math.log(pi)/Math.log(2);
+        }
+    }
+
+    return infoGain;
   }
-  public void getRMD() {
 
+  public double getRMD(Attribute attribute, ArrayList<Example> examples, Scheme scheme) {
+    int size = examples.size();
+    int valuesCount = attribute.values.size();
+    int attributeIndex = scheme.attributes.indexOf(attribute);
+
+    Hashtable<String, ArrayList<Example>> subGroups = new Hashtable<String, ArrayList<Example>>();
+
+    for (Example example : examples) {
+      String i = example.values.get(attributeIndex);
+      if (subGroups.containsKey(i)) {
+        ArrayList<Example> currGroup = subGroups.get(i);
+        ArrayList<Example> newGroup = new ArrayList<>();
+        Iterator<Example> iterator = currGroup.iterator();
+
+        while(iterator.hasNext()) {
+            newGroup.add((Example)iterator.next().clone());
+        }
+        newGroup.add(example);
+        subGroups.replace(i,currGroup,newGroup);
+      } else {
+        ArrayList<Example> group = new ArrayList<>();
+        group.add(example);
+        subGroups.put(i,group);
+      }
+    }
+
+    int[] subCounts = new int[valuesCount];
+    Set<String> keys = subGroups.keySet();
+    int i = 0;
+    for (String key: keys) {
+        subCounts[i] = subGroups.get(key).size();
+        i++;
+    }
+
+    double remainder = 0.0;
+    i = 0;
+    for (String key: keys) {
+        double pr = (double)subCounts[i] / (double)size;
+        double infoGain = getInfo(subGroups.get(key));
+        remainder += pr * infoGain;
+        i++;
+    }
+    return remainder;
   }
-  public void getAttribute() {
 
+  public Attribute getAttribute( ArrayList<Attribute> attributes, ArrayList<Example> examples, Scheme scheme) {
+    double info = getInfo(examples);
+    double maxGain = -1.0;
+    Attribute bestAttribute = null;
+
+    for (Attribute attribute : attributes) {
+        double remainder = getRMD(attribute, examples, scheme);
+        double gain = info - remainder;
+        System.out.println("Test " + attribute.name + ": info=" + Math.round(info * 10000.0)/10000.0 + " rmd=" + Math.round(remainder * 10000.0)/10000.0 + " gain = " + Math.round(gain * 10000.0)/10000.0);
+        if (gain > maxGain) {
+            maxGain = gain;
+            bestAttribute = attribute;
+        }
+    }
+    System.out.println("\tSelect attribute " + bestAttribute.name);
+    return bestAttribute;
   }
 
   public ArrayList<Example> getExamples(ArrayList<String> data, Scheme scheme) {
@@ -35,16 +116,12 @@ public class Sample {
 
     data.remove(0);
     for(String i: data) {
-      ArrayList<Integer> intValues = new ArrayList();
+      ArrayList<String> values = new ArrayList();
       String strValues[] = i.split(" ");
       for (int j = 0; j < strValues.length; j++) {
-        if (j == strValues.length-1) {
-          intValues.add(scheme.func.values.indexOf(strValues[j]));
-        } else {
-          intValues.add(scheme.attributes.get(j).values.indexOf(strValues[j]));
-        }
+        values.add(strValues[j]);
       }
-      examples.add(new Example(intValues));
+      examples.add(new Example(values));
     }
 
     return examples;

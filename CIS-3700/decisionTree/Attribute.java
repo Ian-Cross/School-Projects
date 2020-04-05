@@ -12,4 +12,13 @@ public class Attribute {
   public String toString() {
     return this.name + ": " + values.toString();
   }
+
+  public Boolean equals(Attribute attribute) {
+    if (this.name != attribute.name) return false;
+    if (this.values.size() != attribute.values.size()) return false;
+    for (int i = 0; i < values.size(); i++) {
+      if (!this.values.get(i).equals(attribute.values.get(i))) return false;
+    }
+    return true;
+  }
 }

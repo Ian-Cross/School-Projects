@@ -1,7 +1,7 @@
 JAVAC=javac
 IOFILEPATH=./dataFiles
 
-all: DTLearn.class Attribute.class Scheme.class UTIL.class Example.class Sample.class 
+all: DTLearn.class Attribute.class Scheme.class UTIL.class Example.class Sample.class Node.class
 
 %.class: %.java
 	$(JAVAC) $^
