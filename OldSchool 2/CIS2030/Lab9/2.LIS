@@ -1,0 +1,36 @@
+
+Source file: 2.X68
+Assembled on: 16-11-17 at: 11:07:12
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1  00008024                        ORG       $8024
+    2  00008024 4EF900009500           JMP       $9500
+    3                        
+    4                        
+    5  00009000                        ORG       $9000
+    6  00009000 027CDFFF     START:    ANDI      #%1101111111111111,SR
+    7  00009004 343C04D2               MOVE      #1234,D2
+    8  00009008 4E45                   TRAP      #5
+    9  0000900A 4E4E                   TRAP      #14
+   10                                
+   11  00009500                        ORG       $9500
+   12  00009500 48E7E000     T5:       MOVEM.L   D0-D2,-(SP)
+   13  00009504 0C420000               CMPI.W    #0,D2
+   14  00009508 6700001A               BEQ       QUIT
+   15  0000950C 4281                   CLR.L     D1
+   16  0000950E 3202                   MOVE      D2,D1
+   17  00009510 83FC000A               DIVS      #10,D1
+   18  00009514 4841                   SWAP      D1
+   19  00009516 3001                   MOVE      D1,D0
+   20  00009518 4841                   SWAP      D1
+   21  0000951A 3401                   MOVE      D1,D2
+   22  0000951C 4E45                   TRAP      #5
+   23  0000951E 06400030               ADD       #48,D0
+   24  00009522 4E41                   TRAP      #1
+   25  00009524 4CDF0007     QUIT:     MOVEM.L   (SP)+,D0-D2
+   26  00009528 4E73                   RTE       
+   27                        
+   28           00009000               END       START
+
+Lines: 28, Errors: 0, Warnings: 0.

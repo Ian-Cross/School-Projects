@@ -1,0 +1,125 @@
+Assignment 5 - Alternative to the Final Exam
+-------------------------------------------
+Due. March 27, 2020
+
+This assignment can be chosen instead of writing the final exam.
+As the exam is worth twice as much as a regular assignment so this
+assignment is approximately twice as large as a regular assignment.
+
+This assignment is optional. You can choose to write the assignment or
+write the final exam. You can only choose one of these options (you can't
+try both and pick the better one). If you wish to code this assignment
+instead of the exam then send me an email (dcalvert@uoguelph.ca) and let
+me know about it. If you start working on this assignment and then decide you
+would rather write the exam then don't submit the assignment and just write
+the exam instead. There is no penalty for changing your mind.
+This is a demanding assignment and the final exam may be easier.
+
+The assignment builds on assignment 4 and adds more game functionality.
+
+
+1. Creating New Vehicles
+------------------------
+Add two new vehicles, the tank and helicopter, to the game.
+
+The tank starts near the player's base. Unless it is given a destination, it will
+move randomly around the world and shoot at the other players vehicles, towers, and
+cube of meteors.
+
+The helicopter is created and moves like the tank but it can fly above the ground.
+Pick a reasonable elevation for the helicopter to fly.
+
+The cost to build vehicles and tower, and the range they can shoot other objects,
+and the number of times they can be shot before being destroyed  is:
+
+                 Cost  Range  Health
+Tower           2      10        3
+Truck            1      0          2
+Tanks            3      10        4
+Helicopter    2      15        1
+
+The tower, tank, and helicopter all shoot at enemies that are within range.
+They will shoot at other towers, trucks, tanks, helicopters, and at the
+opponents cube of meteors. Use the sphere to represent a shot. Shooting a
+vehicle reduces the vehicles health by one. Shooting the opponents cube removes
+a meteor. If the AI opponent shoots the player's cube then the number of
+meteors displayed in 2D and 3D should be reduced and displayed correctly.
+
+Create shapes for the new vehicles so they look interesting. They should be more
+complex than a single cube.
+
+
+2. Controlling Vehicles
+----------------------
+The player should be able to select a vehicle using the keyboard. They can
+press the less than < and greater than > keys to cycle through all of their
+vehicles. When a vehicle is selected it should be displayed differently. Either
+draw it using different colours or draw a marker above it. Using the < > keys
+the player should be able to move the marker through all of the trucks, tanks, and
+helicopters they currently have in the game. It does not matter which order the
+vehicles are selected as long as the player can move through all of their
+vehicles using the < and > keys to move forward and backwards through the list. 
+
+Once a vehicle is selected the player can select a new location for the vehicle
+to move towards. This should replace the random location that the vehicle is currently
+moving towards. Use the mouse to select the new destination for the vehicle.
+Selecting the new destination for a vehicle should work the same way as selecting
+a location for a tower in assignment 4. The player should press the / key to indicate
+they want to identify the destination for the selected vehicle, move the mouse to
+find the location, and press the p key again to select the destination point.
+Helicopters will fly above this location.
+
+
+3. Opponent AI
+--------------
+The opponent should be able to create the new vehicles. Again, they should have
+a strategy using all of the vehicles in the game. It doesn't need to be
+very smart but they should create the vehicles. Describe the strategy in the
+readme.txt file.
+
+4. Pause the Game
+-----------------
+The player should be able to press the p key to pause and unpause the game.
+Vehicles should stop moving and shooting when the game is paused.
+
+5. Player Shooting Cost
+-----------------------
+If the player shoots using the space bar they can damage a vehicle. The
+cost in meteors for the player to shoot is 3.
+
+
+Coding Practices
+----------------
+Write the code using standard stylistic practices. Use functions, 
+reasonable variable names, and consistent indentation.
+If the code is difficult for the TA to understand then you
+will lose marks.
+
+As usual, keep backups of your work using source control software.
+
+
+Starting Code
+-------------
+The starting code is available on the Courselink site.
+You can untar the file using tar xf filename.
+
+
+Submitting the Assignment
+-------------------------
+NOTE: The assignment executable is named a1. Other files can be
+named with any reasonable filenames.
+
+Submit the assignment using Courselink. Submit the files needed to
+build and run your program. Do not submit compiled code. Bundle the code in a tar file.
+
+Include a makefile that will compile the executable. Name the executable a1.
+ 
+The TA will unpack your code and type "make". They will then try to
+run an executable named "./a1".  If the make command or executing a1
+does not work then you will lose a substantial number of marks.
+
+It is always a good idea to unpack and test the file you are submitting
+to be sure that what you submit actually compiles and runs. 
+
+
+

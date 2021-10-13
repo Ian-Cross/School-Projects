@@ -1,0 +1,31 @@
+
+Source file: LAB8_1.X68
+Assembled on: 16-11-10 at: 09:09:22
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        
+    2  00008000                        ORG       $8000
+    3  00008000 3F390000A000 START:    MOVE.W    X,-(SP)
+    4  00008006 4EB900008012           JSR       QUAD
+    5  0000800C 4FEF0002               LEA       2(SP),SP
+    6  00008010 4E4E                   TRAP      #14
+    7                        
+    8                        **************Quadratic****************
+    9  00008012 302F0004     QUAD:     MOVE.W    4(SP),D0
+   10  00008016 3200                   MOVE.W    D0,D1
+   11  00008018 C3FC0002               MULS      #2,D1
+   12  0000801C C1C0                   MULS      D0,D0
+   13  0000801E C1FC0005               MULS      #5,D0
+   14  00008022 9041                   SUB.W     D1,D0
+   15  00008024 5C40                   ADD.W     #6,D0
+   16  00008026 3200                   MOVE.W    D0,D1
+   17  00008028 4E75                   RTS       
+   18                                
+   19                        
+   20  0000A000                        ORG       $A000
+   21  0000A000 0003         X:        DC.W      3
+   22                        
+   23           00008000               END       START
+
+Lines: 23, Errors: 0, Warnings: 0.

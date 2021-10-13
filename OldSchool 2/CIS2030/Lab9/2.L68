@@ -1,0 +1,42 @@
+00009000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 11/17/2016 11:01:25 AM
+
+00008024                             1      ORG    $8024
+00008024  4EF9 00009500              2      JMP    $9500
+0000802A                             3  
+0000802A                             4  
+00009000                             5      ORG    $9000
+00009000  343C 04D2                  6  START   move    #1234,D2
+00009004  6000 04FA                  7          BRA     T5  ;TRAP    #5
+00009008  4E4E                       8          TRAP    #14
+0000900A                             9          
+00009500                            10      ORG    $9500
+00009500  48E7 E000                 11  T5      movem.l D0-D2,-(SP)
+00009504  0C42 0000                 12          cmpi.w  #0,D2
+00009508  6700 001A                 13          beq     quit
+0000950C  4281                      14          clr.l   D1
+0000950E  3202                      15          move    D2,D1
+00009510  83FC 000A                 16          divs    #10,D1
+00009514  4841                      17          swap    D1
+00009516  3001                      18          move    D1,D0
+00009518  4841                      19          swap    D1
+0000951A  3401                      20          move  D1,D2
+0000951C  60E2                      21          BRA     T5  ;TRAP    #5
+0000951E  0640 0030                 22          add   #48,D0
+00009522  4E41                      23          trap    #1
+00009524  4CDF 0007                 24  quit    movem.l (SP)+,D0-D2
+00009528  4E73                      25          RTE
+0000952A                            26  
+0000952A                            27      END    START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+QUIT                9524
+START               9000
+T5                  9500

@@ -1,0 +1,23 @@
+
+Source file: L3_3.X68
+Assembled on: 16-10-06 at: 09:16:18
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        *L3_3: Sample program 3
+    2                         
+    3  00008000                        ORG       $8000
+    4                        
+    5  00008000 103900009001 START:    MOVE.B    $9001,D0              ;;memory address
+    6  00008006 103900009001           MOVE.B    VAR1+1,D0             ;;assemble-time expression
+    7  0000800C 103900009001           MOVE.B    VAR2,D0               ;;label
+    8  00008012 4E4E                   TRAP      #14
+    9                        
+   10  00009000                        ORG       $9000
+   11  00009000 01           VAR1:     DC.B      1
+   12  00009001 02           VAR2:     DC.B      2
+   13  00009002 03           VAR3:     DC.B      3
+   14                          
+   15           00008000               END       START
+
+Lines: 15, Errors: 0, Warnings: 0.

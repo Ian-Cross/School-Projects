@@ -1,0 +1,41 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 10/27/2016 9:38:18 AM
+
+00000000                             1  *L6_2.x68     
+00000000                             2  
+00008000                             3      ORG $8000
+00008000  103C 00FF                  4  START   MOVE.B  #$FF,D0
+00008004  41F9 00009000              5          LEA     pointer1,A0
+0000800A  43F9 00009020              6          LEA     pointer2,A1   
+00008010  1218                       7  LOOP    MOVE.B  (A0)+,D1
+00008012  1419                       8          MOVE.B  (A1)+,D2
+00008014  B242                       9          CMP     D2,D1
+00008016  6700 0006                 10          BEQ     IF
+0000801A  103C 0000                 11          MOVE.B  #$00,D0
+0000801E  0C41 000D                 12  IF      CMPI    #$0D,D1
+00008022  6700 0008                 13          BEQ     EXIT
+00008026  0C40 00FF                 14          CMPI    #$FF,D0
+0000802A  67E4                      15          BEQ     LOOP
+0000802C  4E4E                      16  EXIT    TRAP    #14
+0000802E                            17  
+00009000                            18      ORG $9000       
+00009000= 41 41 41 41 4D 0D         19  pointer1    DC.B    'AAAAM',$0D
+00009020                            20      ORG $9020
+00009020= 41 41 41 41 41 0D         21  pointer2    DC.B    'AAAAA',$0D
+00009026                            22  
+00009026                            23      END START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+EXIT                802C
+IF                  801E
+LOOP                8010
+POINTER1            9000
+POINTER2            9020
+START               8000

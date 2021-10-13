@@ -1,0 +1,23 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 9/29/2016 10:26:00 AM
+
+00000000                             1  *template
+00000000                             2  
+00000000                             3  
+00008000                             4      ORG $8000
+00008000                             5  
+00008000  3200                       6      MOVE.W D0,D1
+00008002  C3FC 0009                  7      MULS #9,D1
+00008006  83FC 0005                  8      DIVS #5,D1
+0000800A  0641 0020                  9      ADD.W #32,D1
+0000800E  4E4E                      10      TRAP    #14
+00008010                            11      END $8000
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------

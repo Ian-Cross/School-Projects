@@ -1,0 +1,47 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 11/10/2016 9:12:02 AM
+
+00000000                             1  
+00008000                             2      ORG     $8000
+00008000  3F39 0000A000              3  START   MOVE.W  X,-(SP)
+00008006  3F39 0000A002              4          MOVE.W  Y,-(SP)
+0000800C  3F39 0000A004              5          MOVE.W  Z,-(SP)
+00008012  4EB9 0000801E              6          jsr     QUAD
+00008018  4FEF 0006                  7          lea     6(SP),SP
+0000801C  4E4E                       8          TRAP    #14
+0000801E                             9  
+0000801E                            10  **************Quadratic****************
+0000801E  342F 0004                 11  QUAD    MOVE.W  4(SP),D2
+00008022  362F 0006                 12          MOVE.W  6(SP),D3
+00008026  382F 0008                 13          MOVE.W  8(SP),D4
+0000802A  C5C2                      14          MULS    D2,D2
+0000802C  C7C4                      15          MULS    D4,D3
+0000802E  C7FC 0002                 16          MULS    #2,D3
+00008032  C9C4                      17          MULS    D4,D4
+00008034  C9FC 0005                 18          MULS    #5,D4
+00008038  9843                      19          SUB.W   D3,D4
+0000803A  D842                      20          ADD.W   D2,D4
+0000803C  3204                      21          MOVE.W  D4,D1
+0000803E  4E75                      22          rts
+00008040                            23          
+00008040                            24  
+0000A000                            25      ORG     $A000
+0000A000= 0004                      26  X       DC.W    4
+0000A002= 0005                      27  Y       DC.W    5
+0000A004= 0006                      28  Z       DC.W    6
+0000A006                            29          
+0000A006                            30      END    START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+QUAD                801E
+START               8000
+X                   A000
+Y                   A002
+Z                   A004

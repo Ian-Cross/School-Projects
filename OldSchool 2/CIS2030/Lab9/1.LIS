@@ -1,0 +1,29 @@
+
+Source file: 1.X68
+Assembled on: 16-11-17 at: 11:34:00
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1  0000802A                        ORG       $802A
+    2  0000802A 4EF900009200           JMP       $9200
+    3                            
+    4  00008030                        ORG       $8030
+    5  00008030 4EF900009500           JMP       $9500
+    6                        
+    7                        
+    8  00009000                        ORG       $9000
+    9  00009000 4E47         START:    TRAP      #7
+   10  00009002 4E46                   TRAP      #6
+   11  00009004 4E4E                   TRAP      #14
+   12                                
+   13  00009200                        ORG       $9200
+   14  00009200 00572000               ORI.W     #%0010000000000000,(A7)
+   15  00009204 4E73                   RTE       
+   16                                
+   17  00009500                        ORG       $9500
+   18  00009500 0257DFFF               ANDI.W    #%1101111111111111,(A7)
+   19  00009504 4E73                   RTE       
+   20                        
+   21           00009000               END       START
+
+Lines: 21, Errors: 0, Warnings: 0.

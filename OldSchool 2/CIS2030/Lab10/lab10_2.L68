@@ -1,0 +1,62 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 11/24/2016 11:29:38 AM
+
+00000000  =0000C001                  1  DUART   EQU $C001
+00000000  =00000002                  2  SRA     EQU 2
+00000000  =00000006                  3  TBA     EQU 6
+00000000  =0000000D                  4  CR      EQU $0D
+00000000  =0000000A                  5  LF      EQU $0A
+00000000                             6  
+00008000                             7      ORG     $8000
+00008000  207C 0000C001              8  START   MOVEA.L #DUART,A0
+00008006  367C 8010                  9          MOVE    #WORD,A3
+0000800A  6100 0038                 10          BSR     SCAN
+0000800E  4E4E                      11          TRAP    #14
+00008010                            12          
+00008010                            13  WORD    DS.B    20
+00008024                            14  
+00008024  2F08                      15  PRCH    MOVE.L  A0,-(A7)
+00008026  3F07                      16          MOVE.W  D7,-(A7)
+00008028  207C 0000C001             17          MOVEA.L #DUART,A0
+0000802E                            18         
+0000802E  1E28 0002                 19  PRCH2   MOVE.B  SRA(A0),D7
+00008032  0207 0001                 20          ANDI.B  #1,D7
+00008036  67F6                      21          BEQ     PRCH2
+00008038  1028 0006                 22          MOVE.B  TBA(A0),D0
+0000803C  16C0                      23          MOVE.B  D0,(A3)+
+0000803E  3E1F                      24          MOVE.W  (A7)+,D7
+00008040  205F                      25          MOVE.L  (A7)+,A0
+00008042  4E75                      26          RTS
+00008044                            27  
+00008044                            28  
+00008044  2F00                      29  SCAN    MOVE.L D0,-(A7)
+00008046  1019                      30  PR      MOVE.B (A1)+,D0
+00008048  6700 000A                 31          BEQ     EXIT
+0000804C  4EB9 00008024             32          JSR     PRCH
+00008052  60F2                      33          BRA     PR
+00008054                            34          
+00008054  201F                      35  EXIT    MOVE.L  (A7)+,D0
+00008056  4E75                      36          RTS
+00008058                            37      
+00008058                            38      END    START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CR                  D
+DUART               C001
+EXIT                8054
+LF                  A
+PR                  8046
+PRCH                8024
+PRCH2               802E
+SCAN                8044
+SRA                 2
+START               8000
+TBA                 6
+WORD                8010

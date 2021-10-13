@@ -1,0 +1,41 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 10/6/2016 9:44:18 AM
+
+00000000                             1  *IAN CROSS LAB 3 BONUS
+00000000                             2  
+00000000  =00008000                  3  CODE    EQU     $8000
+00000000  =00009000                  4  DATA    EQU     $9000
+00000000                             5  
+00008000                             6      ORG     CODE
+00008000  3039 00009000              7  START   MOVE.W      W,D0
+00008006  1239 00009002              8      MOVE.B      Y,D1
+0000800C  C0C1                       9      MULU        D1,D0
+0000800E  3239 00009004             10      MOVE.W      X,D1
+00008014  4881                      11      EXT.W       D1
+00008016  82FC 0003                 12      DIVU        #$3,D1
+0000801A  D240                      13      ADD.W       D0,D1
+0000801C  23C1 00009006             14      MOVE.L      D1,Z
+00008022  4E4E                      15      TRAP        #14
+00008024                            16      
+00009000                            17      ORG     DATA
+00009000= 0005                      18  W   DC.W    $5
+00009002= 05                        19  Y   DC.B    $5
+00009004= 0009                      20  X   DC.W    $9
+00009006                            21  Z   DS.L    1
+0000900A                            22      END     START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CODE                8000
+DATA                9000
+START               8000
+W                   9000
+X                   9004
+Y                   9002
+Z                   9006

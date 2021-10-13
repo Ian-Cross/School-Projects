@@ -1,0 +1,79 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 11/24/2016 11:11:55 AM
+
+00000000                             1  ******************************************************
+00000000                             2  * TWOHZ.x68                                          *
+00000000                             3  *                                                    *
+00000000                             4  * This program uses the 68681 timer to create a 2 Hz *
+00000000                             5  * square wave on OP3.  If the 68681 X1 input is      *
+00000000                             6  * driven at 3.6864 MHz, then the frequency on OP3    *
+00000000                             7  * equals                                             *
+00000000                             8  *                                                    *
+00000000                             9  *       3686400 / 2 / 16 / COUNT                     *
+00000000                            10  *                                                    *
+00000000                            11  * where COUNT is the 16-bit integer in the timer     *
+00000000                            12  * registers CTUR and CTLR.  CTUR holds the upper     *
+00000000                            13  * byte, CTLR holds the lower byte.                   *
+00000000                            14  ******************************************************
+00000000  =0000C001                 15  DUART    EQU      $00C001  ;68681 base address
+00000000  =0000000A                 16  ISR      EQU      $A
+00000000  =0000001E                 17  STOP     EQU      $1E
+00000000  =00000008                 18  ACR      EQU      4*2      ;auxiliary control reg.
+00000000  =0000000C                 19  CTUR     EQU      6*2      ;counter/timer upper reg.
+00000000  =0000000E                 20  CTLR     EQU      7*2      ;counter/timer lower reg.
+00000000  =0000001A                 21  OPCR     EQU      13*2     ;output port config. reg.
+00000000  =00038400                 22  COUNT    EQU      230400
+00000000  =0000001C                 23  OPR_SET  EQU      $1C
+00000000  =0000001E                 24  OPR_CLR  EQU      $1E
+00000000                            25  
+00008000                            26           ORG      $8000
+00008000  207C 0000C001             27  TWOHZ    MOVEA.L  #DUART,A0
+00008006  203C 00038400             28           MOVE.L   #COUNT,D0
+0000800C  01C8 000C                 29           MOVEP.L  D0,CTUR(A0)
+00008010  117C 0070 0008            30           MOVE.B   #$70,ACR(A0)   ;crystal clock / 16
+00008016                            31           
+00008016  1028 000A                 32  LOOP     MOVE.B   ISR(A0),D0
+0000801A  0200 0008                 33           ANDI.B   #8,D0
+0000801E  67F6                      34           BEQ      LOOP
+00008020  4A28 001E                 35           TST.B    STOP(A0)
+00008024  0C02 0001                 36           CMPI.B   #1,D2
+00008028  6700 0006                 37           BEQ      OFF
+0000802C  6000 0014                 38           BRA      ON
+00008030                            39           
+00008030  103C 00FF                 40  OFF      MOVE.B #$FF,D0
+00008034  13C0 0000C01F             41           MOVE.B D0,$C01F
+0000803A  4600                      42           NOT.B  D0
+0000803C  143C 0000                 43           MOVE.B #0,D2
+00008040  60D4                      44           BRA LOOP
+00008042                            45  
+00008042  103C 0000                 46  ON       MOVE.B #$00,D0
+00008046  1140 001E                 47           MOVE.B D0,OPR_CLR(A0)
+0000804A  4600                      48           NOT.B  D0
+0000804C  1140 001C                 49           MOVE.B D0,OPR_SET(A0)
+00008050  143C 0001                 50           MOVE.B #1,D2
+00008054  60C0                      51           BRA LOOP
+00008056                            52  
+00008056                            53           END      TWOHZ
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ACR                 8
+COUNT               38400
+CTLR                E
+CTUR                C
+DUART               C001
+ISR                 A
+LOOP                8016
+OFF                 8030
+ON                  8042
+OPCR                1A
+OPR_CLR             1E
+OPR_SET             1C
+STOP                1E
+TWOHZ               8000

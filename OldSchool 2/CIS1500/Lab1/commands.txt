@@ -1,0 +1,9 @@
+MV: move a file from one place to another
+ls: list all the current files and directories in the current directory
+man: opens the "Manual" on the specified command
+cd: changes to the specified directory
+mkdir: makes a directory in the current directory
+nano: opens the text editor nano, or a specified file
+rm: removes a file or directory
+pwd: displays the path of the current or specified file/directory
+cp: copies a file

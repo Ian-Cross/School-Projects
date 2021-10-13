@@ -1,0 +1,25 @@
+
+Source file: L4_3.X68
+Assembled on: 16-10-13 at: 09:43:30
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        *L4_3.x68      
+    2                         
+    3  00008000                        ORG       $8000
+    4                        
+    5  00008000 207900009000 START:    MOVEA.L   LIST,A0
+    6  00008006 1010                   MOVE.B    (A0),D0
+    7  00008008 3010                   MOVE.W    (A0),D0
+    8  0000800A 2010                   MOVE.L    (A0),D0
+    9  0000800C 4E4E                   TRAP      #14
+   10                        
+   11  00009000                        ORG       $9000
+   12  00009000 02           LIST:     DC.B      $2
+   13  00009001 04                     DC.B      $4
+   14  00009002 06                     DC.B      $6
+   15  00009003 08                     DC.B      $8
+   16                         
+   17           00008000               END       START
+
+Lines: 17, Errors: 0, Warnings: 0.

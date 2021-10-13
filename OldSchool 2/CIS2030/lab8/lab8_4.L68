@@ -1,0 +1,59 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 11/10/2016 10:30:06 AM
+
+00000000                             1  
+00008000                             2      ORG     $8000
+00008000  3F39 0000A000              3  START   MOVE.W  X,-(SP)
+00008006  3F39 0000A002              4          MOVE.W  Y,-(SP)
+0000800C  4879 0000A004              5          PEA     Z
+00008012  4EB9 00008024              6          jsr     QUAD
+00008018  4FEF 0008                  7          lea     8(SP),SP
+0000801C  3A39 0000A004              8          MOVE    Z,D5
+00008022  4E4E                       9          TRAP    #14
+00008024                            10  
+00008024                            11  **************Quadratic****************
+00008024  4E50 FFFA                 12  QUAD    LINK        A0,#-6
+00008028  48E7 E040                 13          MOVEM.L     D0-D2/A1,-(SP)
+0000802C  3228 000E                 14          MOVE.W      14(A0),D1
+00008030  C2C1                      15          MULU        D1,D1
+00008032  3141 FFFE                 16          MOVE.W      D1,-2(A0)
+00008036  3228 000C                 17          MOVE.W      12(A0),D1
+0000803A  C2C1                      18          MULU        D1,D1
+0000803C  3141 FFFC                 19          MOVE.W      D1,-4(A0)
+00008040  3028 000E                 20          MOVE.W      14(A0),D0
+00008044  3228 000C                 21          MOVE.W      12(A0),D1
+00008048  C2C0                      22          MULU        D0,D1
+0000804A  C2FC 0002                 23          MULU        #2,D1
+0000804E  3141 FFFA                 24          MOVE.W      D1,-6(A0)
+00008052  3028 FFFE                 25          MOVE        -2(A0),D0
+00008056  3228 FFFC                 26          MOVE        -4(A0),D1
+0000805A  3428 FFFA                 27          MOVE        -6(A0),D2
+0000805E  D041                      28          ADD.W       D1,D0
+00008060  D440                      29          ADD.W       D0,D2
+00008062  2668 0008                 30          MOVEA.L     8(A0),A3
+00008066  2682                      31          MOVE.L      D2,(A3)
+00008068  4CDF 0207                 32          MOVEM.L     (SP)+,D0-D2/A1
+0000806C  4E58                      33          UNLK        A0
+0000806E  4E75                      34          rts
+00008070                            35          
+00008070                            36  
+0000A000                            37      ORG     $A000
+0000A000= 0004                      38  X       DC.W    4
+0000A002= 0005                      39  Y       DC.W    5
+0000A004                            40  Z       DS.L    1
+0000A008                            41          
+0000A008                            42      END    START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+QUAD                8024
+START               8000
+X                   A000
+Y                   A002
+Z                   A004
